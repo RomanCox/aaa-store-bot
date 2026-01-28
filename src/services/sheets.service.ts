@@ -5,10 +5,10 @@ const auth = new google.auth.GoogleAuth({
 	scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
 });
 
-const sheets = google.sheets({ version: "v4", auth });
+const sheetsService = google.sheets({ version: "v4", auth });
 
 export async function getSheet(range: string) {
-	const res = await sheets.spreadsheets.values.get({
+	const res = await sheetsService.spreadsheets.values.get({
 		spreadsheetId: process.env.SPREADSHEET_ID!,
 		range,
 	});
