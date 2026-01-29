@@ -1,3 +1,5 @@
+import {Actions} from "../constants/actions";
+
 export type Product = {
 	id: string;
 	category: string;
@@ -20,7 +22,7 @@ export function getAllProducts(): Product[] {
 }
 
 export function getProductsByCategory(category: string) {
-	if (category === "Все") return productsCache;
+	if (category === Actions.PricesAll) return productsCache;
 	return productsCache.filter((p) => p.category === category);
 }
 

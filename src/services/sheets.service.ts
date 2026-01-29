@@ -1,5 +1,5 @@
 import { google } from "googleapis";
-import { type Product, setProductsCache } from "../cache";
+import { type Product, setProductsCache } from "../cache/products.cache";
 
 const auth = new google.auth.GoogleAuth({
 	keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS!,

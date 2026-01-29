@@ -1,10 +1,11 @@
 import { InlineKeyboardMarkup } from "node-telegram-bot-api";
+import {Actions} from "../constants/actions";
 
 export function categoriesKeyboard(categories: string[]): InlineKeyboardMarkup {
 	const keyboard = [];
 
 	keyboard.push([
-		{ text: "📦 Все", callback_data: "category:all" },
+		{ text: "📦 Все", callback_data: `category:${Actions.PricesAll}` },
 	]);
 
 	for (let i = 0; i < categories.length; i += 2) {

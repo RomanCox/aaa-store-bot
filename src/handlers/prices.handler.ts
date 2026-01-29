@@ -20,7 +20,7 @@ export const pricesHandler = async (bot: TelegramBot, chatId: number) => {
 		const categories = await getCategories();
 
 		await bot.editMessageText(
-			"📂 Выберите категорию:",
+			"Выберите категорию 👇",
 			{
 				chat_id: chatId,
 				message_id: loadingMsg.message_id,

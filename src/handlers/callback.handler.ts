@@ -1,6 +1,11 @@
 import TelegramBot from "node-telegram-bot-api";
-import { getProductsByCategory } from "../cache";
-import {splitMessage} from "../utils/telegram";
+import { getProductsByCategory } from "../cache/products.cache";
+import { splitMessage } from "../utils/telegram";
+import { getChatState, setChatState } from "../cache/chat.cache";
+import { getCategories } from "../services/categories.service";
+import { categoriesKeyboard } from "../keyboards/categories.keyboard";
+import { backKeyboard } from "../keyboards/back.keyboard";
+// import {Actions} from "../constants/actions";
 // import { Actions } from "../constants/actions";
 // import { pricesKeyboard } from "../keyboards/prices.keyboard";
 
@@ -49,26 +54,89 @@ export function registerCallbacks(bot: TelegramBot) {
     //     await bot.sendMessage(chatId, "Неизвестная команда 🤷‍♂️");
     // }
 
+    const state = getChatState(chatId);
+
+    if (query.data === "back") {
+      if (state.productsMessageIds?.length) {
+        for (const id of state.productsMessageIds) {
+          await bot.deleteMessage(chatId, id).catch(() => {});
+        }
+      }
+
+      const categories = await getCategories();
+      const msg = await bot.sendMessage(
+        chatId,
+        "Выберите категорию 👇",
+        { reply_markup: categoriesKeyboard(categories) }
+      );
+
+      setChatState(chatId, {
+        categoriesMessageId: msg.message_id,
+        productsMessageIds: [],
+      });
+
+      await bot.answerCallbackQuery(query.id);
+      return;
+    }
+
 		if (!query.data.startsWith("category:")) return;
 
 		const category = query.data.replace("category:", "");
 
+    if (state.categoriesMessageId) {
+      await bot.deleteMessage(chatId, state.categoriesMessageId).catch(() => {});
+    }
+
 		const products = getProductsByCategory(category);
 
-		if (!products.length) {
-			await bot.sendMessage(chatId, "В этой категории пока нет товаров");
-			return;
-		}
-
 		const text = products
-			.map(p => `${p.name} - ${p.price} ${p.country}`)
+      .map(p => {
+        const main = [p.name, p.price].filter(Boolean).join(" - ");
+        return p.country ? `${main} ${p.country}` : main;
+      })
+      .filter(Boolean)
 			.join("\n");
 
+    if (!products.length || !text) {
+      await bot.sendMessage(chatId, "В этой категории пока нет товаров");
+      return;
+    }
+
 		const messages = splitMessage(text);
+    const sentIds: number[] = [];
 
 		for (const msg of messages) {
-			await bot.sendMessage(chatId, msg);
+      if (!msg || msg.trim() === "") continue;
+			const sentMessage = await bot.sendMessage(chatId, msg);
+      sentIds.push(sentMessage.message_id);
 		}
+
+    const lastMsgId = state?.productsMessageIds?.slice(-1)[0];
+
+    if (lastMsgId) {
+      await bot.editMessageReplyMarkup(
+        {
+          inline_keyboard: [[{ text: "⬅️ Назад", callback_data: "back" }]],
+        },
+        {
+          chat_id: chatId,
+          message_id: lastMsgId,
+        }
+      );
+    }
+
+    // const backMsg = await bot.sendMessage(
+    //   chatId,
+    //   "Выберите действие:",
+    //   { reply_markup: backKeyboard() }
+    // );
+
+    // sentIds.push(backMsg.message_id);
+
+    setChatState(chatId, {
+      productsMessageIds: sentIds,
+      categoriesMessageId: undefined,
+    });
 
     // обязательно закрываем "часики" у кнопки
     await bot.answerCallbackQuery(query.id);

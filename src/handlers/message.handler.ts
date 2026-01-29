@@ -1,6 +1,7 @@
 import TelegramBot from "node-telegram-bot-api";
 import { MenuButtons } from "../constants/menu-buttons";
-import {pricesHandler} from "./prices.handler";
+import { pricesHandler } from "./prices.handler";
+import { setChatState } from "../cache/chat.cache";
 
 export function registerMessages(bot: TelegramBot) {
 	bot.on("message", async (msg) => {
@@ -12,6 +13,10 @@ export function registerMessages(bot: TelegramBot) {
 		switch (text) {
 			case MenuButtons.Prices:
 				await pricesHandler(bot, chatId);
+
+        setChatState(chatId, {
+          categoriesMessageId: msg.message_id,
+        });
 				break;
 
 			case "ℹ️ О боте":
