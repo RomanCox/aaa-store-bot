@@ -1,7 +1,7 @@
 import TelegramBot from "node-telegram-bot-api";
-import { MenuButtons } from "../constants/menu-buttons";
-import { pricesHandler } from "./prices.handler";
-import { setChatState } from "../cache/chat.cache";
+import { catalogHandler } from "./catalog/catalog.handler";
+import { MENU_TEXTS } from "../texts/menu.texts";
+import { removeNavigationMessage } from "../utils/removeNavigationMessage";
 
 export function registerMessages(bot: TelegramBot) {
 	bot.on("message", async (msg) => {
@@ -11,20 +11,19 @@ export function registerMessages(bot: TelegramBot) {
 		if (!text) return;
 
 		switch (text) {
-			case MenuButtons.Prices:
-				await pricesHandler(bot, chatId);
-
-        setChatState(chatId, {
-          categoriesMessageId: msg.message_id,
-        });
+			case MENU_TEXTS.CATALOG:
+				await removeNavigationMessage(bot, chatId);
+				await catalogHandler(bot, chatId);
 				break;
 
-			case "ℹ️ О боте":
-				await bot.sendMessage(
-					chatId,
-					"🤖 Это тестовый бот.\nДанные берутся из Google Sheets."
-				);
+			case MENU_TEXTS.ORDERS:
+				await removeNavigationMessage(bot, chatId);
 				break;
+
+			case MENU_TEXTS.CART:
+				await removeNavigationMessage(bot, chatId);
+				break;
+
 			default: break;
 		}
 	});

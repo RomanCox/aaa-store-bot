@@ -1,0 +1,18 @@
+[
+  {
+    "id": "ord_001",
+    "userId": 256626302,
+    "items": [
+      { "productId": "p1", "qty": 2 }
+    ],
+    "createdAt": "2026-01-30T12:30:00Z"
+  },
+  {
+    "id": "ord_002",
+    "userId": 100786066,
+    "items": [
+      { "productId": "p1", "qty": 2 }
+    ],
+    "createdAt": "2026-01-30T12:30:00Z"
+  }
+]

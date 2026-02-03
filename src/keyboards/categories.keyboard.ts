@@ -1,26 +1,30 @@
 import { InlineKeyboardMarkup } from "node-telegram-bot-api";
-import {Actions} from "../constants/actions";
+import { CALLBACK_TYPE, CATALOG_VALUE } from "../types/actions";
+import { COMMON_TEXTS } from "../texts/common.texts";
+import { CATALOG_TEXTS } from "../texts/catalog.texts";
+import { SECTION } from "../types/navigation";
+import { buildCallbackData } from "../utils/callbackBuilder";
 
 export function categoriesKeyboard(categories: string[]): InlineKeyboardMarkup {
-	const keyboard = [];
+	const keyboard: InlineKeyboardMarkup["inline_keyboard"] = [];
 
 	keyboard.push([
-		{ text: "📦 Все", callback_data: `category:${Actions.PricesAll}` },
+		{text: CATALOG_TEXTS.ALL, callback_data: buildCallbackData(SECTION.CATALOG_CATEGORIES, CATALOG_VALUE.ALL)},
 	]);
 
 	for (let i = 0; i < categories.length; i += 2) {
 		keyboard.push(
 			categories.slice(i, i + 2).map(cat => ({
 				text: cat,
-				callback_data: `category:${cat}`,
+				callback_data: buildCallbackData(SECTION.CATALOG_CATEGORIES, cat),
 			}))
 		);
 	}
 
 	keyboard.push(
-		[{ text: "⬅ Назад", callback_data: "prices:back" }],
-		[{ text: "📥 Скачать прайслист", callback_data: "prices:download" }]
+		[{text: COMMON_TEXTS.BACK_BUTTON, callback_data: buildCallbackData(CALLBACK_TYPE.CATALOG, CALLBACK_TYPE.BACK)}],
+		[{text: CATALOG_TEXTS.DOWNLOAD_CATALOG, callback_data: buildCallbackData(CALLBACK_TYPE.CATALOG, CALLBACK_TYPE.DOWNLOAD_XLSX)}]
 	);
 
-	return { inline_keyboard: keyboard };
+	return {inline_keyboard: keyboard};
 }

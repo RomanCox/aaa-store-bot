@@ -1,144 +1,132 @@
 import TelegramBot from "node-telegram-bot-api";
-import { getProductsByCategory } from "../cache/products.cache";
-import { splitMessage } from "../utils/telegram";
-import { getChatState, setChatState } from "../cache/chat.cache";
-import { getCategories } from "../services/categories.service";
-import { categoriesKeyboard } from "../keyboards/categories.keyboard";
-// import { backKeyboard } from "../keyboards/back.keyboard";
-// import {Actions} from "../constants/actions";
-// import { Actions } from "../constants/actions";
-// import { pricesKeyboard } from "../keyboards/prices.keyboard";
+import { CALLBACK_TYPE } from "../types/actions";
+import { setChatState } from "../state/chat.state";
+import { renderCatalogStep } from "./catalog/renderCatalogStep";
+import { parseCallbackData } from "../utils/parseCallbackData";
+import { SECTION } from "../types/navigation";
+import { handleBack } from "./back.handler";
 
 export function registerCallbacks(bot: TelegramBot) {
-  bot.on("callback_query", async (query) => {
-    const chatId = query.message?.chat.id;
-    if (!chatId || !query.data || !query.message) return;
+	bot.on("callback_query", async (query) => {
+		const chatId = query.message?.chat.id;
+		const messageId = query.message?.message_id;
+		const data = query.data;
 
-    // switch (query.data) {
-		// 	case Actions.PricesAll:
-		// 		await bot.sendMessage(chatId, "📦 Все товары");
-		// 		break;
-		//
-		// 	case Actions.PricesSmartphones:
-		// 		await bot.sendMessage(chatId, "📱 Смартфоны");
-		// 		break;
-		//
-		// 	case Actions.PricesLaptops:
-		// 		await bot.sendMessage(chatId, "💻 Ноутбуки");
-		// 		break;
-		//
-		// 	case Actions.PricesTablets:
-		// 		await bot.sendMessage(chatId, "📟 Планшеты");
-		// 		break;
-		//
-		// 	case Actions.PricesHeadphones:
-		// 		await bot.sendMessage(chatId, "🎧 Наушники");
-		// 		break;
-		//
-		// 	case Actions.PricesBack:
-		// 		await bot.editMessageText(
-		// 			"Выберите категорию 👇",
-		// 			{
-		// 				chat_id: chatId,
-		// 				message_id: query.message!.message_id,
-		// 				reply_markup: pricesKeyboard(),
-		// 			}
-		// 		);
-		// 		break;
-		//
-		// 	case Actions.PricesDownload:
-		// 		await bot.sendMessage(chatId, "📥 Готовлю прайслист...");
-		// 		break;
-		//
-    //   default:
-    //     await bot.sendMessage(chatId, "Неизвестная команда 🤷‍♂️");
-    // }
+		if (!chatId || !data) return;
 
-    const state = getChatState(chatId);
+		const { action, section, params } = parseCallbackData(data);
 
-    if (query.data === "back") {
-      if (state.productsMessageIds?.length) {
-        for (const id of state.productsMessageIds) {
-          await bot.deleteMessage(chatId, id).catch(() => {});
-        }
-      }
+		console.log(action, section, params)
 
-      const categories = await getCategories();
-      const msg = await bot.sendMessage(
-        chatId,
-        "Выберите категорию 👇",
-        { reply_markup: categoriesKeyboard(categories) }
-      );
+		if (action === CALLBACK_TYPE.CATALOG) {
+			switch (section) {
+				case SECTION.CATALOG:
+					setChatState(chatId, {
+						catalogStep: "products",
+						selectedBrand: undefined,
+						selectedCategory: undefined,
+					});
+					break;
 
-      setChatState(chatId, {
-        categoriesMessageId: msg.message_id,
-        productsMessageIds: [],
-      });
+				case SECTION.CATALOG_BRANDS: {
+					const [brand] = params;
 
-      await bot.answerCallbackQuery(query.id);
-      return;
-    }
+					setChatState(chatId, {
+						catalogStep: "categories",
+						selectedBrand: brand,
+						selectedCategory: undefined,
+					});
+					break;
+				}
 
-		if (!query.data.startsWith("category:")) return;
+				case SECTION.CATALOG_CATEGORIES: {
+					const [brand, category] = params;
 
-		const category = query.data.replace("category:", "");
+					setChatState(chatId, {
+						catalogStep: "products",
+						selectedBrand: brand,
+						selectedCategory: category,
+					});
+					break;
+				}
 
-    if (state.categoriesMessageId) {
-      await bot.deleteMessage(chatId, state.categoriesMessageId).catch(() => {});
-    }
+				case SECTION.CATALOG_DOWNLOAD_XLSX:
+					await bot.answerCallbackQuery(query.id, {
+						text: "Формирование прайса скоро будет доступно",
+						show_alert: true,
+					});
+					return;
+			}
 
-		const products = getProductsByCategory(category);
-
-		const text = products
-      .map(p => {
-        const main = [p.name, p.price].filter(Boolean).join(" - ");
-        return p.country ? `${main} ${p.country}` : main;
-      })
-      .filter(Boolean)
-			.join("\n");
-
-    if (!products.length || !text) {
-      await bot.sendMessage(chatId, "В этой категории пока нет товаров");
-      return;
-    }
-
-		const messages = splitMessage(text);
-    const sentIds: number[] = [];
-
-		for (const msg of messages) {
-      if (!msg || msg.trim() === "") continue;
-			const sentMessage = await bot.sendMessage(chatId, msg);
-      sentIds.push(sentMessage.message_id);
+			await renderCatalogStep(bot, chatId);
+			await bot.answerCallbackQuery(query.id);
+			return;
 		}
 
-    const lastMsgId = state?.productsMessageIds?.slice(-1)[0];
+		/** ================= BACK ================= */
+		if (data === CALLBACK_TYPE.BACK) {
+			// const state = getChatState(chatId);
+			//
+			// if (state.catalogStep === "products") {
+			// 	setChatState(chatId, {
+			// 		catalogStep: "categories",
+			// 		selectedCategory: undefined,
+			// 	});
+			// } else if (state.catalogStep === "categories") {
+			// 	setChatState(chatId, {
+			// 		catalogStep: "brands",
+			// 		selectedBrand: undefined,
+			// 	});
+			// }
+			//
+			// await renderCatalogStep(bot, chatId);
+			// await bot.answerCallbackQuery(query.id);
+			// return;
+			await handleBack(bot, chatId, messageId);
+			await bot.answerCallbackQuery(query.id);
+			return;
+		}
 
-    if (lastMsgId) {
-      await bot.editMessageReplyMarkup(
-        {
-          inline_keyboard: [[{ text: "⬅️ Назад", callback_data: "back" }]],
-        },
-        {
-          chat_id: chatId,
-          message_id: lastMsgId,
-        }
-      );
-    }
-
-    // const backMsg = await bot.sendMessage(
-    //   chatId,
-    //   "Выберите действие:",
-    //   { reply_markup: backKeyboard() }
-    // );
-
-    // sentIds.push(backMsg.message_id);
-
-    setChatState(chatId, {
-      productsMessageIds: sentIds,
-      categoriesMessageId: undefined,
-    });
-
-    // обязательно закрываем "часики" у кнопки
-    await bot.answerCallbackQuery(query.id);
-  });
+	// 	/** ================= CATALOG ================= */
+	// 	if (data.startsWith("catalog:")) {
+	// 		const [, action, value] = data.split(":");
+	//
+	// 		switch (action) {
+	// 			case CALLBACK_TYPE.ALL:
+	// 				setChatState(chatId, {
+	// 					catalogStep: "products",
+	// 					selectedBrand: undefined,
+	// 					selectedCategory: undefined,
+	// 				});
+	// 				break;
+	//
+	// 			case CALLBACK_TYPE.BRAND:
+	// 				setChatState(chatId, {
+	// 					catalogStep: "categories",
+	// 					selectedBrand: value,
+	// 					selectedCategory: undefined,
+	// 				});
+	// 				break;
+	//
+	// 			case CALLBACK_TYPE.CATEGORY:
+	// 				setChatState(chatId, {
+	// 					catalogStep: "products",
+	// 					selectedCategory: value,
+	// 				});
+	// 				break;
+	//
+	// 			case CALLBACK_TYPE.DOWNLOAD_XLSX:
+	// 				// TODO add function for create xlsx
+	// 				await bot.answerCallbackQuery(query.id, {
+	// 					text: "Формирование прайса скоро будет доступно",
+	// 					show_alert: true,
+	// 				});
+	// 				return;
+	// 		}
+	//
+	// 		await renderCatalogStep(bot, chatId);
+	// 		await bot.answerCallbackQuery(query.id);
+	// 		return;
+	// 	}
+	});
 }
