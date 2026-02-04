@@ -60,7 +60,7 @@ export function registerStart(bot: TelegramBot) {
 		}
 
 		setChatState(chatId, {
-			navigationMessageId: navMsg.message_id,
+      inlineMessageId: navMsg.message_id,
 			section: undefined,
 		});
 	});

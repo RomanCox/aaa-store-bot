@@ -1,5 +1,5 @@
 export const ADMIN_TEXTS = {
-	onlyAdmins: "⛔ Только для администраторов",
-	uploadXlsx: "📤 Загрузить XLSX",
-	manageUsers: "👨‍💼 Управление пользователями",
+	ONLY_ADMINS: "⛔ Только для администраторов",
+	UPLOAD_XLSX: "📤 Загрузить XLSX",
+	MANAGE_USERS: "👨‍💼 Управление пользователями",
 };

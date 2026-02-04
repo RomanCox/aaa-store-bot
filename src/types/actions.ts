@@ -1,5 +1,7 @@
 export enum CALLBACK_TYPE {
-	ADMIN = "admin",
+	// ADMIN = "admin",
+  UPLOAD_XLSX = "upload_xlsx",
+  MANAGE_USERS = "manage_users",
 	CATALOG = "catalog",
 	BRAND = "brand",
 	CATEGORY = "category",

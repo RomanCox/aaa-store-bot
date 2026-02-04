@@ -15,8 +15,7 @@ export function registerCallbacks(bot: TelegramBot) {
 		if (!chatId || !data) return;
 
 		const { action, section, params } = parseCallbackData(data);
-
-		console.log(action, section, params)
+    console.log(action, section, params)
 
 		if (action === CALLBACK_TYPE.CATALOG) {
 			switch (section) {
@@ -64,7 +63,7 @@ export function registerCallbacks(bot: TelegramBot) {
 		}
 
 		/** ================= BACK ================= */
-		if (data === CALLBACK_TYPE.BACK) {
+		if (action === CALLBACK_TYPE.BACK) {
 			// const state = getChatState(chatId);
 			//
 			// if (state.catalogStep === "products") {

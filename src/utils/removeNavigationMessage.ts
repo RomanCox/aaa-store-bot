@@ -6,7 +6,7 @@ export async function removeNavigationMessage(
 	chatId: number
 ) {
 	const state = getChatState(chatId);
-	const navMsgId = state?.navigationMessageId;
+	const navMsgId = state?.inlineMessageId;
 
 	if (!navMsgId) return;
 
@@ -21,6 +21,6 @@ export async function removeNavigationMessage(
 	}
 
 	setChatState(chatId, {
-		navigationMessageId: undefined,
+    inlineMessageId: undefined,
 	});
 }

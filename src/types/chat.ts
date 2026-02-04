@@ -14,5 +14,6 @@ export interface ChatState {
 	selectedVariantId?: string;
 
 	messageIds?: number[];
-	navigationMessageId?: number;
+	inlineMessageId?: number;
+  replyMessageId?: number;
 }

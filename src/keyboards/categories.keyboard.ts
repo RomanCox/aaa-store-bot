@@ -9,6 +9,7 @@ export function categoriesKeyboard(categories: string[]): InlineKeyboardMarkup {
 	const keyboard: InlineKeyboardMarkup["inline_keyboard"] = [];
 
 	keyboard.push([
+    //TODO check order of arguments in buildCallbackData
 		{text: CATALOG_TEXTS.ALL, callback_data: buildCallbackData(SECTION.CATALOG_CATEGORIES, CATALOG_VALUE.ALL)},
 	]);
 
@@ -16,12 +17,14 @@ export function categoriesKeyboard(categories: string[]): InlineKeyboardMarkup {
 		keyboard.push(
 			categories.slice(i, i + 2).map(cat => ({
 				text: cat,
+        //TODO check order of arguments in buildCallbackData
 				callback_data: buildCallbackData(SECTION.CATALOG_CATEGORIES, cat),
 			}))
 		);
 	}
 
 	keyboard.push(
+    //TODO check order of arguments in buildCallbackData
 		[{text: COMMON_TEXTS.BACK_BUTTON, callback_data: buildCallbackData(CALLBACK_TYPE.CATALOG, CALLBACK_TYPE.BACK)}],
 		[{text: CATALOG_TEXTS.DOWNLOAD_CATALOG, callback_data: buildCallbackData(CALLBACK_TYPE.CATALOG, CALLBACK_TYPE.DOWNLOAD_XLSX)}]
 	);

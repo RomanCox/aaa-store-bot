@@ -1,4 +1,5 @@
 export enum SECTION {
+  MAIN = "main",
 	ADMIN = "admin",
 	ADMIN_USERS = "admin_users",
 	CATALOG = "catalog",

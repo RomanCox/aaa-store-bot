@@ -7,6 +7,19 @@ import { renderCatalogStep } from "./catalog/renderCatalogStep";
 export async function handleBack(bot: TelegramBot, chatId: number, messageId?: number) {
 	const state = getChatState(chatId);
 
+  if (state.replyMessageId) {
+    await bot
+      .deleteMessage(chatId, state.replyMessageId)
+      .catch(err => {
+        console.error(
+          "❌ deleteMessage failed",
+          messageId,
+          err.response?.body || err.message
+        );
+      });
+    setChatState(chatId, { replyMessageId: undefined });
+  }
+
 	if (messageId) {
 		await bot
 			.deleteMessage(chatId, messageId)
@@ -41,6 +54,7 @@ export async function handleBack(bot: TelegramBot, chatId: number, messageId?: n
 
 		/** ---------------- CATALOG ---------------- */
 		case SECTION.CATALOG:
+      console.log(state)
 			break;
 		case SECTION.CATALOG_BRANDS:
 			setChatState(chatId, {
