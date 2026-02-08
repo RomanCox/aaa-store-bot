@@ -92,6 +92,10 @@ export function registerCallbacks(bot: TelegramBot) {
 				return;
 			}
 
+      case CALLBACK_TYPE.EDIT_USER: {
+        return;
+      }
+
 			case CALLBACK_TYPE.BRAND: {
 				await clearChatMessages(bot, chatId);
 

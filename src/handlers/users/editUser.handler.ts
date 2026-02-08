@@ -1,24 +1,29 @@
 import TelegramBot from "node-telegram-bot-api";
-import { deleteUser } from "../../services/users.service";
+import { deleteUser, isAdmin } from "../../services/users.service";
 import { setUserState } from "../../state/user.state";
-import { USERS_ERRORS, USERS_TEXTS } from "../../texts/users.texts";
+import { USERS_ERRORS } from "../../texts/users.texts";
 
-export async function deleteUserInputHandler(
+export async function editUserInputHandler(
 	bot: TelegramBot,
 	chatId: number,
 	text: string
 ) {
-	const userIdToDelete = Number(text.trim());
+	const userIdToEdit = Number(text.trim());
 
-	if (Number.isNaN(userIdToDelete)) {
+	if (Number.isNaN(userIdToEdit)) {
 		await bot.sendMessage(chatId, USERS_ERRORS.ID_NUMBER);
 		return;
 	}
 
-	if (userIdToDelete === chatId) {
-		await bot.sendMessage(chatId, USERS_ERRORS.DELETE_MYSELF);
+	if (userIdToEdit === chatId) {
+		await bot.sendMessage(chatId, USERS_ERRORS.EDIT_MYSELF);
 		return;
 	}
+
+  if (!isAdmin(chatId)) {
+    await bot.sendMessage(chatId, USERS_ERRORS.ONLY_ADMIN);
+    return;
+  }
 
 	try {
 		await deleteUser(userIdToDelete);
@@ -27,7 +32,7 @@ export async function deleteUserInputHandler(
 
 		await bot.sendMessage(
 			chatId,
-      USERS_TEXTS.DELETE_SUCCESSFUL,
+			"✅ Пользователь успешно удалён"
 		);
 	} catch (error) {
 		if (error instanceof Error) {
@@ -39,7 +44,7 @@ export async function deleteUserInputHandler(
 				default:
 					await bot.sendMessage(
 						chatId,
-						USERS_ERRORS.CANT_DELETE_USER,
+						"❌ Не удалось удалить пользователя"
 					);
 			}
 		}

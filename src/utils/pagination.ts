@@ -37,22 +37,30 @@ export function paginationKeyboard(
 	totalPages: number,
 	callbackPrefix: string
 ): TelegramBot.InlineKeyboardMarkup {
+  const buttons = [];
+
+  if (currentPage > 1) {
+    buttons.push({
+      text: COMMON_TEXTS.PREV,
+      callback_data: `${callbackPrefix}:prev`,
+    });
+  }
+
+  buttons.push({
+    text: `стр. ${currentPage} из ${totalPages}`,
+    callback_data: `${callbackPrefix}:goto`,
+  });
+
+  if (currentPage < totalPages) {
+    buttons.push({
+      text: COMMON_TEXTS.NEXT,
+      callback_data: `${callbackPrefix}:next`,
+    })
+  }
+
 	return {
 		inline_keyboard: [
-			[
-				{
-					text: COMMON_TEXTS.PREV,
-					callback_data: `${callbackPrefix}:prev`,
-				},
-				{
-					text: `стр. ${currentPage} из ${totalPages}`,
-					callback_data: `${callbackPrefix}:goto`,
-				},
-				{
-					text: COMMON_TEXTS.NEXT,
-					callback_data: `${callbackPrefix}:next`,
-				},
-			],
+			buttons,
 			[{
 				text: COMMON_TEXTS.BACK_BUTTON,
 				callback_data: CALLBACK_TYPE.BACK,

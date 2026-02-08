@@ -8,6 +8,7 @@ import { SECTION } from "../types/navigation";
 import { getUserState, setUserState } from "../state/user.state";
 import { deleteUserInputHandler } from "./users/deleteUser.handler";
 import { pageInputHandler } from "../utils/pagination";
+import { editUserInputHandler } from "./users/editUser.handler";
 
 export function registerMessages(bot: TelegramBot) {
 	bot.on("message", async (msg) => {
@@ -18,10 +19,19 @@ export function registerMessages(bot: TelegramBot) {
 
 		const userState = getUserState(chatId);
 
+    if (userState.mode === "add_user") {
+      return;
+    }
+
 		if (userState.mode === "delete_user") {
 			await deleteUserInputHandler(bot, chatId, text);
 			return;
 		}
+
+    if (userState.mode === "edit_user") {
+      await editUserInputHandler(bot, chatId, text);
+      return;
+    }
 
 		if (userState.mode === "await_page_number") {
 			await pageInputHandler(bot, chatId, text);
