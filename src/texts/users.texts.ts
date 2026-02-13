@@ -1,4 +1,4 @@
-import { UserRole } from "../types/user";
+import { UserRole } from "../types";
 
 export enum USERS_ERRORS {
 	FAILED_LOAD = "Failed to load users.json",

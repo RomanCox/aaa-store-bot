@@ -1,6 +1,6 @@
 import { InlineKeyboardMarkup } from "node-telegram-bot-api";
-import { CALLBACK_TYPE, CATALOG_VALUE, SECTION } from "../types";
-import { CART_TEXTS, CATALOG_TEXTS } from "../texts";
+import { CALLBACK_TYPE, SECTION } from "../types";
+import { CART_TEXTS } from "../texts";
 import { buildCallbackData } from "../utils";
 import { COMMON_TEXTS } from "../texts";
 import { ProductForCart } from "../types";

@@ -2,7 +2,7 @@ import { CALLBACK_TYPE, ChatMode } from "../types";
 import { savePriceFormation } from "../services/price.service";
 import { getChatState, registerBotMessage, setChatState } from "../state/chat.state";
 import TelegramBot from "node-telegram-bot-api";
-import { COMMON_TEXTS, PRICE_ERRORS, PRICE_TEXTS, USERS_ERRORS, USERS_TEXTS } from "../texts";
+import { COMMON_TEXTS, PRICE_ERRORS, PRICE_TEXTS } from "../texts";
 
 export async function editPriceInputHandler(
 	bot: TelegramBot,
@@ -32,7 +32,7 @@ export async function editPriceInputHandler(
 				}]]
 			}
 		});
-
+		registerBotMessage(chatId, msg.message_id);
 		return;
 	}
 

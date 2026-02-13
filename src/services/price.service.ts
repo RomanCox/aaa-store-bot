@@ -1,11 +1,10 @@
 import fs from "fs";
 import path from "path";
 import TelegramBot from "node-telegram-bot-api";
-import { CALLBACK_TYPE, ChatMode, PriceFormation, PriceFormationUpdate, UserRole } from "../types";
-import { clearChatMessages } from "../utils/clearChatMessages";
+import { CALLBACK_TYPE, ChatMode, PriceFormation, PriceFormationUpdate } from "../types";
+import { clearChatMessages } from "../utils";
 import { registerBotMessage, setChatState } from "../state/chat.state";
 import { COMMON_TEXTS, PRICE_TEXTS } from "../texts";
-import { priceFormat } from "../utils/priceFormat";
 import { getUserRole } from "./users.service";
 
 const PRICE_FORMATION_PATH = path.resolve(__dirname, "../data/price_formation.json");

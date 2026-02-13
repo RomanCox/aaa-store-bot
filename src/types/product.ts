@@ -31,4 +31,4 @@ export interface ProductFilters {
 	category?: string;
 	model?: string;
 	storage?: string;
-};
+}

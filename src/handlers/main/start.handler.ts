@@ -3,13 +3,13 @@ import TelegramBot from "node-telegram-bot-api";
 import { ENV } from "../../config/env";
 import { mainKeyboard } from "../../keyboards";
 import { getUser, isAdmin } from "../../services/users.service";
-import { AUTH_TEXTS } from "../../texts/auth.texts";
-import { START_TEXTS } from "../../texts/start.texts";
-import { START_ACTIONS } from "../../types/actions";
-import { getWelcomeText } from "../../texts/welcome.texts";
+import { AUTH_TEXTS } from "../../texts";
+import { START_TEXTS } from "../../texts";
+import { START_ACTIONS } from "../../types";
+import { getWelcomeText } from "../../texts";
 import { setChatState } from "../../state/chat.state";
 import { renderAdminPanel } from "./renderAdminPanel";
-import { SECTION } from "../../types/navigation";
+import { SECTION } from "../../types";
 
 export function registerStart(bot: TelegramBot) {
 	bot.onText(/\/start/, async (msg) => {

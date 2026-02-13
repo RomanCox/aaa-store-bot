@@ -5,7 +5,7 @@ import { parseXlsxToProducts } from "../services/xlsx.service";
 import { saveProducts } from "../services/products.service";
 import { isAdmin } from "../services/users.service";
 import { getChatState, registerBotMessage, setChatState } from "../state/chat.state";
-import { ADMIN_TEXTS } from "../texts/admin.texts";
+import { ADMIN_TEXTS } from "../texts";
 
 export function registerDocumentHandler(bot: TelegramBot) {
 	bot.on("document", async (query) => {

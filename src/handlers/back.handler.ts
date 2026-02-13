@@ -1,10 +1,10 @@
 import TelegramBot from "node-telegram-bot-api";
 import { getChatState, setChatState } from "../state/chat.state";
-import { SECTION } from "../types/navigation";
-import { clearChatMessages } from "../utils/clearChatMessages";
+import { SECTION } from "../types";
+import { clearChatMessages } from "../utils";
 import { startUserManagement } from "../services/admin.service";
 
-export async function handleBack(bot: TelegramBot, chatId: number, messageId?: number) {
+export async function handleBack(bot: TelegramBot, chatId: number) {
 	const state = getChatState(chatId);
 	await clearChatMessages(bot, chatId);
 

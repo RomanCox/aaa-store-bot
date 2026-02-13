@@ -1,5 +1,5 @@
 import { InlineKeyboardMarkup } from "node-telegram-bot-api";
-import { CALLBACK_TYPE, CATALOG_VALUE, SECTION } from "../types";
+import { CALLBACK_TYPE, SECTION } from "../types";
 import { COMMON_TEXTS } from "../texts";
 import { stringWithoutSpaces, buildCallbackData } from "../utils";
 

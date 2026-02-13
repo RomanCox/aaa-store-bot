@@ -1,5 +1,4 @@
 import { Product } from "../types";
-import { normalizeModel } from "./stringFormat";
 
 const TELEGRAM_MESSAGE_LIMIT = 4096;
 
@@ -112,15 +111,9 @@ function shouldSplitMessage({
 	// 2️⃣ Проверка группировки внутри бренда
 	const currentGroupKey = getProductGroupKey(product);
 
-	if (
-		prevGroupKey &&
+	return !!(prevGroupKey &&
 		currentGroupKey &&
-		prevGroupKey !== currentGroupKey
-	) {
-		return true;
-	}
-
-	return false;
+		prevGroupKey !== currentGroupKey);
 }
 
 export function buildMessages(products: Product[]): string[] {

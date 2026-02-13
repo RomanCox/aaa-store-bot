@@ -1,5 +1,5 @@
 import { InlineKeyboardMarkup } from "node-telegram-bot-api";
-import { CALLBACK_TYPE, CATALOG_VALUE, Product, SECTION } from "../types";
+import { CALLBACK_TYPE, Product, SECTION } from "../types";
 import { CART_TEXTS, COMMON_TEXTS } from "../texts";
 import { buildCallbackData } from "../utils";
 import { getChatState } from "../state/chat.state";
