@@ -30,6 +30,14 @@ export enum CALLBACK_TYPE {
 	INCREASE_AMOUNT = "increase_amount",
 	DECREASE_AMOUNT = "decrease_amount",
 	DELETE_POSITION_FROM_CART = "delete_product_from_cart",
+  ORDERS = "orders",
+  CHOOSE_ORDER = "choose_order",
+}
+
+export enum PAGINATION {
+  NEXT = "next",
+  PREV = "prev",
+  GOTO = "goto",
 }
 
 export enum START_ACTIONS {

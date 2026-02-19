@@ -1,12 +1,15 @@
-import { InlineKeyboardMarkup } from "node-telegram-bot-api";
+import { InlineKeyboardButton } from "node-telegram-bot-api";
 import { CALLBACK_TYPE, SECTION } from "../types";
 import { CART_TEXTS } from "../texts";
 import { buildCallbackData } from "../utils";
 import { COMMON_TEXTS } from "../texts";
 import { ProductForCart } from "../types";
 
-export function cartRootKeyboard(currentOrder: ProductForCart[] = [], options?: { showBack?: boolean }): InlineKeyboardMarkup {
-	const keyboard = [];
+export function cartRootKeyboard(
+  currentOrder: ProductForCart[] = [],
+  options?: { showBack?: boolean }
+): InlineKeyboardButton[][] {
+	const keyboard: InlineKeyboardButton[][] = [];
 
 	if (!currentOrder.length) {
 		keyboard.push([
@@ -51,5 +54,6 @@ export function cartRootKeyboard(currentOrder: ProductForCart[] = [], options?: 
 		]);
 	}
 
-	return {inline_keyboard: keyboard};
+	// return {inline_keyboard: keyboard};
+	return keyboard;
 }

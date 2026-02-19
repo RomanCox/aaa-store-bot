@@ -6,6 +6,7 @@ import { resolveBrandFromName } from "./brand-resolver.service";
 import { CATALOG_TEXTS } from "../texts";
 import TelegramBot from "node-telegram-bot-api";
 import { getChatState } from "../state/chat.state";
+import { renderScreen } from "../render/renderScreen";
 
 const COLUMN_MAP: Record<string, keyof Product> = {
 	"SKU": "id",
@@ -133,7 +134,7 @@ export async function sendPriceList(
 	products: Product[]
 ) {
 	if (!products.length) {
-		await bot.sendMessage(chatId, CATALOG_TEXTS.NOT_ITEMS_FOR_DOWNLOAD);
+		await renderScreen(bot, chatId, CATALOG_TEXTS.NOT_ITEMS_FOR_DOWNLOAD);
 		return;
 	}
 

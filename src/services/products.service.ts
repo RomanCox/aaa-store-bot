@@ -4,9 +4,9 @@ import { Product, ProductFilters } from "../types";
 import { priceFormat } from "../utils";
 import { getUser } from "./users.service";
 import { getPriceFormation } from "./price.service";
-import { sortProducts, stringWithoutSpaces } from "../utils";
+import { sortProducts } from "../utils";
 
-const PRODUCTS_PATH = path.resolve("src/data/products.json");
+const PRODUCTS_PATH = path.resolve(__dirname, "../data/products.json");
 let products = new Map<string, Product>();
 
 export const tempExports = new Map<string, string[]>();

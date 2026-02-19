@@ -1,4 +1,4 @@
-import { InlineKeyboardMarkup } from "node-telegram-bot-api";
+import { InlineKeyboardButton } from "node-telegram-bot-api";
 import { CALLBACK_TYPE, SECTION } from "../types";
 import { COMMON_TEXTS } from "../texts";
 import { buildCallbackData } from "../utils";
@@ -6,8 +6,8 @@ import { buildCallbackData } from "../utils";
 const AMOUNT = 10;
 const BUTTONS_IN_RAW = 5;
 
-export function choosingAmountKeyboard(): InlineKeyboardMarkup {
-	const keyboard: InlineKeyboardMarkup["inline_keyboard"] = [];
+export function choosingAmountKeyboard(): InlineKeyboardButton[][] {
+	const keyboard: InlineKeyboardButton[][] = [];
 
 	const numbers = Array.from({ length: AMOUNT }, (_, i) => i + 1);
 
@@ -24,5 +24,5 @@ export function choosingAmountKeyboard(): InlineKeyboardMarkup {
 		 [{text: COMMON_TEXTS.BACK_BUTTON, callback_data: buildCallbackData(CALLBACK_TYPE.BACK, SECTION.CART)}]
 	);
 
-	return {inline_keyboard: keyboard};
+	return keyboard;
 }

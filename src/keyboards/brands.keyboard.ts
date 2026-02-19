@@ -1,4 +1,4 @@
-import { InlineKeyboardMarkup } from "node-telegram-bot-api";
+import { InlineKeyboardButton } from "node-telegram-bot-api";
 import { CALLBACK_TYPE, CATALOG_VALUE, SECTION } from "../types";
 import { CATALOG_TEXTS } from "../texts";
 import { buildCallbackData } from "../utils";
@@ -6,8 +6,11 @@ import { COMMON_TEXTS } from "../texts";
 
 const BUTTONS_IN_RAW = 2;
 
-export function brandsKeyboard(brands: string[], options?: { withAllBtn?: boolean, withDownloadBtn?: boolean, showBack?: boolean }): InlineKeyboardMarkup {
-	const keyboard = [];
+export function brandsKeyboard(
+  brands: string[],
+  options?: { withAllBtn?: boolean, withDownloadBtn?: boolean, showBack?: boolean }
+): InlineKeyboardButton[][] {
+	const keyboard: InlineKeyboardButton[][] = [];
 
 	if (options?.withAllBtn) {
 		keyboard.push([
@@ -43,5 +46,5 @@ export function brandsKeyboard(brands: string[], options?: { withAllBtn?: boolea
 	}
 
 
-	return {inline_keyboard: keyboard};
+	return keyboard;
 }

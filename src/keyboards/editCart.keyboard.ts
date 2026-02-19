@@ -1,4 +1,4 @@
-import { InlineKeyboardMarkup } from "node-telegram-bot-api";
+import { InlineKeyboardButton } from "node-telegram-bot-api";
 import { CALLBACK_TYPE, SECTION } from "../types";
 import { COMMON_TEXTS } from "../texts";
 import { buildCallbackData } from "../utils";
@@ -6,8 +6,8 @@ import { getChatState } from "../state/chat.state";
 
 const BUTTONS_IN_RAW = 5;
 
-export function editCartKeyboard(chatId: number): InlineKeyboardMarkup {
-	const keyboard: InlineKeyboardMarkup["inline_keyboard"] = [];
+export function editCartKeyboard(chatId: number): InlineKeyboardButton[][] {
+	const keyboard: InlineKeyboardButton[][] = [];
 
 	const state = getChatState(chatId);
 
@@ -26,5 +26,5 @@ export function editCartKeyboard(chatId: number): InlineKeyboardMarkup {
 		{text: COMMON_TEXTS.BACK_BUTTON, callback_data: buildCallbackData(CALLBACK_TYPE.BACK, SECTION.CART)},
 	]);
 
-	return {inline_keyboard: keyboard};
+	return keyboard;
 }

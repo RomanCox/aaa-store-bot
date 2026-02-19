@@ -1,7 +1,7 @@
 import TelegramBot from "node-telegram-bot-api";
 import { CART_TEXTS, MENU_TEXTS } from "../texts";
-import { clearChatMessages, pageInputHandler, removeNavigationMessage } from "../utils";
-import { getChatState, registerBotMessage, setChatState } from "../state/chat.state";
+import { removeNavigationMessage } from "../utils";
+import { getChatState, setChatState } from "../state/chat.state";
 import { ProductForCart, SECTION } from "../types";
 import { deleteUserInputHandler } from "./users/deleteUser.handler";
 import { editUserInputHandler } from "./users/editUser.handler";
@@ -9,6 +9,9 @@ import { addUserInputHandler } from "./users/addUser.handler";
 import { editPriceInputHandler } from "./price.handler";
 import { getProductById } from "../services/products.service";
 import { renderFlow } from "./renderFlow";
+import { ordersHandler, ordersPageInputHandler } from "./orders.handler";
+import { usersPageInputHandler } from "../services/users.service";
+import { renderScreen } from "../render/renderScreen";
 
 export function registerMessages(bot: TelegramBot) {
 	bot.on("message", async (msg) => {
@@ -20,19 +23,16 @@ export function registerMessages(bot: TelegramBot) {
 		const state = getChatState(chatId);
 
     if (state.mode === "add_user") {
-			await clearChatMessages(bot, chatId);
 			await addUserInputHandler(bot, chatId, text);
       return;
     }
 
 		if (state.mode === "delete_user") {
-			await clearChatMessages(bot, chatId);
 			await deleteUserInputHandler(bot, chatId, text);
 			return;
 		}
 
     if (state.mode === "edit_user") {
-			await clearChatMessages(bot, chatId);
       await editUserInputHandler(bot, chatId, text);
       return;
     }
@@ -40,31 +40,38 @@ export function registerMessages(bot: TelegramBot) {
 		if (
 			["edit_rub_to_byn", "edit_rub_to_usd", "edit_retail_mult", "edit_wholesale_mult"].includes(state.mode)
 		) {
-			await clearChatMessages(bot, chatId);
 			await editPriceInputHandler(bot, chatId, text);
 			return;
 		}
 
-		if (state.mode === "await_page_number") {
-			await pageInputHandler(bot, chatId, text);
+		if (state.mode === "await_users_page_number") {
+			await usersPageInputHandler(bot, chatId, text);
 			setChatState(chatId, { mode: "idle" });
 			return;
 		}
 
-		if (state.mode === "amount_product_for_cart") {
-			await clearChatMessages(bot, chatId);
+    if (state.mode === "await_orders_page_number") {
+      await ordersPageInputHandler(bot, chatId, text);
+      setChatState(chatId, { mode: "idle" });
+      return;
+    }
 
+    if (state.mode === "choose_userId_for_orders") {
+      await ordersHandler(bot, chatId, text);
+      setChatState(chatId, { mode: "idle" });
+      return;
+    }
+
+		if (state.mode === "amount_product_for_cart") {
 			if (Number.isNaN(text)) {
-				const msg = await bot.sendMessage(chatId, CART_TEXTS.AMOUNT_WILL_BE_NUMBER);
-				registerBotMessage(chatId, msg.message_id);
+        await renderScreen(bot, chatId, CART_TEXTS.AMOUNT_WILL_BE_NUMBER);
 				return;
 			}
 
 			const choseProduct = getProductById(chatId, state.selectedProductId);
 
 			if (!choseProduct) {
-				const msg = await bot.sendMessage(chatId, CART_TEXTS.PRODUCT_UNAVAILABLE);
-				registerBotMessage(chatId, msg.message_id);
+        await renderScreen(bot, chatId, CART_TEXTS.PRODUCT_UNAVAILABLE);
 				return;
 			}
 
@@ -87,8 +94,6 @@ export function registerMessages(bot: TelegramBot) {
 		}
 
 		if (state.mode === "edit_product_amount_in_cart") {
-			await clearChatMessages(bot, chatId);
-
 			if (!state.currentOrder?.length || state.selectedProductIdForCart || Number.isNaN(text)) {
 				return;
 			}
@@ -109,7 +114,6 @@ export function registerMessages(bot: TelegramBot) {
 
 		switch (text) {
 			case MENU_TEXTS.CATALOG:
-				await clearChatMessages(bot, chatId);
 				await removeNavigationMessage(bot, chatId);
         setChatState(chatId, {
 					section: SECTION.CATALOG,
@@ -125,7 +129,6 @@ export function registerMessages(bot: TelegramBot) {
 				break;
 
 			case MENU_TEXTS.ORDERS:
-				await clearChatMessages(bot, chatId);
 				await removeNavigationMessage(bot, chatId);
         setChatState(chatId, {
 					section: SECTION.ORDERS,
@@ -136,11 +139,11 @@ export function registerMessages(bot: TelegramBot) {
 					selectedProductId: undefined,
           replyMessageId: msg.message_id,
         });
-        //TODO add logic for open orders menu
+
+        await ordersHandler(bot, chatId);
 				break;
 
 			case MENU_TEXTS.CART:
-				await clearChatMessages(bot, chatId);
 				await removeNavigationMessage(bot, chatId);
         setChatState(chatId, {
 					section: SECTION.CART,

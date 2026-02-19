@@ -1,7 +1,11 @@
 import fs from "fs";
 import path from "path";
 import { User, UserRole } from "../types";
-import { USERS_ERRORS } from "../texts";
+import { PAGINATION_TEXTS, USERS_ERRORS } from "../texts";
+import TelegramBot from "node-telegram-bot-api";
+import { getChatState, setChatState } from "../state/chat.state";
+import { showUsersList } from "../handlers/users/users.handler";
+import { renderScreen } from "../render/renderScreen";
 
 const USERS_PATH = path.resolve(__dirname, "../data/users.json");
 
@@ -82,4 +86,28 @@ export function isAdmin(userId: number): boolean {
 
 export function isSuperAdmin(userId: number): boolean {
 	return users.get(userId)?.role === "superadmin";
+}
+
+export async function usersPageInputHandler(
+  bot: TelegramBot,
+  chatId: number,
+  text: string
+) {
+  const page = Number(text);
+  const state = getChatState(chatId);
+
+  if (!Number.isInteger(page) || page < 1) {
+    await renderScreen(bot, chatId, PAGINATION_TEXTS.ERROR_PAGE);
+    return;
+  }
+
+  if (page < 1 || page > (state.usersTotalPages ?? 0)) {
+    await renderScreen(bot, chatId, PAGINATION_TEXTS.PAGE_FROM_TO + state.usersTotalPages);
+    return;
+  }
+
+  setChatState(chatId, {
+    usersPage: page,
+  });
+  await showUsersList(bot, chatId);
 }

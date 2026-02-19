@@ -11,15 +11,19 @@ export type ChatMode = "idle"
 	| "edit_retail_mult"
 	| "edit_wholesale_mult"
 	| "amount_product_for_cart"
-	| "await_page_number"
+	| "await_users_page_number"
+	| "await_orders_page_number"
+	| "choose_userId_for_orders"
 	| "edit_product_amount_in_cart";
 
-export interface ChatState {
+export interface IChatState {
 	section?: SECTION;
 	mode: ChatMode;
 
-	page?: number;
-	totalPages?: number;
+	usersPage?: number;
+	usersTotalPages?: number;
+  ordersPage?: number;
+  ordersTotalPages?: number;
 
 	adminStep?: ManageUsersStep;
 	editingUserId?: number;
@@ -37,6 +41,7 @@ export interface ChatState {
   lastProductGroups?: Product[][];
 	currentOrder?: ProductForCart[];
 
+  currentMessageId?: number;
 	messageIds?: number[];
 	inlineMessageId?: number;
   replyMessageId?: number;

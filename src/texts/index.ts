@@ -4,6 +4,7 @@ export * from "./cart.texts";
 export * from "./catalog.texts";
 export * from "./common.texts";
 export * from "./menu.texts";
+export * from "./order.texts";
 export * from "./pagination.texts";
 export * from "./price.texts";
 export * from "./start.texts";
