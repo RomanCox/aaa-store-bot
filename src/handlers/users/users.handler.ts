@@ -1,9 +1,10 @@
 import TelegramBot from "node-telegram-bot-api";
 import { getAllUsers } from "../../services/users.service";
-import { paginationKeyboard } from "../../utils/pagination";
+import { paginate, paginationKeyboard } from "../../utils";
 import { getChatState, setChatState } from "../../state/chat.state";
-import { clearChatMessages } from "../../utils/clearChatMessages";
-import { CALLBACK_TYPE } from "../../types/actions";
+import { CALLBACK_TYPE } from "../../types";
+import { renderScreen } from "../../render/renderScreen";
+import { COMMON_TEXTS, USERS_TEXTS } from "../../texts";
 
 const USERS_PER_PAGE = 5;
 
@@ -12,69 +13,73 @@ export async function openUsersList(
 	chatId: number
 ) {
 	const users = getAllUsers();
-	const totalPages = Math.max(
+	const usersTotalPages = Math.max(
 		1,
 		Math.ceil(users.length / USERS_PER_PAGE)
 	);
 
 	setChatState(chatId, {
-		page: 1,
-		totalPages,
+    usersPage: 1,
+		usersTotalPages,
 	});
 
-	await clearChatMessages(bot, chatId);
 	await showUsersList(bot, chatId);
 }
 
 export async function showUsersList(
-	bot: TelegramBot,
-	chatId: number
+  bot: TelegramBot,
+  chatId: number
 ) {
-	const state = getChatState(chatId);
-	const page = state.page ?? 1;
+  const state = getChatState(chatId);
+  const requestedPage = state.usersPage ?? 1;
 
-	const users = getAllUsers();
-	const totalPages = Math.max(
-		1,
-		Math.ceil(users.length / USERS_PER_PAGE)
-	);
+  const users = getAllUsers();
+  const { items, currentPage, totalPages } = paginate(
+    users,
+    requestedPage,
+    USERS_PER_PAGE
+  );
 
-	setChatState(chatId, {
-		adminStep: "users_list",
-		page,
-		totalPages,
-		messageIds: [],
-	});
+  setChatState(chatId, {
+    adminStep: "users_list",
+    usersPage: currentPage,
+    usersTotalPages: totalPages,
+  });
 
-	const start = (page - 1) * USERS_PER_PAGE;
-	const slice = users.slice(start, start + USERS_PER_PAGE);
+  if (items.length === 0) {
+    await renderScreen(
+      bot,
+      chatId,
+      USERS_TEXTS.USER_LIST_EMPTY,
+      [[{
+        text: COMMON_TEXTS.BACK_BUTTON,
+        callback_data: CALLBACK_TYPE.BACK,
+      }]],
+      "HTML"
+    );
+    return;
+  }
 
-	for (let i = 0; i < slice.length; i++) {
-		const user = slice[i];
-		const isLast = i === slice.length - 1;
+  const text =
+    `<b>Список пользователей</b>\n\n` +
+    items
+      .map(
+        (user) =>
+          USERS_TEXTS.USER +
+          `🆔 <code>${user.id}</code>\n` +
+          `🔐 <b>${user.role}</b>\n`
+      )
+      .join("\n");
 
-		const text = `👤 Пользователь:\n` +
-				`🆔 <code>${user.id}</code>\n` +
-				`🔐 <b>${user.role}</b>`;
-
-		const msg = await bot.sendMessage(
-			chatId,
-			text,
-			isLast
-				? {
-					parse_mode: "HTML",
-					reply_markup: paginationKeyboard(
-						page,
-						totalPages,
-						CALLBACK_TYPE.USERS_LIST
-					),
-				}
-				: { parse_mode: "HTML", },
-		);
-
-		const currentState = getChatState(chatId);
-		setChatState(chatId, {
-			messageIds: [...(currentState.messageIds ?? []), msg.message_id],
-		});
-	}
+  await renderScreen(
+    bot,
+    chatId,
+    text,
+    paginationKeyboard(
+      currentPage,
+      totalPages,
+      CALLBACK_TYPE.USERS_LIST
+    ),
+    "HTML"
+  );
 }

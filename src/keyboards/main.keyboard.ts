@@ -1,5 +1,5 @@
 import { ReplyKeyboardMarkup, KeyboardButton } from "node-telegram-bot-api";
-import { MENU_TEXTS } from "../texts/menu.texts";
+import { MENU_TEXTS } from "../texts";
 
 export function mainKeyboard(): ReplyKeyboardMarkup {
 	const pricesButton: KeyboardButton = {text: MENU_TEXTS.CATALOG};

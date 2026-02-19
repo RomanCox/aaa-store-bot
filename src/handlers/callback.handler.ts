@@ -1,20 +1,21 @@
 import TelegramBot from "node-telegram-bot-api";
 import { CALLBACK_TYPE, CATALOG_VALUE, Product, ProductForCart, SECTION, UserRole } from "../types";
-import { getChatState, registerBotMessage, setChatState } from "../state/chat.state";
+import { getChatState, setChatState } from "../state/chat.state";
 import { renderFlow } from "./renderFlow";
 import { parseCallbackData, removeNavigationMessage } from "../utils";
 import { handleBack } from "./back.handler";
 import { addUser, deleteUser, editUser, startUserManagement, startXlsxUpload } from "../services/admin.service";
 import { renderAdminPanel } from "./main/renderAdminPanel";
-import { clearChatMessages } from "../utils";
-import { getProductById, getProducts, tempExports } from "../services/products.service";
+import { getProductById, tempExports } from "../services/products.service";
 import { renderProductsList } from "../render/renderProductsList";
-import { openUsersList, showUsersList } from "./users/users.handler";
+import { showUsersList } from "./users/users.handler";
 import { CART_TEXTS, COMMON_TEXTS, PAGINATION_TEXTS, USERS_ERRORS, USERS_TEXTS } from "../texts";
 import { createUser, updateUserRole } from "../services/users.service";
 import { sendPriceList } from "../services/xlsx.service";
 import { editPriceFormation } from "../services/price.service";
-import { buildOrderMessage, createOrder } from "../services/orders.service";
+import { addOrder, buildOrderMessage, createOrder } from "../services/orders.service";
+import { orderHandler, ordersHandler } from "./orders.handler";
+import { renderScreen } from "../render/renderScreen";
 
 const ADMIN_CHAT_ID = Number(process.env.ADMIN_CHAT_ID);
 
@@ -63,33 +64,53 @@ export function registerCallbacks(bot: TelegramBot) {
 				return;
 			}
 
-			case CALLBACK_TYPE.USERS_LIST: {
-				const paramValue = params[0];
+      case CALLBACK_TYPE.USERS_LIST: {
+        const paramValue = params[0];
 
-				if (!paramValue) {
-					await openUsersList(bot, chatId);
-					return;
-				}
+        // Открыть список заново
+        if (!paramValue) {
+          await showUsersList(bot, chatId);
+          return;
+        }
 
-				if (paramValue === "goto") {
-					setChatState(chatId, { mode: "await_page_number" });
-					await bot.sendMessage(chatId, PAGINATION_TEXTS.ENTER_PAGE_NUMBER);
-					return;
-				}
+        const state = getChatState(chatId);
+        let newPage = state.usersPage ?? 1;
 
-				const state = getChatState(chatId);
-				let newPage = state.page ?? 1;
-				if (paramValue === "next") newPage++;
-				if (paramValue === "prev") newPage--;
+        if (paramValue === "next") newPage++;
+        if (paramValue === "prev") newPage--;
 
-				setChatState(chatId, {
-					page: newPage,
-				});
+        if (paramValue === "goto") {
+          setChatState(chatId, {
+            ...state,
+            mode: "await_users_page_number",
+          });
 
-				await clearChatMessages(bot, chatId);
-				await showUsersList(bot, chatId);
-				return;
-			}
+          // ⚠ если хочешь остаться в рамках одного сообщения:
+          await renderScreen(
+            bot,
+            chatId,
+            PAGINATION_TEXTS.ENTER_PAGE_NUMBER,
+            [
+              [
+                {
+                  text: COMMON_TEXTS.BACK_BUTTON,
+                  callback_data: CALLBACK_TYPE.USERS_LIST,
+                },
+              ],
+            ],
+            "HTML"
+          );
+          return;
+        }
+
+        setChatState(chatId, {
+          ...state,
+          usersPage: newPage,
+        });
+
+        await showUsersList(bot, chatId);
+        return;
+      }
 
 			case CALLBACK_TYPE.ADD_USER: {
 				await addUser(bot, chatId);
@@ -111,7 +132,7 @@ export function registerCallbacks(bot: TelegramBot) {
 				const state = getChatState(chatId);
 
 				if (!state.newUserId) {
-					await bot.sendMessage(chatId, USERS_ERRORS.USER_NOT_CHOOSE_MESSAGE);
+          await renderScreen(bot, chatId, USERS_ERRORS.USER_NOT_CHOOSE_MESSAGE);
 					return;
 				}
 
@@ -119,14 +140,10 @@ export function registerCallbacks(bot: TelegramBot) {
 
 				setChatState(chatId, { mode: "idle" });
 
-				await clearChatMessages(bot, chatId);
-
-				const msg = await bot.sendMessage(chatId, USERS_TEXTS.ADD_SUCCESSFUL, {
-					reply_markup: {
-						inline_keyboard: [[{ text: COMMON_TEXTS.BACK_BUTTON, callback_data: CALLBACK_TYPE.BACK }]]
-					}
-				});
-				registerBotMessage(chatId, msg.message_id);
+        await renderScreen(bot, chatId, USERS_TEXTS.ADD_SUCCESSFUL, [[{
+          text: COMMON_TEXTS.BACK_BUTTON,
+          callback_data: CALLBACK_TYPE.BACK
+        }]]);
 				return;
 			}
 
@@ -135,7 +152,7 @@ export function registerCallbacks(bot: TelegramBot) {
         const state = getChatState(chatId);
 
         if (!state.editingUserId) {
-          await bot.sendMessage(chatId, USERS_ERRORS.USER_NOT_CHOOSE_MESSAGE);
+          await renderScreen(bot, chatId, USERS_ERRORS.USER_NOT_CHOOSE_MESSAGE);
           return;
         }
 
@@ -143,18 +160,10 @@ export function registerCallbacks(bot: TelegramBot) {
 
         setChatState(chatId, { mode: "idle" });
 
-				await clearChatMessages(bot, chatId);
-
-        const msg = await bot.sendMessage(
-          chatId,
-          USERS_TEXTS.ROLE_RENEWED + role,
-          {
-            reply_markup: {
-              inline_keyboard: [[{ text: COMMON_TEXTS.BACK_BUTTON, callback_data: CALLBACK_TYPE.BACK }]]
-            }
-          }
-        );
-        registerBotMessage(chatId, msg.message_id);
+        await renderScreen(bot, chatId, USERS_TEXTS.ROLE_RENEWED + role, [[{
+          text: COMMON_TEXTS.BACK_BUTTON,
+          callback_data: CALLBACK_TYPE.BACK
+        }]]);
         return;
       }
 
@@ -179,8 +188,6 @@ export function registerCallbacks(bot: TelegramBot) {
 			}
 
 			case CALLBACK_TYPE.BRAND: {
-				await clearChatMessages(bot, chatId);
-
 				const [brandValue] = params;
 
 				if (brandValue === CATALOG_VALUE.ALL) {
@@ -200,8 +207,6 @@ export function registerCallbacks(bot: TelegramBot) {
 			}
 
 			case CALLBACK_TYPE.CATEGORY: {
-				await clearChatMessages(bot, chatId);
-
 				const [categoryValue] = params;
 
 				const selectedCategory = categoryValue !== CATALOG_VALUE.ALL ? categoryValue : undefined;
@@ -228,8 +233,6 @@ export function registerCallbacks(bot: TelegramBot) {
 			}
 
 			case CALLBACK_TYPE.MODEL: {
-				await clearChatMessages(bot, chatId);
-
 				const [modelValue] = params;
 
 				setChatState(chatId, {
@@ -242,8 +245,6 @@ export function registerCallbacks(bot: TelegramBot) {
 			}
 
 			case CALLBACK_TYPE.STORAGE: {
-				await clearChatMessages(bot, chatId);
-
 				const [storageValue] = params;
 
 				setChatState(chatId, {
@@ -262,7 +263,7 @@ export function registerCallbacks(bot: TelegramBot) {
           .filter(Boolean) as Product[];
 
         if (!productsToExport.length) {
-          await bot.sendMessage(chatId, "Товары для экспорта не найдены.");
+          await renderScreen(bot, chatId, COMMON_TEXTS.NOT_ITEMS_FOR_EXPORT);
           return;
         }
 
@@ -271,8 +272,6 @@ export function registerCallbacks(bot: TelegramBot) {
 			}
 
 			case CALLBACK_TYPE.ADD_ITEM_TO_CART: {
-				await clearChatMessages(bot, chatId);
-
 				setChatState(chatId, {
 					section: SECTION.CART,
 					flowStep: "brands",
@@ -287,8 +286,6 @@ export function registerCallbacks(bot: TelegramBot) {
 			}
 
 			case CALLBACK_TYPE.CHOOSING_PRODUCT: {
-				await clearChatMessages(bot, chatId);
-
 				const [ selectedProductId ] = params;
 
 				setChatState(chatId, {
@@ -302,22 +299,18 @@ export function registerCallbacks(bot: TelegramBot) {
 			}
 
 			case CALLBACK_TYPE.CHOOSING_AMOUNT: {
-				await clearChatMessages(bot, chatId);
-
 				const state = getChatState(chatId);
 				const [ amount ] = params;
 
 				if (Number.isNaN(amount)) {
-					const msg = await bot.sendMessage(chatId, CART_TEXTS.AMOUNT_WILL_BE_NUMBER);
-					registerBotMessage(chatId, msg.message_id);
+          await renderScreen(bot, chatId, CART_TEXTS.AMOUNT_WILL_BE_NUMBER);
 					return;
 				}
 
 				const choseProduct = getProductById(chatId, state.selectedProductId);
 
 				if (!choseProduct) {
-					const msg = await bot.sendMessage(chatId, CART_TEXTS.PRODUCT_UNAVAILABLE);
-					registerBotMessage(chatId, msg.message_id);
+          await renderScreen(bot, chatId, CART_TEXTS.PRODUCT_UNAVAILABLE);
 					return;
 				}
 
@@ -340,7 +333,6 @@ export function registerCallbacks(bot: TelegramBot) {
 			}
 
 			case CALLBACK_TYPE.CART: {
-				await clearChatMessages(bot, chatId);
 				await removeNavigationMessage(bot, chatId);
 
 				setChatState(chatId, {
@@ -356,8 +348,6 @@ export function registerCallbacks(bot: TelegramBot) {
 			}
 
 			case CALLBACK_TYPE.CHECK_CART: {
-				await clearChatMessages(bot, chatId);
-
 				setChatState(chatId, {
 					flowStep: "main",
 					selectedBrand: undefined,
@@ -371,8 +361,6 @@ export function registerCallbacks(bot: TelegramBot) {
 			}
 
 			case CALLBACK_TYPE.EDITING_ORDER: {
-				await clearChatMessages(bot, chatId);
-
 				setChatState(chatId, {
 					flowStep: "edit_cart",
 				});
@@ -382,7 +370,6 @@ export function registerCallbacks(bot: TelegramBot) {
 			}
 
 			case CALLBACK_TYPE.EDIT_CART_ITEM: {
-				await clearChatMessages(bot, chatId);
 				const [productId] = params;
 
 				setChatState(chatId, {
@@ -395,8 +382,6 @@ export function registerCallbacks(bot: TelegramBot) {
 			}
 
 			case CALLBACK_TYPE.CLEAR_CART: {
-				await clearChatMessages(bot, chatId);
-
 				setChatState(chatId, {
 					currentOrder: undefined,
 				});
@@ -406,11 +391,10 @@ export function registerCallbacks(bot: TelegramBot) {
 			}
 
 			case CALLBACK_TYPE.INCREASE_AMOUNT: {
-				await clearChatMessages(bot, chatId);
 				const state = getChatState(chatId);
 
 				if (!state.currentOrder?.length || !state.selectedProductIdForCart) {
-					console.log("empty currentOrder or selectedProductIdForCart or currentOrder have not this product")
+          await renderScreen(bot, chatId, COMMON_TEXTS.CURRENT_ORDER_ERROR);
 					return;
 				}
 
@@ -430,12 +414,10 @@ export function registerCallbacks(bot: TelegramBot) {
 			}
 
 			case CALLBACK_TYPE.DECREASE_AMOUNT: {
-				await clearChatMessages(bot, chatId);
-
 				const state = getChatState(chatId);
 
 				if (!state.currentOrder?.length || !state.selectedProductIdForCart) {
-					console.log("empty currentOrder or selectedProductIdForCart or currentOrder have not this product");
+          await renderScreen(bot, chatId, COMMON_TEXTS.CURRENT_ORDER_ERROR);
 					return;
 				}
 
@@ -455,11 +437,10 @@ export function registerCallbacks(bot: TelegramBot) {
 			}
 
 			case CALLBACK_TYPE.DELETE_POSITION_FROM_CART: {
-				await clearChatMessages(bot, chatId);
 				const state = getChatState(chatId);
 
 				if (!state.currentOrder?.length || !state.selectedProductIdForCart) {
-					console.log("empty currentOrder or selectedProductIdForCart");
+          await renderScreen(bot, chatId, COMMON_TEXTS.CURRENT_ORDER_ERROR);
 					return;
 				}
 
@@ -485,28 +466,54 @@ export function registerCallbacks(bot: TelegramBot) {
 
         const order = createOrder(query.from, state.currentOrder);
 
-        // const orders = loadOrders();
-        // orders.push(order);
-        // saveOrders(orders);
 				const message = buildOrderMessage(
 					order,
 					chatId
 				);
 
-				await bot.sendMessage(ADMIN_CHAT_ID, message, {
-					parse_mode: "HTML",
-				});
+        addOrder(order);
+        await renderScreen(bot, ADMIN_CHAT_ID, message, [], "HTML");
 
-				// Очистить корзину
 				setChatState(chatId, {
 					currentOrder: undefined,
 					selectedProductIdForCart: undefined,
 				});
 
-				await bot.sendMessage(chatId, "✅ Заказ отправлен администратору!");
-
+				await renderScreen(bot, chatId, COMMON_TEXTS.ORDER_SENT);
 				return;
 			}
+
+      case CALLBACK_TYPE.ORDERS: {
+        const paramValue = params[0];
+
+        if (!paramValue) {
+          await ordersHandler(bot, chatId);
+          return;
+        }
+
+        if (paramValue === "goto") {
+          setChatState(chatId, { mode: "await_orders_page_number" });
+          await renderScreen(bot, chatId, PAGINATION_TEXTS.ENTER_PAGE_NUMBER);
+          return;
+        }
+
+        const state = getChatState(chatId);
+        let newPage = state.ordersPage ?? 1;
+        if (paramValue === "next") newPage++;
+        if (paramValue === "prev") newPage--;
+
+        setChatState(chatId, {
+          ordersPage: newPage,
+        });
+
+        await ordersHandler(bot, chatId);
+        return;
+      }
+
+      case CALLBACK_TYPE.CHOOSE_ORDER: {
+        await orderHandler(bot, chatId, params[0]);
+        return;
+      }
 		}
 	});
 }

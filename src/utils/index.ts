@@ -1,6 +1,5 @@
 export * from "./answer.callback.query";
 export * from "./callbackBuilder";
-export * from "./clearChatMessages";
 export * from "./message.utils";
 export * from "./pagination";
 export * from "./parseCallbackData";

@@ -10,6 +10,7 @@ import { getWelcomeText } from "../../texts";
 import { setChatState } from "../../state/chat.state";
 import { renderAdminPanel } from "./renderAdminPanel";
 import { SECTION } from "../../types";
+import { renderScreen } from "../../render/renderScreen";
 
 export function registerStart(bot: TelegramBot) {
 	bot.onText(/\/start/, async (msg) => {
@@ -18,24 +19,27 @@ export function registerStart(bot: TelegramBot) {
 
 		if (!chatId) return;
 
+    setChatState(chatId, {
+      section: SECTION.MAIN,
+      currentMessageId: undefined,
+    });
+
 		const now = Math.floor(Date.now() / 1000);
 		if (msg.date < now - 5) return;
 
 		const user = getUser(chatId);
 
 		if (!user) {
-			await bot.sendMessage(chatId,
-				AUTH_TEXTS.notActivated(chatId),
-				{
-					parse_mode: "HTML",
-					reply_markup: {
-						inline_keyboard: [
-							[{text: START_TEXTS.CHECK_ACCESS, callback_data: START_ACTIONS.CHECK_ACCESS}],
-							[{text: START_TEXTS.WRITE_MANAGER, url: ENV.MANAGER_URL}],
-						],
-					},
-				}
-			);
+      await renderScreen(
+        bot,
+        chatId,
+        AUTH_TEXTS.notActivated(chatId),
+        [
+          [{text: START_TEXTS.CHECK_ACCESS, callback_data: START_ACTIONS.CHECK_ACCESS}],
+          [{text: START_TEXTS.WRITE_MANAGER, url: ENV.MANAGER_URL}]
+        ],
+        "HTML"
+      );
 			return;
 		}
 
@@ -47,10 +51,6 @@ export function registerStart(bot: TelegramBot) {
 			{ reply_markup: mainKeyboard() }
 		);
 
-		setChatState(chatId, {
-			section: SECTION.MAIN,
-		});
-
-		await renderAdminPanel(bot, chatId);
+    await renderAdminPanel(bot, chatId);
 	});
 }

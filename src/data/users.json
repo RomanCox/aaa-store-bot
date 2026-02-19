@@ -1,7 +1,7 @@
 [
   {
     "id": 256626302,
-    "role": "retail"
+    "role": "superadmin"
   },
   {
     "id": 100786066,
@@ -13,7 +13,7 @@
   },
   {
     "id": 7827419700,
-    "role": "wholesale"
+    "role": "admin"
   },
   {
     "id": 945003490,

@@ -1,12 +1,12 @@
-import { InlineKeyboardMarkup } from "node-telegram-bot-api";
+import { InlineKeyboardButton } from "node-telegram-bot-api";
 import { CALLBACK_TYPE, SECTION } from "../types";
 import { COMMON_TEXTS } from "../texts";
-import { buildCallbackData, stringWithoutSpaces } from "../utils";
+import { buildCallbackData } from "../utils";
 
 const BUTTONS_IN_RAW = 2;
 
-export function storageValuesKeyboard(storageValues: string[]): InlineKeyboardMarkup {
-	const keyboard: InlineKeyboardMarkup["inline_keyboard"] = [];
+export function storageValuesKeyboard(storageValues: string[]): InlineKeyboardButton[][] {
+	const keyboard: InlineKeyboardButton[][] = [];
 
 	for (let i = 0; i < storageValues.length; i += BUTTONS_IN_RAW) {
 		keyboard.push(
@@ -21,5 +21,5 @@ export function storageValuesKeyboard(storageValues: string[]): InlineKeyboardMa
 		 [{text: COMMON_TEXTS.BACK_BUTTON, callback_data: buildCallbackData(CALLBACK_TYPE.BACK, SECTION.CART)}]
 	);
 
-	return {inline_keyboard: keyboard};
+	return keyboard;
 }

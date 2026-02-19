@@ -2,10 +2,10 @@ import fs from "fs";
 import path from "path";
 import TelegramBot from "node-telegram-bot-api";
 import { CALLBACK_TYPE, ChatMode, PriceFormation, PriceFormationUpdate } from "../types";
-import { clearChatMessages } from "../utils";
-import { registerBotMessage, setChatState } from "../state/chat.state";
+import { setChatState } from "../state/chat.state";
 import { COMMON_TEXTS, PRICE_TEXTS } from "../texts";
 import { getUserRole } from "./users.service";
+import { renderScreen } from "../render/renderScreen";
 
 const PRICE_FORMATION_PATH = path.resolve(__dirname, "../data/price_formation.json");
 const DEFAULT_PRICE_FORMATION: PriceFormation = {
@@ -87,8 +87,6 @@ export async function savePriceFormation(update: PriceFormationUpdate) {
 }
 
 export async function editPriceFormation(bot: TelegramBot, chatId: number, priceEditType: ChatMode) {
-	await clearChatMessages(bot, chatId);
-
 	setChatState(chatId, {
 		mode: priceEditType,
 	});
@@ -119,19 +117,9 @@ export async function editPriceFormation(bot: TelegramBot, chatId: number, price
 		return result;
 	}
 
-	const msg = await bot.sendMessage(
-		chatId,
-		textGenerate(priceEditType),
-		{
-			reply_markup: {
-				inline_keyboard: [[{
-					text: COMMON_TEXTS.BACK_BUTTON, callback_data: CALLBACK_TYPE.BACK
-				}]]
-			}
-		}
-	);
-	registerBotMessage(chatId, msg.message_id);
-
+  await renderScreen(bot, chatId, textGenerate(priceEditType), [[{
+    text: COMMON_TEXTS.BACK_BUTTON, callback_data: CALLBACK_TYPE.BACK
+  }]]);
 	return;
 }
 

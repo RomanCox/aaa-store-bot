@@ -1,4 +1,4 @@
-import { InlineKeyboardMarkup } from "node-telegram-bot-api";
+import { InlineKeyboardButton } from "node-telegram-bot-api";
 import { CALLBACK_TYPE, Product, SECTION } from "../types";
 import { CART_TEXTS, COMMON_TEXTS } from "../texts";
 import { buildCallbackData } from "../utils";
@@ -6,8 +6,8 @@ import { getChatState } from "../state/chat.state";
 
 const BUTTONS_IN_RAW = 4;
 
-export function choosingProductKeyboard(chatId: number, products: Product[]): InlineKeyboardMarkup {
-	const keyboard: InlineKeyboardMarkup["inline_keyboard"] = [];
+export function choosingProductKeyboard(chatId: number, products: Product[]): InlineKeyboardButton[][] {
+	const keyboard: InlineKeyboardButton[][] = [];
 	const state = getChatState(chatId);
 
 	for (let i = 0; i < products.length; i += BUTTONS_IN_RAW) {
@@ -32,5 +32,5 @@ export function choosingProductKeyboard(chatId: number, products: Product[]): In
 
 	keyboard.push(bottomRow);
 
-	return {inline_keyboard: keyboard};
+	return keyboard;
 }
