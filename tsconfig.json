@@ -3,10 +3,11 @@
     "types": ["node"],
     "target": "ES2020",
     "module": "CommonJS",
+    "resolveJsonModule": true,
     "moduleResolution": "node",
     "strict": true,
     "esModuleInterop": true,
     "outDir": "dist"
   },
-  "include": ["src"]
+  "include": ["src", "data/**/*"]
 }
