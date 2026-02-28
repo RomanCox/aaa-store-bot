@@ -8,18 +8,6 @@ import TelegramBot from "node-telegram-bot-api";
 import { getChatState, getSectionState } from "../state/chat.state";
 import { renderScreen } from "../render/renderScreen";
 
-const COLUMN_MAP: Record<string, keyof Product> = {
-	"SKU": "id",
-	"Категория": "category",
-	"Название": "name",
-	"Бренд": "brand",
-	"Модель": "model",
-	"Хранилище": "storage",
-	"Цена": "price",
-	"Страна": "country",
-	"Тип SIM": "sim",
-};
-
 function sortProducts(products: Product[]): Product[] {
 	return [...products].sort((a, b) => {
 		// 1. Бренд

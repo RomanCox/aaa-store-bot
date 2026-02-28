@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
 import TelegramBot from "node-telegram-bot-api";
-import { CALLBACK_TYPE, ChatMode, PriceFormation, PriceFormationUpdate, SECTION } from "../types";
+import { ChatMode, PriceFormation, PriceFormationUpdate, SECTION } from "../types";
 import { setChatState } from "../state/chat.state";
-import { COMMON_TEXTS, PRICE_TEXTS } from "../texts";
+import { PRICE_TEXTS } from "../texts";
 import { getUserRole } from "./users.service";
 import { renderScreen } from "../render/renderScreen";
 

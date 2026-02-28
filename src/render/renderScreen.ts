@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
-import { CALLBACK_TYPE, SECTION, SectionStateMap } from "../types";
+import { CALLBACK_TYPE, SECTION } from "../types";
 import { getChatState, getSectionState, setChatState, updateSectionState } from "../state/chat.state";
 import { COMMON_TEXTS } from "../texts";
 

@@ -1,8 +1,8 @@
 import TelegramBot from "node-telegram-bot-api";
 import { deleteUser } from "../../services/users.service";
-import { COMMON_TEXTS, USERS_ERRORS, USERS_TEXTS } from "../../texts";
+import { USERS_ERRORS, USERS_TEXTS } from "../../texts";
 import { getChatState, setChatState } from "../../state/chat.state";
-import { CALLBACK_TYPE, SECTION } from "../../types";
+import { SECTION } from "../../types";
 import { renderScreen } from "../../render/renderScreen";
 
 export async function deleteUserInputHandler(

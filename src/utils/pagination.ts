@@ -1,6 +1,6 @@
 import TelegramBot from "node-telegram-bot-api";
 import { COMMON_TEXTS } from "../texts";
-import { CALLBACK_TYPE, PAGINATION } from "../types";
+import { PAGINATION } from "../types";
 import { buildCallbackData } from "./callbackBuilder";
 
 export function paginate<T>(

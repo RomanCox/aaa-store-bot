@@ -1,8 +1,8 @@
-import { CALLBACK_TYPE, ChatMode, SECTION } from "../types";
+import { SECTION } from "../types";
 import { savePriceFormation } from "../services/price.service";
 import { getChatState, setChatState } from "../state/chat.state";
 import TelegramBot from "node-telegram-bot-api";
-import { COMMON_TEXTS, PRICE_ERRORS, PRICE_TEXTS } from "../texts";
+import { PRICE_ERRORS, PRICE_TEXTS } from "../texts";
 import { renderScreen } from "../render/renderScreen";
 
 export async function editPriceInputHandler(

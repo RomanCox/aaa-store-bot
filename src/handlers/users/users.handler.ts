@@ -4,7 +4,7 @@ import { paginate, paginationKeyboard } from "../../utils";
 import { getChatState, setChatState } from "../../state/chat.state";
 import { CALLBACK_TYPE, SECTION } from "../../types";
 import { renderScreen } from "../../render/renderScreen";
-import { ADMIN_TEXTS, COMMON_TEXTS, USERS_TEXTS } from "../../texts";
+import { ADMIN_TEXTS, USERS_TEXTS } from "../../texts";
 
 const USERS_PER_PAGE = 5;
 
