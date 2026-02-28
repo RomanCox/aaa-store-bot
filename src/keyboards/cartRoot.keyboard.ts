@@ -1,14 +1,9 @@
 import { InlineKeyboardButton } from "node-telegram-bot-api";
-import { CALLBACK_TYPE, SECTION } from "../types";
+import { CALLBACK_TYPE } from "../types";
 import { CART_TEXTS } from "../texts";
-import { buildCallbackData } from "../utils";
-import { COMMON_TEXTS } from "../texts";
 import { ProductForCart } from "../types";
 
-export function cartRootKeyboard(
-  currentOrder: ProductForCart[] = [],
-  options?: { showBack?: boolean }
-): InlineKeyboardButton[][] {
+export function cartRootKeyboard(currentOrder: ProductForCart[] = []): InlineKeyboardButton[][] {
 	const keyboard: InlineKeyboardButton[][] = [];
 
 	if (!currentOrder.length) {
@@ -41,15 +36,6 @@ export function cartRootKeyboard(
 			{
 				text: CART_TEXTS.CLEAR_CART,
 				callback_data: CALLBACK_TYPE.CLEAR_CART,
-			},
-		]);
-	}
-
-	if (options?.showBack) {
-		keyboard.push([
-			{
-				text: COMMON_TEXTS.BACK_BUTTON,
-				callback_data: buildCallbackData(CALLBACK_TYPE.BACK, SECTION.CATALOG),
 			},
 		]);
 	}

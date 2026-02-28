@@ -1,11 +1,11 @@
 import * as XLSX from "xlsx";
 import fs from "fs";
 import path from "path";
-import { Product, PRODUCT_XLSX_HEADERS } from "../types";
+import { Product, PRODUCT_XLSX_HEADERS, SECTION } from "../types";
 import { resolveBrandFromName } from "./brand-resolver.service";
 import { CATALOG_TEXTS } from "../texts";
 import TelegramBot from "node-telegram-bot-api";
-import { getChatState } from "../state/chat.state";
+import { getChatState, getSectionState } from "../state/chat.state";
 import { renderScreen } from "../render/renderScreen";
 
 const COLUMN_MAP: Record<string, keyof Product> = {
@@ -134,13 +134,14 @@ export async function sendPriceList(
 	products: Product[]
 ) {
 	if (!products.length) {
-		await renderScreen(bot, chatId, CATALOG_TEXTS.NOT_ITEMS_FOR_DOWNLOAD);
+		await renderScreen(bot, chatId, { section: SECTION.CATALOG, text: CATALOG_TEXTS.NOT_ITEMS_FOR_DOWNLOAD });
 		return;
 	}
 
 	const state = getChatState(chatId);
+  const catalogState = getSectionState(state, SECTION.CATALOG);
 
-	const parts = ["price", state.selectedBrand, state.selectedCategory].filter(Boolean);
+	const parts = ["price", catalogState?.selectedBrand, catalogState?.selectedCategory].filter(Boolean);
 	const fileName = `${parts.join("_")}.xlsx`;
 
 	const filePath = generateProductsXlsx(products, fileName);

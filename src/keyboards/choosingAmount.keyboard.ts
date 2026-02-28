@@ -1,6 +1,5 @@
 import { InlineKeyboardButton } from "node-telegram-bot-api";
-import { CALLBACK_TYPE, SECTION } from "../types";
-import { COMMON_TEXTS } from "../texts";
+import { CALLBACK_TYPE } from "../types";
 import { buildCallbackData } from "../utils";
 
 const AMOUNT = 10;
@@ -19,10 +18,6 @@ export function choosingAmountKeyboard(): InlineKeyboardButton[][] {
 			}))
 		);
 	}
-
-	keyboard.push(
-		 [{text: COMMON_TEXTS.BACK_BUTTON, callback_data: buildCallbackData(CALLBACK_TYPE.BACK, SECTION.CART)}]
-	);
 
 	return keyboard;
 }

@@ -4,123 +4,241 @@ import { SECTION } from "../types";
 import { startUserManagement } from "../services/admin.service";
 
 export async function handleBack(bot: TelegramBot, chatId: number) {
-	const state = getChatState(chatId);
+  const state = getChatState(chatId);
+  const mainState = state.sections?.[SECTION.MAIN];
 
-	if (state.section === SECTION.UPLOAD_XLSX) {
-		setChatState(chatId, {
-			mode: "idle",
-		});
-		setChatState(chatId, { section: SECTION.MAIN });
-		return;
-	}
+  if (!mainState) return;
 
-	if (state.section === SECTION.MANAGE_USERS) {
-		if (state.adminStep === "users_list") {
-			setChatState(chatId, { adminStep: "main" });
-			await startUserManagement(bot, chatId);
-			return;
-		}
+  if (mainState.flowStep === "upload_xlsx") {
+    setChatState(chatId, {
+      mode: "idle",
+      sections: {
+        ...state.sections,
+        [SECTION.MAIN]: {
+          ...mainState,
+          flowStep: "main",
+        },
+      },
+    });
+    return;
+  }
 
-		if (["add_user", "delete_user", "edit_user"].includes(state.adminStep ?? "")) {
-			setChatState(chatId, { mode: "idle", adminStep: "main" });
-			await startUserManagement(bot, chatId);
-			return;
-		}
+  if (
+    mainState.flowStep === "users_list" ||
+    mainState.flowStep === "add_user" ||
+    mainState.flowStep === "edit_user" ||
+    mainState.flowStep === "delete_user"
+  ) {
+    setChatState(chatId, {
+      mode: "idle",
+      sections: {
+        ...state.sections,
+        [SECTION.MAIN]: {
+          ...mainState,
+          flowStep: "manage_users",
+        },
+      },
+    });
 
-		setChatState(chatId, { section: SECTION.MAIN });
-		return;
-	}
+    await startUserManagement(bot, chatId);
+    return;
+  }
+
+  if (mainState.flowStep === "manage_users") {
+    setChatState(chatId, {
+      sections: {
+        ...state.sections,
+        [SECTION.MAIN]: {
+          ...mainState,
+          flowStep: "main",
+        },
+      },
+    });
+    return;
+  }
 
 	if (state.section === SECTION.CATALOG) {
-		switch (state.flowStep) {
-			case "brands":
-				setChatState(chatId, {
-					section: SECTION.MAIN,
-					flowStep: undefined,
-				});
-				return;
+    const catalogState = state.sections?.[SECTION.CATALOG];
 
-			case "categories":
-				setChatState(chatId, {
-					section: SECTION.CATALOG,
-					flowStep: "brands",
-					selectedBrand: undefined,
-				});
-				return;
+    if (!catalogState) return;
 
-			case "products":
-				setChatState(chatId, {
-					flowStep: "categories",
-					selectedCategory: undefined,
-				});
-				return;
-		}
+    switch (catalogState.flowStep) {
+      // 🔹 Назад из брендов → в main
+      case "brands":
+        setChatState(chatId, {
+          sections: {
+            ...state.sections,
+            [SECTION.CATALOG]: {
+              ...catalogState,
+              flowStep: "brands",
+              selectedBrand: undefined,
+              selectedCategory: undefined,
+            },
+          },
+          section: SECTION.MAIN,
+        });
+        return;
+
+      // 🔹 Назад из категорий → к брендам
+      case "categories":
+        setChatState(chatId, {
+          sections: {
+            ...state.sections,
+            [SECTION.CATALOG]: {
+              ...catalogState,
+              flowStep: "brands",
+              selectedBrand: undefined,
+              selectedCategory: undefined,
+            },
+          },
+        });
+        return;
+
+      // 🔹 Назад из продуктов → к категориям
+      case "products":
+        setChatState(chatId, {
+          sections: {
+            ...state.sections,
+            [SECTION.CATALOG]: {
+              ...catalogState,
+              flowStep: "categories",
+              selectedCategory: undefined,
+            },
+          },
+        });
+        return;
+    }
 	}
 
 	if (state.section === SECTION.CART) {
-		switch (state.flowStep) {
-			case "main":
-				setChatState(chatId, {
-					section: SECTION.MAIN,
-					flowStep: undefined,
-				});
-				return;
+    const cartState = state.sections?.[SECTION.CART];
 
-			case "brands":
-				setChatState(chatId, {
-					flowStep: "main",
-				});
-				return;
+    if (!cartState) return;
 
-			case "categories":
-				setChatState(chatId, {
-					flowStep: "brands",
-					selectedBrand: undefined,
-				});
-				return;
+    switch (cartState.flowStep) {
+      // 🔹 Назад из main корзины → в MAIN
+      case "main":
+        setChatState(chatId, {
+          section: SECTION.MAIN,
+          sections: {
+            ...state.sections,
+            [SECTION.CART]: {
+              ...cartState,
+              flowStep: "main",
+            },
+          },
+        });
+        return;
 
-			case "models":
-				setChatState(chatId, {
-					flowStep: "categories",
-					selectedCategory: undefined,
-				});
-				return;
+      // 🔹 Назад из брендов → в main корзины
+      case "brands":
+        setChatState(chatId, {
+          sections: {
+            ...state.sections,
+            [SECTION.CART]: {
+              ...cartState,
+              flowStep: "main",
+            },
+          },
+        });
+        return;
 
-			case "storage":
-				setChatState(chatId, {
-					flowStep: "models",
-					selectedModel: undefined,
-				});
-				return;
+      // 🔹 Назад из категорий → к брендам
+      case "categories":
+        setChatState(chatId, {
+          sections: {
+            ...state.sections,
+            [SECTION.CART]: {
+              ...cartState,
+              flowStep: "brands",
+              selectedBrand: undefined,
+            },
+          },
+        });
+        return;
 
-			case "products_for_cart":
-				setChatState(chatId, {
-					flowStep: "storage",
-					selectedStorage: undefined,
-				});
-				return;
+      // 🔹 Назад из моделей → к категориям
+      case "models":
+        setChatState(chatId, {
+          sections: {
+            ...state.sections,
+            [SECTION.CART]: {
+              ...cartState,
+              flowStep: "categories",
+              selectedCategory: undefined,
+            },
+          },
+        });
+        return;
 
-			case "amount":
-				setChatState(chatId, {
-					section: SECTION.CART,
-					flowStep: "products_for_cart",
-					selectedProductId: undefined,
-				});
-				return;
+      // 🔹 Назад из storage → к моделям
+      case "storage":
+        setChatState(chatId, {
+          sections: {
+            ...state.sections,
+            [SECTION.CART]: {
+              ...cartState,
+              flowStep: "models",
+              selectedModel: undefined,
+            },
+          },
+        });
+        return;
 
-			case "edit_cart":
-				setChatState(chatId, {
-					section: SECTION.CART,
-					flowStep: "main",
-				});
-				return;
+      // 🔹 Назад из списка продуктов → к storage
+      case "products_for_cart":
+        setChatState(chatId, {
+          sections: {
+            ...state.sections,
+            [SECTION.CART]: {
+              ...cartState,
+              flowStep: "storage",
+              selectedStorage: undefined,
+            },
+          },
+        });
+        return;
 
-			case "edit_product_in_cart":
-				setChatState(chatId, {
-					flowStep: "edit_cart",
-					selectedProductIdForCart: undefined,
-				});
-				return;
-		}
+      // 🔹 Назад из ввода количества → к продуктам
+      case "amount":
+        setChatState(chatId, {
+          sections: {
+            ...state.sections,
+            [SECTION.CART]: {
+              ...cartState,
+              flowStep: "products_for_cart",
+              selectedProductId: undefined,
+            },
+          },
+        });
+        return;
+
+      // 🔹 Назад из редактирования корзины → в main корзины
+      case "edit_cart":
+        setChatState(chatId, {
+          sections: {
+            ...state.sections,
+            [SECTION.CART]: {
+              ...cartState,
+              flowStep: "main",
+            },
+          },
+        });
+        return;
+
+      // 🔹 Назад из редактирования конкретного товара → к edit_cart
+      case "edit_product_in_cart":
+        setChatState(chatId, {
+          sections: {
+            ...state.sections,
+            [SECTION.CART]: {
+              ...cartState,
+              flowStep: "edit_cart",
+              selectedProductIdForCart: undefined,
+            },
+          },
+        });
+        return;
+    }
 	}
 }

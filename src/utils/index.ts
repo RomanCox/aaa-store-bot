@@ -5,5 +5,4 @@ export * from "./pagination";
 export * from "./parseCallbackData";
 export * from "./priceFormat";
 export * from "./products.utils";
-export * from "./removeNavigationMessage";
 export * from "./stringFormat";

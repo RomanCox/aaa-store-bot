@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { User, UserRole } from "../types";
+import { SECTION, User, UserRole } from "../types";
 import { PAGINATION_TEXTS, USERS_ERRORS } from "../texts";
 import TelegramBot from "node-telegram-bot-api";
 import { getChatState, setChatState } from "../state/chat.state";
@@ -42,7 +42,7 @@ export function getAllUsers(): User[] {
 
 export async function createUser(user: User) {
 	if (users.has(user.id)) {
-		throw new Error(USERS_ERRORS.USER_EXISTS);
+		throw new Error(USERS_ERRORS.USER_EXIST);
 	}
 
 	users.set(user.id, user);
@@ -94,20 +94,65 @@ export async function usersPageInputHandler(
   text: string
 ) {
   const page = Number(text);
-  const state = getChatState(chatId);
+  let state = getChatState(chatId);
 
+  // создаём дефолтное состояние MAIN при первом обращении
+  if (!state.sections?.[SECTION.MAIN]) {
+    setChatState(chatId, {
+      sections: {
+        ...state.sections,
+        [SECTION.MAIN]: {
+          messageId: undefined,
+          flowStep: "main",
+          users: {
+            page: 1,
+            totalPages: 1,
+            editingUserId: undefined,
+            newUserId: undefined,
+          },
+        },
+      },
+    });
+    // получаем обновлённый state
+    state = getChatState(chatId);
+  }
+
+  const mainState = state.sections[SECTION.MAIN]!;
+  const usersState = mainState.users;
+
+  // проверка на число
   if (!Number.isInteger(page) || page < 1) {
-    await renderScreen(bot, chatId, PAGINATION_TEXTS.ERROR_PAGE);
+    await renderScreen(bot, chatId, {
+      section: SECTION.MAIN,
+      text: PAGINATION_TEXTS.ERROR_PAGE,
+    });
     return;
   }
 
-  if (page < 1 || page > (state.usersTotalPages ?? 0)) {
-    await renderScreen(bot, chatId, PAGINATION_TEXTS.PAGE_FROM_TO + state.usersTotalPages);
+  // проверка на диапазон страниц
+  const totalPages = usersState.totalPages ?? 0;
+  if (page > totalPages) {
+    await renderScreen(bot, chatId, {
+      section: SECTION.MAIN,
+      text: PAGINATION_TEXTS.PAGE_FROM_TO + totalPages,
+    });
     return;
   }
 
+  // обновляем страницу
   setChatState(chatId, {
-    usersPage: page,
+    sections: {
+      ...state.sections,
+      [SECTION.MAIN]: {
+        ...mainState,
+        users: {
+          ...usersState,
+          page,
+        },
+      },
+    },
   });
+
+  // показываем список пользователей
   await showUsersList(bot, chatId);
 }

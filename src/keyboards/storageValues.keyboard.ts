@@ -1,6 +1,5 @@
 import { InlineKeyboardButton } from "node-telegram-bot-api";
-import { CALLBACK_TYPE, SECTION } from "../types";
-import { COMMON_TEXTS } from "../texts";
+import { CALLBACK_TYPE } from "../types";
 import { buildCallbackData } from "../utils";
 
 const BUTTONS_IN_RAW = 2;
@@ -16,10 +15,6 @@ export function storageValuesKeyboard(storageValues: string[]): InlineKeyboardBu
 			}))
 		);
 	}
-
-	keyboard.push(
-		 [{text: COMMON_TEXTS.BACK_BUTTON, callback_data: buildCallbackData(CALLBACK_TYPE.BACK, SECTION.CART)}]
-	);
 
 	return keyboard;
 }

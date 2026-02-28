@@ -1,11 +1,9 @@
 import TelegramBot from "node-telegram-bot-api";
 import { getUser, isAdmin, isSuperAdmin } from "../../services/users.service";
 import { ROLE_LABELS, USERS_ERRORS, USERS_TEXTS } from "../../texts";
-import { setChatState } from "../../state/chat.state";
-import { UserRole } from "../../types";
+import { getChatState, setChatState } from "../../state/chat.state";
+import { CALLBACK_TYPE, SECTION, UserRole } from "../../types";
 import { buildCallbackData } from "../../utils";
-import { CALLBACK_TYPE } from "../../types";
-import { COMMON_TEXTS } from "../../texts";
 import { renderScreen } from "../../render/renderScreen";
 
 export function addUserRoleKeyboard(isSuperAdmin: boolean) {
@@ -20,12 +18,6 @@ export function addUserRoleKeyboard(isSuperAdmin: boolean) {
         callback_data: buildCallbackData(CALLBACK_TYPE.ROLE_FOR_NEW_USER, role),
       },
     ]),
-    [
-      {
-        text: COMMON_TEXTS.BACK_BUTTON,
-        callback_data: CALLBACK_TYPE.BACK,
-      },
-    ],
   ];
 }
 
@@ -34,40 +26,68 @@ export async function addUserInputHandler(
   chatId: number,
   text: string
 ) {
+  const state = getChatState(chatId);
+  const mainState = state.sections?.[SECTION.MAIN];
+  if (!mainState) return;
+
   const newUserId = Number(text.trim());
 
   if (Number.isNaN(newUserId)) {
-    await renderScreen(bot, chatId, USERS_ERRORS.ID_NUMBER);
+    await renderScreen(bot, chatId, {
+      section: SECTION.MAIN,
+      text: USERS_ERRORS.ID_NUMBER,
+      withBackButton: true,
+    });
     return;
   }
 
   if (newUserId === chatId) {
-    await renderScreen(bot, chatId, USERS_ERRORS.ADD_MYSELF);
+    await renderScreen(bot, chatId, {
+      section: SECTION.MAIN,
+      text: USERS_ERRORS.ADD_MYSELF,
+      withBackButton: true,
+    });
     return;
   }
 
   if (!isAdmin(chatId)) {
-    await renderScreen(bot, chatId, USERS_ERRORS.ONLY_ADMIN);
+    await renderScreen(bot, chatId, {
+      section: SECTION.MAIN,
+      text: USERS_ERRORS.ONLY_ADMIN,
+      withBackButton: true,
+    });
     return;
   }
 
   const user = getUser(newUserId);
-
   if (user) {
-    await renderScreen(bot, chatId, USERS_ERRORS.USER_EXIST);
+    await renderScreen(bot, chatId, {
+      section: SECTION.MAIN,
+      text: USERS_ERRORS.USER_EXIST,
+      withBackButton: true,
+    });
     return;
   }
 
   setChatState(chatId, {
-    newUserId: newUserId,
+    sections: {
+      ...state.sections,
+      [SECTION.MAIN]: {
+        ...mainState,
+        users: {
+          ...mainState.users,
+          newUserId,
+        },
+      },
+    },
   });
 
   const isSuperAdminUser = isSuperAdmin(chatId);
 
-  await renderScreen(
-    bot,
-    chatId,
-    USERS_TEXTS.CHOOSE_ROLE,
-    addUserRoleKeyboard(isSuperAdminUser),
-  );
+  await renderScreen(bot, chatId, {
+    section: SECTION.MAIN,
+    text: USERS_TEXTS.CHOOSE_ROLE,
+    inlineKeyboard: addUserRoleKeyboard(isSuperAdminUser),
+    withBackButton: true,
+  });
 }

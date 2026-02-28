@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import TelegramBot from "node-telegram-bot-api";
-import { CALLBACK_TYPE, ChatMode, PriceFormation, PriceFormationUpdate } from "../types";
+import { CALLBACK_TYPE, ChatMode, PriceFormation, PriceFormationUpdate, SECTION } from "../types";
 import { setChatState } from "../state/chat.state";
 import { COMMON_TEXTS, PRICE_TEXTS } from "../texts";
 import { getUserRole } from "./users.service";
@@ -86,41 +86,37 @@ export async function savePriceFormation(update: PriceFormationUpdate) {
 	priceFormation = next;
 }
 
-export async function editPriceFormation(bot: TelegramBot, chatId: number, priceEditType: ChatMode) {
-	setChatState(chatId, {
-		mode: priceEditType,
-	});
+export async function editPriceFormation(
+  bot: TelegramBot,
+  chatId: number,
+  priceEditType: ChatMode
+) {
+  setChatState(chatId, {
+    mode: priceEditType,
+  });
 
-	const textGenerate = (priceEditType: ChatMode) => {
-		let result = PRICE_TEXTS.ENTER_RUB_TO_BYN
+  const textGenerate = (priceEditType: ChatMode) => {
+    switch (priceEditType) {
+      case "edit_rub_to_byn":
+        return PRICE_TEXTS.ENTER_RUB_TO_BYN;
+      case "edit_rub_to_usd":
+        return PRICE_TEXTS.ENTER_RUB_TO_USD;
+      case "edit_retail_mult":
+        return PRICE_TEXTS.ENTER_RETAIL_MULT;
+      case "edit_wholesale_mult":
+        return PRICE_TEXTS.ENTER_WHOLESALE_MULT;
+      default:
+        return PRICE_TEXTS.ENTER_RUB_TO_BYN;
+    }
+  };
 
-		switch (priceEditType) {
-			case "edit_rub_to_byn":
-				result = PRICE_TEXTS.ENTER_RUB_TO_BYN;
-				break;
+  await renderScreen(bot, chatId, {
+    section: SECTION.MAIN,
+    text: textGenerate(priceEditType),
+    withBackButton: true,
+  });
 
-				case "edit_rub_to_usd":
-					result = PRICE_TEXTS.ENTER_RUB_TO_USD;
-					break;
-
-				case "edit_retail_mult":
-					result = PRICE_TEXTS.ENTER_RETAIL_MULT;
-					break;
-
-				case "edit_wholesale_mult":
-					result = PRICE_TEXTS.ENTER_WHOLESALE_MULT;
-					break;
-
-				default:
-					break;
-		}
-		return result;
-	}
-
-  await renderScreen(bot, chatId, textGenerate(priceEditType), [[{
-    text: COMMON_TEXTS.BACK_BUTTON, callback_data: CALLBACK_TYPE.BACK
-  }]]);
-	return;
+  return;
 }
 
 export function getCurrency(userId: number) {

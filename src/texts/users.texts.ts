@@ -2,7 +2,6 @@ import { UserRole } from "../types";
 
 export const USERS_ERRORS = {
 	FAILED_LOAD: "Failed to load users.json",
-	USER_EXISTS: "User already exists",
 	USER_NOT_FOUND: "User not found",
 	USER_NOT_FOUND_MESSAGE: "❌ Пользователь не найден",
 	USER_NOT_CHOOSE_MESSAGE: "❌ Пользователь не выбран",

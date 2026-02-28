@@ -2,66 +2,64 @@ import TelegramBot from "node-telegram-bot-api";
 import { getAllUsers } from "../../services/users.service";
 import { paginate, paginationKeyboard } from "../../utils";
 import { getChatState, setChatState } from "../../state/chat.state";
-import { CALLBACK_TYPE } from "../../types";
+import { CALLBACK_TYPE, SECTION } from "../../types";
 import { renderScreen } from "../../render/renderScreen";
-import { COMMON_TEXTS, USERS_TEXTS } from "../../texts";
+import { ADMIN_TEXTS, COMMON_TEXTS, USERS_TEXTS } from "../../texts";
 
 const USERS_PER_PAGE = 5;
-
-export async function openUsersList(
-	bot: TelegramBot,
-	chatId: number
-) {
-	const users = getAllUsers();
-	const usersTotalPages = Math.max(
-		1,
-		Math.ceil(users.length / USERS_PER_PAGE)
-	);
-
-	setChatState(chatId, {
-    usersPage: 1,
-		usersTotalPages,
-	});
-
-	await showUsersList(bot, chatId);
-}
 
 export async function showUsersList(
   bot: TelegramBot,
   chatId: number
 ) {
   const state = getChatState(chatId);
-  const requestedPage = state.usersPage ?? 1;
 
-  const users = getAllUsers();
+  // безопасный доступ к MAIN и users
+  const mainState = state.sections?.[SECTION.MAIN] ?? {
+    messageId: undefined,
+    flowStep: "main",
+    users: { page: 1, totalPages: 1, editingUserId: undefined, newUserId: undefined },
+  };
+  const usersState = mainState.users;
+
+  // используем текущую страницу или 1
+  const requestedPage = usersState.page ?? 1;
+
+  const allUsers = getAllUsers();
   const { items, currentPage, totalPages } = paginate(
-    users,
+    allUsers,
     requestedPage,
     USERS_PER_PAGE
   );
 
+  // сохраняем состояние users и flowStep
   setChatState(chatId, {
-    adminStep: "users_list",
-    usersPage: currentPage,
-    usersTotalPages: totalPages,
+    sections: {
+      ...state.sections,
+      [SECTION.MAIN]: {
+        ...mainState,
+        flowStep: "users_list",
+        users: {
+          ...usersState,
+          page: currentPage,
+          totalPages,
+        },
+      },
+    },
   });
 
+  // если список пуст
   if (items.length === 0) {
-    await renderScreen(
-      bot,
-      chatId,
-      USERS_TEXTS.USER_LIST_EMPTY,
-      [[{
-        text: COMMON_TEXTS.BACK_BUTTON,
-        callback_data: CALLBACK_TYPE.BACK,
-      }]],
-      "HTML"
-    );
+    await renderScreen(bot, chatId, {
+      section: SECTION.MAIN,
+      text: USERS_TEXTS.USER_LIST_EMPTY,
+      withBackButton: true,
+    });
     return;
   }
 
   const text =
-    `<b>Список пользователей</b>\n\n` +
+    `<b>${ADMIN_TEXTS.USERS_LIST}</b>\n\n` +
     items
       .map(
         (user) =>
@@ -71,15 +69,11 @@ export async function showUsersList(
       )
       .join("\n");
 
-  await renderScreen(
-    bot,
-    chatId,
+  await renderScreen(bot, chatId, {
+    section: SECTION.MAIN,
     text,
-    paginationKeyboard(
-      currentPage,
-      totalPages,
-      CALLBACK_TYPE.USERS_LIST
-    ),
-    "HTML"
-  );
+    inlineKeyboard: paginationKeyboard(currentPage, totalPages, CALLBACK_TYPE.USERS_LIST),
+    parse_mode: "HTML",
+    withBackButton: true,
+  });
 }

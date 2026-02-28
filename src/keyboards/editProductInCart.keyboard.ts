@@ -1,7 +1,6 @@
 import { InlineKeyboardButton } from "node-telegram-bot-api";
-import { CALLBACK_TYPE, SECTION } from "../types";
+import { CALLBACK_TYPE } from "../types";
 import { CART_TEXTS, COMMON_TEXTS } from "../texts";
-import { buildCallbackData } from "../utils";
 
 export function editProductInCartKeyboard(productAmount: number): InlineKeyboardButton[][] {
 	const keyboard: InlineKeyboardButton[][] = [];
@@ -18,10 +17,6 @@ export function editProductInCartKeyboard(productAmount: number): InlineKeyboard
 
 	keyboard.push([
 		{text: CART_TEXTS.DELETE_POSITION, callback_data: CALLBACK_TYPE.DELETE_POSITION_FROM_CART},
-	]);
-
-	keyboard.push([
-		{text: COMMON_TEXTS.BACK_BUTTON, callback_data: buildCallbackData(CALLBACK_TYPE.BACK, SECTION.CART)},
 	]);
 
 	return keyboard;

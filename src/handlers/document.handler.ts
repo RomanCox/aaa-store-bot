@@ -7,6 +7,7 @@ import { isAdmin } from "../services/users.service";
 import { getChatState, setChatState } from "../state/chat.state";
 import { ADMIN_TEXTS } from "../texts";
 import { renderScreen } from "../render/renderScreen";
+import { SECTION } from "../types";
 
 export function registerDocumentHandler(bot: TelegramBot) {
 	bot.on("document", async (query) => {
@@ -19,13 +20,13 @@ export function registerDocumentHandler(bot: TelegramBot) {
 		if (!isAdmin(chatId)) return;
 
 		if (state.mode !== "upload_xlsx") {
-      await renderScreen(bot, query.chat.id, ADMIN_TEXTS.DONT_WAITING_FILE);
+      await renderScreen(bot, query.chat.id, { section: SECTION.MAIN, text: ADMIN_TEXTS.DONT_WAITING_FILE });
 			return;
 		}
 
 		const document = query.document;
 		if (!document) {
-      await renderScreen(bot, query.chat.id, ADMIN_TEXTS.CANT_FIND_FILE);
+      await renderScreen(bot, query.chat.id, { section: SECTION.MAIN, text: ADMIN_TEXTS.CANT_FIND_FILE });
 			return;
 		}
 
@@ -39,17 +40,19 @@ export function registerDocumentHandler(bot: TelegramBot) {
 			const products = parseXlsxToProducts(buffer);
 
 			if (!products.length) {
-        await renderScreen(bot, chatId, ADMIN_TEXTS.ERROR_ITEMS)
+        await renderScreen(bot, chatId, { section: SECTION.MAIN, text: ADMIN_TEXTS.ERROR_ITEMS });
 				return;
 			}
 
 			saveProducts(products);
 
-      await renderScreen(bot, chatId, ADMIN_TEXTS.PRICE_UPLOAD_SUCCESS + products.length);
+      await renderScreen(bot, chatId, {
+        section: SECTION.MAIN, text: ADMIN_TEXTS.PRICE_UPLOAD_SUCCESS + products.length
+      });
 
 			setChatState(userId, { mode: "idle" });
 		} catch (error) {
-			await renderScreen(bot, chatId, ADMIN_TEXTS.FILE_ERROR);
+			await renderScreen(bot, chatId, { section: SECTION.MAIN, text: ADMIN_TEXTS.FILE_ERROR });
 		}
 	});
 }

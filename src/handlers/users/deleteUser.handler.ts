@@ -1,51 +1,80 @@
 import TelegramBot from "node-telegram-bot-api";
 import { deleteUser } from "../../services/users.service";
-import { USERS_ERRORS, USERS_TEXTS } from "../../texts";
-import { setChatState } from "../../state/chat.state";
-import { COMMON_TEXTS } from "../../texts";
-import { CALLBACK_TYPE } from "../../types";
+import { COMMON_TEXTS, USERS_ERRORS, USERS_TEXTS } from "../../texts";
+import { getChatState, setChatState } from "../../state/chat.state";
+import { CALLBACK_TYPE, SECTION } from "../../types";
 import { renderScreen } from "../../render/renderScreen";
 
 export async function deleteUserInputHandler(
-	bot: TelegramBot,
-	chatId: number,
-	text: string
+  bot: TelegramBot,
+  chatId: number,
+  text: string
 ) {
-	const userIdToDelete = Number(text.trim());
+  const userIdToDelete = Number(text.trim());
+  const state = getChatState(chatId);
+  const mainState = state.sections?.[SECTION.MAIN];
 
-	if (Number.isNaN(userIdToDelete)) {
-    await renderScreen(bot, chatId, USERS_ERRORS.ID_NUMBER);
-		return;
-	}
+  if (!mainState) return;
 
-	if (userIdToDelete === chatId) {
-    await renderScreen(bot, chatId, USERS_ERRORS.DELETE_MYSELF);
-		return;
-	}
+  // проверка, что введено число
+  if (Number.isNaN(userIdToDelete)) {
+    await renderScreen(bot, chatId, {
+      section: SECTION.MAIN,
+      text: USERS_ERRORS.ID_NUMBER,
+      withBackButton: true,
+    });
+    return;
+  }
 
-	try {
-		await deleteUser(userIdToDelete);
-		setChatState(chatId, { mode: "idle" });
-    await renderScreen(
-      bot,
-      chatId,
-      USERS_TEXTS.DELETE_SUCCESSFUL,
-      [[{ text: COMMON_TEXTS.BACK_BUTTON, callback_data: CALLBACK_TYPE.BACK }]]
-    );
-	} catch (error) {
-		if (error instanceof Error) {
-			switch (error.message) {
-				case USERS_ERRORS.USER_NOT_FOUND:
-          await renderScreen(bot, chatId, USERS_ERRORS.USER_NOT_FOUND_MESSAGE, [[{
-            text: COMMON_TEXTS.BACK_BUTTON,
-            callback_data: CALLBACK_TYPE.BACK,
-          }]]);
-					break;
+  // нельзя удалить себя
+  if (userIdToDelete === chatId) {
+    await renderScreen(bot, chatId, {
+      section: SECTION.MAIN,
+      text: USERS_ERRORS.DELETE_MYSELF,
+      withBackButton: true,
+    });
+    return;
+  }
 
-				default:
-          await renderScreen(bot, chatId, USERS_ERRORS.CANT_DELETE_USER);
-					break;
-			}
-		}
-	}
+  try {
+    await deleteUser(userIdToDelete);
+
+    // обновляем state после успешного удаления
+    setChatState(chatId, {
+      sections: {
+        ...state.sections,
+        [SECTION.MAIN]: {
+          ...mainState,
+          flowStep: mainState.flowStep, // оставляем текущий flowStep
+        },
+      },
+      mode: "idle",
+    });
+
+    await renderScreen(bot, chatId, {
+      section: SECTION.MAIN,
+      text: USERS_TEXTS.DELETE_SUCCESSFUL,
+      withBackButton: true,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      switch (error.message) {
+        case USERS_ERRORS.USER_NOT_FOUND:
+          await renderScreen(bot, chatId, {
+            section: SECTION.MAIN,
+            text: USERS_ERRORS.USER_NOT_FOUND_MESSAGE,
+            withBackButton: true,
+          });
+          break;
+
+        default:
+          await renderScreen(bot, chatId, {
+            section: SECTION.MAIN,
+            text: USERS_ERRORS.CANT_DELETE_USER,
+            withBackButton: true,
+          });
+          break;
+      }
+    }
+  }
 }

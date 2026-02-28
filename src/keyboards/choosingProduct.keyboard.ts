@@ -23,7 +23,7 @@ export function choosingProductKeyboard(chatId: number, products: Product[]): In
 		{text: COMMON_TEXTS.BACK_BUTTON, callback_data: buildCallbackData(CALLBACK_TYPE.BACK, SECTION.CART)},
 	]
 
-	if (state.currentOrder?.length) {
+	if (state.sections.cart?.currentOrder?.length) {
 		bottomRow.push({
 			text: CART_TEXTS.CHECK_CART,
 			callback_data: CALLBACK_TYPE.CHECK_CART,

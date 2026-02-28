@@ -1,4 +1,4 @@
-import { ManageUsersStep, SECTION, FlowStep } from "./navigation";
+import { SECTION, CatalogFlowStep, CartFlowStep, MainFlowStep } from "./navigation";
 import { Product, ProductForCart } from "./product";
 
 export type ChatMode = "idle"
@@ -16,33 +16,67 @@ export type ChatMode = "idle"
 	| "choose_userId_for_orders"
 	| "edit_product_amount_in_cart";
 
-export interface IChatState {
-	section?: SECTION;
-	mode: ChatMode;
+export type MainSectionState = {
+  messageId?: number;
+  flowStep: MainFlowStep;
+  users: {
+    page?: number;
+    totalPages?: number;
+    editingUserId?: number;
+    newUserId?: number;
+  };
+};
 
-	usersPage?: number;
-	usersTotalPages?: number;
-  ordersPage?: number;
-  ordersTotalPages?: number;
+export interface CatalogSectionState {
+  messageId?: number;
+  lastProductsMessageId?: number;
+  flowStep: CatalogFlowStep;
 
-	adminStep?: ManageUsersStep;
-	editingUserId?: number;
-	newUserId?: number;
-
-	flowStep?: FlowStep;
-	selectedBrand?: string;
-	selectedCategory?: string;
-	selectedModel?: string;
-	selectedStorage?: string;
-	selectedProductId?: string;
-	selectedAmount?: string;
-	selectedProductIdForCart?: string;
+  selectedBrand?: string;
+  selectedCategory?: string;
 
   lastProductGroups?: Product[][];
-	currentOrder?: ProductForCart[];
+}
 
-  currentMessageId?: number;
-	messageIds?: number[];
-	inlineMessageId?: number;
-  replyMessageId?: number;
+export interface OrdersSectionState {
+  messageId?: number;
+  flowStep: string;
+
+  page: number;
+  totalPages: number;
+
+  selectedUserId?: string;
+}
+
+export interface CartSectionState {
+  messageId?: number;
+  flowStep: CartFlowStep;
+
+  selectedBrand?: string;
+  selectedCategory?: string;
+  selectedModel?: string;
+  selectedStorage?: string;
+
+  selectedProductId?: string;
+  selectedAmount?: number;
+
+  selectedProductIdForCart?: string;
+  currentOrder?: ProductForCart[];
+}
+
+export interface SectionStateMap {
+  [SECTION.MAIN]: MainSectionState;
+  [SECTION.CATALOG]: CatalogSectionState;
+  [SECTION.ORDERS]: OrdersSectionState;
+  [SECTION.CART]: CartSectionState;
+}
+
+export interface IChatState {
+  section: SECTION;
+  mode: ChatMode;
+  activeMessageId?: number;
+
+  sections: {
+    [K in SECTION]?: SectionStateMap[K];
+  };
 }

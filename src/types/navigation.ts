@@ -1,14 +1,17 @@
 export enum SECTION {
   MAIN = "main",
-	UPLOAD_XLSX = "upload_xlsx",
-	MANAGE_USERS = "manage_users",
 	CATALOG = "catalog",
 	ORDERS = "orders",
 	CART = "cart",
 }
 
-export type ManageUsersStep = "main" | "users_list" | "add_user" | "delete_user" | "edit_user";
-export type FlowStep =
+export type MainFlowStep = "main" | "upload_xlsx" | "manage_users" | "users_list" | "add_user" | "delete_user" | "edit_user";
+export type CatalogFlowStep =
+  "brands" |
+  "categories" |
+  "products";
+
+export type CartFlowStep =
 	"main" |
 	"brands" |
 	"categories" |

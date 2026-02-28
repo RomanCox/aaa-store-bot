@@ -1,11 +1,9 @@
 import TelegramBot from "node-telegram-bot-api";
 import { getUser, isAdmin, isSuperAdmin } from "../../services/users.service";
-import { ROLE_LABELS, USERS_ERRORS } from "../../texts";
-import { setChatState } from "../../state/chat.state";
-import { UserRole } from "../../types";
+import { ROLE_LABELS, USERS_ERRORS, USERS_TEXTS } from "../../texts";
+import { getChatState, setChatState } from "../../state/chat.state";
+import { CALLBACK_TYPE, SECTION, UserRole } from "../../types";
 import { buildCallbackData } from "../../utils";
-import { CALLBACK_TYPE } from "../../types";
-import { COMMON_TEXTS } from "../../texts";
 import { renderScreen } from "../../render/renderScreen";
 
 export function editUserRoleKeyboard(isSuperAdmin: boolean) {
@@ -20,12 +18,6 @@ export function editUserRoleKeyboard(isSuperAdmin: boolean) {
         callback_data: buildCallbackData(CALLBACK_TYPE.NEW_ROLE_FOR_EXIST_USER, role),
       },
     ]),
-    [
-      {
-        text: COMMON_TEXTS.BACK_BUTTON,
-        callback_data: CALLBACK_TYPE.BACK,
-      },
-    ],
   ];
 }
 
@@ -34,38 +26,74 @@ export async function editUserInputHandler(
   chatId: number,
   text: string
 ) {
+  const state = getChatState(chatId);
+  const mainState = state.sections?.[SECTION.MAIN];
+
+  if (!mainState) return;
+
   const userIdToEdit = Number(text.trim());
 
+  // проверка на число
   if (Number.isNaN(userIdToEdit)) {
-    await renderScreen(bot, chatId, USERS_ERRORS.ID_NUMBER);
+    await renderScreen(bot, chatId, {
+      section: SECTION.MAIN,
+      text: USERS_ERRORS.ID_NUMBER,
+      withBackButton: true,
+    });
     return;
   }
 
+  // нельзя редактировать себя
   if (userIdToEdit === chatId) {
-    await renderScreen(bot, chatId, USERS_ERRORS.EDIT_MYSELF);
+    await renderScreen(bot, chatId, {
+      section: SECTION.MAIN,
+      text: USERS_ERRORS.EDIT_MYSELF,
+      withBackButton: true,
+    });
     return;
   }
 
+  // только администратор может редактировать
   if (!isAdmin(chatId)) {
-    await renderScreen(bot, chatId, USERS_ERRORS.ONLY_ADMIN);
+    await renderScreen(bot, chatId, {
+      section: SECTION.MAIN,
+      text: USERS_ERRORS.ONLY_ADMIN,
+      withBackButton: true,
+    });
     return;
   }
 
   const user = getUser(userIdToEdit);
 
   if (!user) {
-    await renderScreen(bot, chatId, USERS_ERRORS.USER_NOT_FOUND_MESSAGE, [[{
-      text: COMMON_TEXTS.BACK_BUTTON,
-      callback_data: CALLBACK_TYPE.BACK,
-    }]]);
+    await renderScreen(bot, chatId, {
+      section: SECTION.MAIN,
+      text: USERS_ERRORS.USER_NOT_FOUND_MESSAGE,
+      withBackButton: true,
+    });
     return;
   }
 
+  // сохраняем ID редактируемого пользователя в mainState.users
   setChatState(chatId, {
-    editingUserId: userIdToEdit,
+    sections: {
+      ...state.sections,
+      [SECTION.MAIN]: {
+        ...mainState,
+        users: {
+          ...mainState.users,
+          editingUserId: userIdToEdit,
+        },
+      },
+    },
   });
 
   const isSuperAdminUser = isSuperAdmin(chatId);
 
-  await renderScreen(bot, chatId, USERS_ERRORS.USER_NOT_FOUND_MESSAGE, editUserRoleKeyboard(isSuperAdminUser));
+  await renderScreen(bot, chatId, {
+    section: SECTION.MAIN,
+    text: USERS_TEXTS.CHOOSE_ROLE,
+    inlineKeyboard: editUserRoleKeyboard(isSuperAdminUser),
+    withBackButton: true,
+  });
 }
