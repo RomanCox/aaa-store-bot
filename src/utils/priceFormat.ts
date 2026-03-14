@@ -22,8 +22,8 @@ function findPriceRule(
 ) {
   const candidates = formats.filter((f) => {
     if (f.category && f.category !== category) return false;
-    if (f.brand && f.brand !== brand) return false;
-    return true;
+    return !(f.brand && f.brand !== brand);
+
   });
 
   for (const format of candidates) {

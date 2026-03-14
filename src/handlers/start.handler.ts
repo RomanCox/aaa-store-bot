@@ -1,7 +1,7 @@
 import TelegramBot from "node-telegram-bot-api";
 
 import { ENV } from "../config/env";
-import { adminKeyboard, mainKeyboard } from "../keyboards";
+import { mainKeyboard } from "../keyboards";
 import { getUser, isAdmin } from "../services/users.service";
 import { AUTH_TEXTS, getWelcomeText, START_TEXTS } from "../texts";
 import { SECTION, START_ACTIONS } from "../types";

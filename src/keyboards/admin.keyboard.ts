@@ -5,7 +5,6 @@ import { getPriceFormation, getRates } from "../services/price.service";
 
 export function adminKeyboard(): InlineKeyboardButton[][] {
 	const rates = getRates();
-	const priceFormation = getPriceFormation();
 
   return [
       [{text: ADMIN_TEXTS.UPLOAD_XLSX, callback_data: CALLBACK_TYPE.UPLOAD_XLSX}],
