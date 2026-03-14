@@ -118,39 +118,6 @@ export async function savePriceFormation(update: PriceFormat[]) {
 	priceFormation = update;
 }
 
-// export async function editPriceFormation(
-//   bot: TelegramBot,
-//   chatId: number,
-//   priceEditType: ChatMode
-// ) {
-//   setChatState(chatId, {
-//     mode: priceEditType,
-//   });
-//
-//   const textGenerate = (priceEditType: ChatMode) => {
-//     switch (priceEditType) {
-//       case "edit_rub_to_byn":
-//         return PRICE_TEXTS.ENTER_RUB_TO_BYN;
-//       case "edit_rub_to_usd":
-//         return PRICE_TEXTS.ENTER_RUB_TO_USD;
-//       case "edit_retail_mult":
-//         return PRICE_TEXTS.ENTER_RETAIL_MULT;
-//       case "edit_wholesale_mult":
-//         return PRICE_TEXTS.ENTER_WHOLESALE_MULT;
-//       default:
-//         return PRICE_TEXTS.ENTER_RUB_TO_BYN;
-//     }
-//   };
-//
-//   await renderScreen(bot, chatId, {
-//     section: SECTION.MAIN,
-//     text: textGenerate(priceEditType),
-//     withBackButton: true,
-//   });
-//
-//   return;
-// }
-
 export function getCurrency(userId: number) {
 	const userRole = getUserRole(userId);
 

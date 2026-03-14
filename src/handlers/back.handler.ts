@@ -39,7 +39,6 @@ export async function handleBack(bot: TelegramBot, chatId: number) {
       },
     });
 
-    // await startUserManagement(bot, chatId);
     return;
   }
 

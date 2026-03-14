@@ -48,9 +48,7 @@ export function registerStart(bot: TelegramBot) {
 
     await renderScreen(bot, chatId, {
       section: SECTION.HOME,
-      // text: isAdmin(chatId) ? START_TEXTS.ADMIN_PANEL : START_TEXTS.SELECT_ACTION,
       text: START_TEXTS.SELECT_ACTION,
-      // inlineKeyboard: isAdmin(chatId) ? adminKeyboard() : [],
       parse_mode: "HTML",
     });
   });

@@ -654,8 +654,8 @@ export function registerCallbacks(bot: TelegramBot) {
               ...state.sections,
               [SECTION.ORDERS]: {
                 messageId: undefined,
-                flowStep: "main", // обязательный дефолт
-                page: 1,          // обязательный дефолт
+                flowStep: "main",
+                page: 1,
                 totalPages: 1,
                 selectedUserId: undefined,
               },
@@ -665,7 +665,7 @@ export function registerCallbacks(bot: TelegramBot) {
           state = getChatState(chatId);
         }
 
-        const ordersState = state.sections[SECTION.ORDERS]!; // теперь TS точно знает, что не undefined
+        const ordersState = state.sections[SECTION.ORDERS]!;
 
         // открыть список заказов заново
         if (!paramValue) {

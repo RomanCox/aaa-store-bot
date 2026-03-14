@@ -40,6 +40,5 @@ export function cartRootKeyboard(currentOrder: ProductForCart[] = []): InlineKey
 		]);
 	}
 
-	// return {inline_keyboard: keyboard};
 	return keyboard;
 }
