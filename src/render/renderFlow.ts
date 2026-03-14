@@ -19,12 +19,11 @@ import {
   ProductForCart,
   SECTION
 } from "../types";
-import { isAdmin } from "../services/users.service";
-import { renderProductsList } from "../render/renderProductsList";
+import { renderProductsList } from "./renderProductsList";
 import { editCartKeyboard } from "../keyboards/editCart.keyboard";
 import { getCurrency } from "../services/price.service";
 import { editProductInCartKeyboard } from "../keyboards/editProductInCart.keyboard";
-import { renderScreen } from "../render/renderScreen";
+import { renderScreen } from "./renderScreen";
 
 async function renderRoot(bot: TelegramBot, chatId: number) {
 	const state = getChatState(chatId);
@@ -69,7 +68,6 @@ async function renderRoot(bot: TelegramBot, chatId: number) {
     text: buildText(state.sections.cart?.currentOrder),
     inlineKeyboard: cartRootKeyboard(state.sections.cart?.currentOrder),
     parse_mode: "HTML",
-    withBackButton: true,
   });
 }
 
@@ -164,7 +162,6 @@ export async function renderBrands(
     inlineKeyboard: brandsKeyboard(brands, {
       withAllBtn: section === SECTION.CATALOG,
       withDownloadBtn: section === SECTION.CATALOG,
-      showBack: isAdmin(chatId),
     }),
   });
 }

@@ -113,7 +113,6 @@ export async function ordersHandler(
     text,
     inlineKeyboard: buttons,
     parse_mode: "HTML",
-    withBackButton: isAdmin(chatId),
   });
 }
 
@@ -198,6 +197,6 @@ export async function orderHandler(bot: TelegramBot, chatId: number, orderId: st
   await renderScreen(bot, chatId, {
     section: SECTION.ORDERS,
     text: message,
-    withBackButton: true,
+    withBackButton: isAdmin(chatId),
   });
 }

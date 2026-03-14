@@ -7,7 +7,7 @@ import { registerCallbacks } from "./handlers/callback.handler";
 import { registerMessages } from "./handlers/message.handler";
 import { registerDocumentHandler } from "./handlers/document.handler";
 import { loadProducts } from "./services/products.service";
-import { loadPriceFormation } from "./services/price.service";
+import { loadPriceFormation, loadRates } from "./services/price.service";
 import { loadOrdersFromFile } from "./services/orders.service";
 
 async function bootstrap() {
@@ -15,6 +15,7 @@ async function bootstrap() {
 
 	loadUsers();
 	loadProducts();
+  loadRates();
 	loadPriceFormation();
   loadOrdersFromFile();
 

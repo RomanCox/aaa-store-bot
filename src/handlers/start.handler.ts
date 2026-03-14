@@ -27,7 +27,7 @@ export function registerStart(bot: TelegramBot) {
 
     if (!user) {
       await renderScreen(bot, chatId, {
-        section: SECTION.MAIN,
+        section: SECTION.HOME,
         text: AUTH_TEXTS.notActivated(chatId),
         inlineKeyboard: [
           [{ text: START_TEXTS.CHECK_ACCESS, callback_data: START_ACTIONS.CHECK_ACCESS }],
@@ -43,13 +43,14 @@ export function registerStart(bot: TelegramBot) {
     await bot.sendMessage(
       chatId,
       welcomeText,
-      { reply_markup: mainKeyboard() }
+      { reply_markup: mainKeyboard(chatId) },
     );
 
     await renderScreen(bot, chatId, {
-      section: SECTION.MAIN,
-      text: isAdmin(chatId) ? START_TEXTS.ADMIN_PANEL : START_TEXTS.SELECT_ACTION,
-      inlineKeyboard: isAdmin(chatId) ? adminKeyboard() : [],
+      section: SECTION.HOME,
+      // text: isAdmin(chatId) ? START_TEXTS.ADMIN_PANEL : START_TEXTS.SELECT_ACTION,
+      text: START_TEXTS.SELECT_ACTION,
+      // inlineKeyboard: isAdmin(chatId) ? adminKeyboard() : [],
       parse_mode: "HTML",
     });
   });

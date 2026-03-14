@@ -8,14 +8,14 @@ import { renderScreen } from "../render/renderScreen";
 
 export async function startXlsxUpload(bot: TelegramBot, chatId: number) {
   const state = getChatState(chatId);
-  const mainState = state.sections?.[SECTION.MAIN];
+  const mainState = state.sections?.[SECTION.ADMIN_PANEL];
 
   setChatState(chatId, {
     mode: "upload_xlsx",
-    section: SECTION.MAIN,
+    section: SECTION.ADMIN_PANEL,
     sections: {
       ...state.sections,
-      [SECTION.MAIN]: {
+      [SECTION.ADMIN_PANEL]: {
         messageId: mainState?.messageId,
         users: mainState?.users ?? {},
         flowStep: "upload_xlsx",
@@ -24,7 +24,7 @@ export async function startXlsxUpload(bot: TelegramBot, chatId: number) {
   });
 
   await renderScreen(bot, chatId, {
-    section: SECTION.MAIN,
+    section: SECTION.ADMIN_PANEL,
     text: ADMIN_TEXTS.UPLOAD_XLSX_MESSAGE,
     parse_mode: "Markdown",
     withBackButton: true,
@@ -33,13 +33,13 @@ export async function startXlsxUpload(bot: TelegramBot, chatId: number) {
 
 export async function startUserManagement(bot: TelegramBot, chatId: number) {
   const state = getChatState(chatId);
-  const mainState = state.sections?.[SECTION.MAIN];
+  const mainState = state.sections?.[SECTION.ADMIN_PANEL];
 
   setChatState(chatId, {
-    section: SECTION.MAIN,
+    section: SECTION.ADMIN_PANEL,
     sections: {
       ...state.sections,
-      [SECTION.MAIN]: {
+      [SECTION.ADMIN_PANEL]: {
         flowStep: "manage_users",
         messageId: mainState?.messageId,
         users: mainState?.users ?? {},
@@ -48,7 +48,7 @@ export async function startUserManagement(bot: TelegramBot, chatId: number) {
   });
 
   await renderScreen(bot, chatId, {
-    section: SECTION.MAIN,
+    section: SECTION.ADMIN_PANEL,
     text: ADMIN_TEXTS.MANAGE_USERS_MESSAGE,
     inlineKeyboard: [
       [{ text: ADMIN_TEXTS.ADD_USER_BTN, callback_data: CALLBACK_TYPE.ADD_USER }],
@@ -63,14 +63,14 @@ export async function startUserManagement(bot: TelegramBot, chatId: number) {
 
 export async function addUser(bot: TelegramBot, chatId: number) {
   const state = getChatState(chatId);
-  const mainState = state.sections?.[SECTION.MAIN];
+  const mainState = state.sections?.[SECTION.ADMIN_PANEL];
 
   setChatState(chatId, {
     mode: "add_user",
-    section: SECTION.MAIN,
+    section: SECTION.ADMIN_PANEL,
     sections: {
       ...state.sections,
-      [SECTION.MAIN]: {
+      [SECTION.ADMIN_PANEL]: {
         flowStep: "add_user",
         messageId: mainState?.messageId,
         users: mainState?.users ?? {},
@@ -79,7 +79,7 @@ export async function addUser(bot: TelegramBot, chatId: number) {
   });
 
   await renderScreen(bot, chatId, {
-    section: SECTION.MAIN,
+    section: SECTION.ADMIN_PANEL,
     text: USERS_TEXTS.ENTER_ID_USER_ADD,
     withBackButton: true,
   });
@@ -87,14 +87,14 @@ export async function addUser(bot: TelegramBot, chatId: number) {
 
 export async function deleteUser(bot: TelegramBot, chatId: number) {
   const state = getChatState(chatId);
-  const mainState = state.sections?.[SECTION.MAIN];
+  const mainState = state.sections?.[SECTION.ADMIN_PANEL];
 
   setChatState(chatId, {
     mode: "delete_user",
-    section: SECTION.MAIN,
+    section: SECTION.ADMIN_PANEL,
     sections: {
       ...state.sections,
-      [SECTION.MAIN]: {
+      [SECTION.ADMIN_PANEL]: {
         flowStep: "delete_user",
         messageId: mainState?.messageId,
         users: mainState?.users ?? {},
@@ -103,7 +103,7 @@ export async function deleteUser(bot: TelegramBot, chatId: number) {
   });
 
   await renderScreen(bot, chatId, {
-    section: SECTION.MAIN,
+    section: SECTION.ADMIN_PANEL,
     text: USERS_TEXTS.ENTER_ID_USER_DELETE,
     withBackButton: true,
   });
@@ -111,14 +111,14 @@ export async function deleteUser(bot: TelegramBot, chatId: number) {
 
 export async function editUser(bot: TelegramBot, chatId: number) {
   const state = getChatState(chatId);
-  const mainState = state.sections?.[SECTION.MAIN];
+  const mainState = state.sections?.[SECTION.ADMIN_PANEL];
 
   setChatState(chatId, {
     mode: "edit_user",
-    section: SECTION.MAIN,
+    section: SECTION.ADMIN_PANEL,
     sections: {
       ...state.sections,
-      [SECTION.MAIN]: {
+      [SECTION.ADMIN_PANEL]: {
         flowStep: "edit_user",
         messageId: mainState?.messageId,
         users: mainState?.users ?? {},
@@ -127,7 +127,7 @@ export async function editUser(bot: TelegramBot, chatId: number) {
   });
 
   await renderScreen(bot, chatId, {
-    section: SECTION.MAIN,
+    section: SECTION.ADMIN_PANEL,
     text: USERS_TEXTS.ENTER_ID_USER_EDIT,
     withBackButton: true,
   });

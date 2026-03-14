@@ -1,21 +1,20 @@
 import TelegramBot from "node-telegram-bot-api";
 import { getChatState, setChatState } from "../state/chat.state";
 import { SECTION } from "../types";
-import { startUserManagement } from "../services/admin.service";
 
 export async function handleBack(bot: TelegramBot, chatId: number) {
   const state = getChatState(chatId);
-  const mainState = state.sections?.[SECTION.MAIN];
+  const adminState = state.sections?.[SECTION.ADMIN_PANEL];
 
-  if (!mainState) return;
+  if (!adminState) return;
 
-  if (mainState.flowStep === "upload_xlsx") {
+  if (adminState.flowStep === "upload_xlsx") {
     setChatState(chatId, {
       mode: "idle",
       sections: {
         ...state.sections,
-        [SECTION.MAIN]: {
-          ...mainState,
+        [SECTION.ADMIN_PANEL]: {
+          ...adminState,
           flowStep: "main",
         },
       },
@@ -24,32 +23,32 @@ export async function handleBack(bot: TelegramBot, chatId: number) {
   }
 
   if (
-    mainState.flowStep === "users_list" ||
-    mainState.flowStep === "add_user" ||
-    mainState.flowStep === "edit_user" ||
-    mainState.flowStep === "delete_user"
+    adminState.flowStep === "users_list" ||
+    adminState.flowStep === "add_user" ||
+    adminState.flowStep === "edit_user" ||
+    adminState.flowStep === "delete_user"
   ) {
     setChatState(chatId, {
       mode: "idle",
       sections: {
         ...state.sections,
-        [SECTION.MAIN]: {
-          ...mainState,
+        [SECTION.ADMIN_PANEL]: {
+          ...adminState,
           flowStep: "manage_users",
         },
       },
     });
 
-    await startUserManagement(bot, chatId);
+    // await startUserManagement(bot, chatId);
     return;
   }
 
-  if (mainState.flowStep === "manage_users") {
+  if (adminState.flowStep === "manage_users") {
     setChatState(chatId, {
       sections: {
         ...state.sections,
-        [SECTION.MAIN]: {
-          ...mainState,
+        [SECTION.ADMIN_PANEL]: {
+          ...adminState,
           flowStep: "main",
         },
       },
@@ -75,7 +74,7 @@ export async function handleBack(bot: TelegramBot, chatId: number) {
               selectedCategory: undefined,
             },
           },
-          section: SECTION.MAIN,
+          section: SECTION.ADMIN_PANEL,
         });
         return;
 
@@ -116,20 +115,6 @@ export async function handleBack(bot: TelegramBot, chatId: number) {
     if (!cartState) return;
 
     switch (cartState.flowStep) {
-      // 🔹 Назад из main корзины → в MAIN
-      case "main":
-        setChatState(chatId, {
-          section: SECTION.MAIN,
-          sections: {
-            ...state.sections,
-            [SECTION.CART]: {
-              ...cartState,
-              flowStep: "main",
-            },
-          },
-        });
-        return;
-
       // 🔹 Назад из брендов → в main корзины
       case "brands":
         setChatState(chatId, {
@@ -241,4 +226,5 @@ export async function handleBack(bot: TelegramBot, chatId: number) {
         return;
     }
 	}
+  return;
 }

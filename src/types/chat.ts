@@ -1,4 +1,4 @@
-import { SECTION, CatalogFlowStep, CartFlowStep, MainFlowStep } from "./navigation";
+import { SECTION, CatalogFlowStep, CartFlowStep, AdminPanelFlowStep } from "./navigation";
 import { Product, ProductForCart } from "./product";
 
 export type ChatMode = "idle"
@@ -16,9 +16,9 @@ export type ChatMode = "idle"
 	| "choose_userId_for_orders"
 	| "edit_product_amount_in_cart";
 
-export type MainSectionState = {
+export type AdminPanelSectionState = {
   messageId?: number;
-  flowStep: MainFlowStep;
+  flowStep: AdminPanelFlowStep;
   users: {
     page?: number;
     totalPages?: number;
@@ -26,6 +26,10 @@ export type MainSectionState = {
     newUserId?: number;
   };
 };
+
+export interface HomeSectionState {
+  messageId?: number;
+}
 
 export interface CatalogSectionState {
   messageId?: number;
@@ -65,10 +69,11 @@ export interface CartSectionState {
 }
 
 export interface SectionStateMap {
-  [SECTION.MAIN]: MainSectionState;
+  [SECTION.HOME]: HomeSectionState;
   [SECTION.CATALOG]: CatalogSectionState;
   [SECTION.ORDERS]: OrdersSectionState;
   [SECTION.CART]: CartSectionState;
+  [SECTION.ADMIN_PANEL]: AdminPanelSectionState;
 }
 
 export interface IChatState {

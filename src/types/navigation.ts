@@ -1,11 +1,12 @@
 export enum SECTION {
-  MAIN = "main",
+  HOME = "home",
 	CATALOG = "catalog",
 	ORDERS = "orders",
 	CART = "cart",
+	ADMIN_PANEL = "admin_panel",
 }
 
-export type MainFlowStep = "main" | "upload_xlsx" | "manage_users" | "users_list" | "add_user" | "delete_user" | "edit_user";
+export type AdminPanelFlowStep = "main" | "upload_xlsx" | "manage_users" | "users_list" | "add_user" | "delete_user" | "edit_user";
 export type CatalogFlowStep =
   "brands" |
   "categories" |

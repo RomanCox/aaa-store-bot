@@ -1,19 +1,12 @@
 import { IChatState, SECTION, SectionStateMap } from "../types";
 
 const DEFAULT_CHAT_STATE: IChatState = {
-  section: SECTION.MAIN,
+  section: SECTION.HOME,
   mode: "idle",
   activeMessageId: undefined,
   sections: {
-    [SECTION.MAIN]: {
+    [SECTION.HOME]: {
       messageId: undefined,
-      flowStep: "main",
-      users: {
-        page: 1,
-        totalPages: 1,
-        editingUserId: undefined,
-        newUserId: undefined,
-      },
     },
     [SECTION.CART]: {
       messageId: undefined,
@@ -31,6 +24,16 @@ const DEFAULT_CHAT_STATE: IChatState = {
       page: 1,
       totalPages: 1,
       selectedUserId: undefined,
+    },
+    [SECTION.ADMIN_PANEL]: {
+      messageId: undefined,
+      flowStep: "main",
+      users: {
+        page: 1,
+        totalPages: 1,
+        editingUserId: undefined,
+        newUserId: undefined,
+      },
     },
   },
 };

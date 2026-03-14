@@ -12,14 +12,14 @@ export async function deleteUserInputHandler(
 ) {
   const userIdToDelete = Number(text.trim());
   const state = getChatState(chatId);
-  const mainState = state.sections?.[SECTION.MAIN];
+  const adminState = state.sections?.[SECTION.ADMIN_PANEL];
 
-  if (!mainState) return;
+  if (!adminState) return;
 
   // проверка, что введено число
   if (Number.isNaN(userIdToDelete)) {
     await renderScreen(bot, chatId, {
-      section: SECTION.MAIN,
+      section: SECTION.ADMIN_PANEL,
       text: USERS_ERRORS.ID_NUMBER,
       withBackButton: true,
     });
@@ -29,7 +29,7 @@ export async function deleteUserInputHandler(
   // нельзя удалить себя
   if (userIdToDelete === chatId) {
     await renderScreen(bot, chatId, {
-      section: SECTION.MAIN,
+      section: SECTION.ADMIN_PANEL,
       text: USERS_ERRORS.DELETE_MYSELF,
       withBackButton: true,
     });
@@ -43,16 +43,16 @@ export async function deleteUserInputHandler(
     setChatState(chatId, {
       sections: {
         ...state.sections,
-        [SECTION.MAIN]: {
-          ...mainState,
-          flowStep: mainState.flowStep, // оставляем текущий flowStep
+        [SECTION.ADMIN_PANEL]: {
+          ...adminState,
+          flowStep: adminState.flowStep, // оставляем текущий flowStep
         },
       },
       mode: "idle",
     });
 
     await renderScreen(bot, chatId, {
-      section: SECTION.MAIN,
+      section: SECTION.ADMIN_PANEL,
       text: USERS_TEXTS.DELETE_SUCCESSFUL,
       withBackButton: true,
     });
@@ -61,7 +61,7 @@ export async function deleteUserInputHandler(
       switch (error.message) {
         case USERS_ERRORS.USER_NOT_FOUND:
           await renderScreen(bot, chatId, {
-            section: SECTION.MAIN,
+            section: SECTION.ADMIN_PANEL,
             text: USERS_ERRORS.USER_NOT_FOUND_MESSAGE,
             withBackButton: true,
           });
@@ -69,7 +69,7 @@ export async function deleteUserInputHandler(
 
         default:
           await renderScreen(bot, chatId, {
-            section: SECTION.MAIN,
+            section: SECTION.ADMIN_PANEL,
             text: USERS_ERRORS.CANT_DELETE_USER,
             withBackButton: true,
           });

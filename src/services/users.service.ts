@@ -97,11 +97,11 @@ export async function usersPageInputHandler(
   let state = getChatState(chatId);
 
   // создаём дефолтное состояние MAIN при первом обращении
-  if (!state.sections?.[SECTION.MAIN]) {
+  if (!state.sections?.[SECTION.ADMIN_PANEL]) {
     setChatState(chatId, {
       sections: {
         ...state.sections,
-        [SECTION.MAIN]: {
+        [SECTION.ADMIN_PANEL]: {
           messageId: undefined,
           flowStep: "main",
           users: {
@@ -117,13 +117,13 @@ export async function usersPageInputHandler(
     state = getChatState(chatId);
   }
 
-  const mainState = state.sections[SECTION.MAIN]!;
-  const usersState = mainState.users;
+  const adminState = state.sections[SECTION.ADMIN_PANEL]!;
+  const usersState = adminState.users;
 
   // проверка на число
   if (!Number.isInteger(page) || page < 1) {
     await renderScreen(bot, chatId, {
-      section: SECTION.MAIN,
+      section: SECTION.ADMIN_PANEL,
       text: PAGINATION_TEXTS.ERROR_PAGE,
     });
     return;
@@ -133,7 +133,7 @@ export async function usersPageInputHandler(
   const totalPages = usersState.totalPages ?? 0;
   if (page > totalPages) {
     await renderScreen(bot, chatId, {
-      section: SECTION.MAIN,
+      section: SECTION.ADMIN_PANEL,
       text: PAGINATION_TEXTS.PAGE_FROM_TO + totalPages,
     });
     return;
@@ -143,8 +143,8 @@ export async function usersPageInputHandler(
   setChatState(chatId, {
     sections: {
       ...state.sections,
-      [SECTION.MAIN]: {
-        ...mainState,
+      [SECTION.ADMIN_PANEL]: {
+        ...adminState,
         users: {
           ...usersState,
           page,

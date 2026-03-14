@@ -27,16 +27,16 @@ export async function editUserInputHandler(
   text: string
 ) {
   const state = getChatState(chatId);
-  const mainState = state.sections?.[SECTION.MAIN];
+  const adminState = state.sections?.[SECTION.ADMIN_PANEL];
 
-  if (!mainState) return;
+  if (!adminState) return;
 
   const userIdToEdit = Number(text.trim());
 
   // проверка на число
   if (Number.isNaN(userIdToEdit)) {
     await renderScreen(bot, chatId, {
-      section: SECTION.MAIN,
+      section: SECTION.ADMIN_PANEL,
       text: USERS_ERRORS.ID_NUMBER,
       withBackButton: true,
     });
@@ -46,7 +46,7 @@ export async function editUserInputHandler(
   // нельзя редактировать себя
   if (userIdToEdit === chatId) {
     await renderScreen(bot, chatId, {
-      section: SECTION.MAIN,
+      section: SECTION.ADMIN_PANEL,
       text: USERS_ERRORS.EDIT_MYSELF,
       withBackButton: true,
     });
@@ -56,7 +56,7 @@ export async function editUserInputHandler(
   // только администратор может редактировать
   if (!isAdmin(chatId)) {
     await renderScreen(bot, chatId, {
-      section: SECTION.MAIN,
+      section: SECTION.ADMIN_PANEL,
       text: USERS_ERRORS.ONLY_ADMIN,
       withBackButton: true,
     });
@@ -67,7 +67,7 @@ export async function editUserInputHandler(
 
   if (!user) {
     await renderScreen(bot, chatId, {
-      section: SECTION.MAIN,
+      section: SECTION.ADMIN_PANEL,
       text: USERS_ERRORS.USER_NOT_FOUND_MESSAGE,
       withBackButton: true,
     });
@@ -78,10 +78,10 @@ export async function editUserInputHandler(
   setChatState(chatId, {
     sections: {
       ...state.sections,
-      [SECTION.MAIN]: {
-        ...mainState,
+      [SECTION.ADMIN_PANEL]: {
+        ...adminState,
         users: {
-          ...mainState.users,
+          ...adminState.users,
           editingUserId: userIdToEdit,
         },
       },
@@ -91,7 +91,7 @@ export async function editUserInputHandler(
   const isSuperAdminUser = isSuperAdmin(chatId);
 
   await renderScreen(bot, chatId, {
-    section: SECTION.MAIN,
+    section: SECTION.ADMIN_PANEL,
     text: USERS_TEXTS.CHOOSE_ROLE,
     inlineKeyboard: editUserRoleKeyboard(isSuperAdminUser),
     withBackButton: true,

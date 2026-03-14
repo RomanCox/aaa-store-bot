@@ -5,4 +5,5 @@ export const MENU_TEXTS = {
 	BALANCE: "💰 Баланс",
 	MANAGER: "✍️ Менеджер",
 	SETTINGS: "⚙️ Настройки",
+	ADMIN_PANEL: "🫆 Панель админа",
 };

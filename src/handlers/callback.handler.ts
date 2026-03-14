@@ -1,21 +1,29 @@
 import TelegramBot from "node-telegram-bot-api";
 import { CALLBACK_TYPE, CATALOG_VALUE, Product, ProductForCart, SECTION, UserRole } from "../types";
 import { getChatState, setChatState } from "../state/chat.state";
-import { renderFlow } from "./renderFlow";
-import { parseCallbackData } from "../utils";
+import { renderFlow } from "../render/renderFlow";
+import { parseCallbackData, safeAnswerCallback } from "../utils";
 import { handleBack } from "./back.handler";
 import { addUser, deleteUser, editUser, startUserManagement, startXlsxUpload } from "../services/admin.service";
 import { getProductById, tempExports } from "../services/products.service";
 import { renderProductsList } from "../render/renderProductsList";
 import { showUsersList } from "./users/users.handler";
-import { CART_TEXTS, COMMON_TEXTS, PAGINATION_TEXTS, START_TEXTS, USERS_ERRORS, USERS_TEXTS } from "../texts";
-import { createUser, isAdmin, updateUserRole } from "../services/users.service";
+import {
+  ADMIN_TEXTS,
+  CART_TEXTS,
+  COMMON_TEXTS,
+  PAGINATION_TEXTS,
+  USERS_ERRORS,
+  USERS_TEXTS
+} from "../texts";
+import { createUser, updateUserRole } from "../services/users.service";
 import { sendPriceList } from "../services/xlsx.service";
-import { editPriceFormation } from "../services/price.service";
 import { buildOrderMessage, createOrder } from "../services/orders.service";
 import { orderHandler, ordersHandler } from "./orders.handler";
 import { renderScreen } from "../render/renderScreen";
-import { adminKeyboard } from "../keyboards";
+import { editRates } from "../services/price.service";
+import { loadPricesFormats } from "../services/sheets.service";
+import { renderSection } from "../render/renderSection";
 
 const ADMIN_CHAT_ID = Number(process.env.ADMIN_CHAT_ID);
 
@@ -34,36 +42,7 @@ export function registerCallbacks(bot: TelegramBot) {
       case CALLBACK_TYPE.BACK: {
         await handleBack(bot, chatId);
 
-        const state = getChatState(chatId);
-
-        if (state.section === SECTION.MAIN) {
-          const mainState = state.sections?.[SECTION.MAIN];
-
-          if (!mainState || mainState.flowStep === "main") {
-            // рендерим главный экран
-            await renderScreen(bot, chatId, {
-              section: SECTION.MAIN,
-              text: isAdmin(chatId) ? START_TEXTS.ADMIN_PANEL : START_TEXTS.SELECT_ACTION,
-              inlineKeyboard: isAdmin(chatId) ? adminKeyboard() : [],
-              parse_mode: "HTML",
-            });
-          } else {
-            // рендерим текущий flowStep, например manage_users
-            await startUserManagement(bot, chatId);
-          }
-
-          return;
-        }
-
-        if (state.section === SECTION.CATALOG) {
-          await renderFlow(bot, chatId);
-          return;
-        }
-
-        if (state.section === SECTION.CART) {
-          await renderFlow(bot, chatId);
-          return;
-        }
+        await renderSection(bot, chatId);
 
         return;
       }
@@ -81,13 +60,13 @@ export function registerCallbacks(bot: TelegramBot) {
       case CALLBACK_TYPE.USERS_LIST: {
         const paramValue = params[0];
         const state = getChatState(chatId);
-        const mainState = state.sections?.[SECTION.MAIN];
+        const adminState = state.sections?.[SECTION.ADMIN_PANEL];
 
-        if (!mainState) return;
+        if (!adminState) return;
 
-        let page = mainState.users?.page ?? 1;
+        let page = adminState.users?.page ?? 1;
 
-        if (mainState.flowStep === "users_list") {
+        if (adminState.flowStep === "users_list") {
           if (paramValue === "next") page++;
           if (paramValue === "prev") page--;
 
@@ -98,7 +77,7 @@ export function registerCallbacks(bot: TelegramBot) {
             });
 
             await renderScreen(bot, chatId, {
-              section: SECTION.MAIN,
+              section: SECTION.ADMIN_PANEL,
               text: PAGINATION_TEXTS.ENTER_PAGE_NUMBER,
               parse_mode: "HTML",
               withBackButton: true,
@@ -111,11 +90,11 @@ export function registerCallbacks(bot: TelegramBot) {
         setChatState(chatId, {
           sections: {
             ...state.sections,
-            [SECTION.MAIN]: {
-              ...mainState,
+            [SECTION.ADMIN_PANEL]: {
+              ...adminState,
               flowStep: "users_list",
               users: {
-                ...mainState.users,
+                ...adminState.users,
                 page,
               },
             },
@@ -145,11 +124,11 @@ export function registerCallbacks(bot: TelegramBot) {
       case CALLBACK_TYPE.ROLE_FOR_NEW_USER: {
         const role = params[0] as UserRole;
         const state = getChatState(chatId);
-        const mainState = state.sections?.[SECTION.MAIN];
+        const mainState = state.sections?.[SECTION.ADMIN_PANEL];
 
         if (!mainState || mainState.flowStep !== "add_user" || !mainState.users.newUserId) {
           await renderScreen(bot, chatId, {
-            section: SECTION.MAIN,
+            section: SECTION.ADMIN_PANEL,
             text: USERS_ERRORS.USER_NOT_CHOOSE_MESSAGE,
           });
           return;
@@ -161,7 +140,7 @@ export function registerCallbacks(bot: TelegramBot) {
           mode: "idle",
           sections: {
             ...state.sections,
-            [SECTION.MAIN]: {
+            [SECTION.ADMIN_PANEL]: {
               ...mainState,
               users: {
                 ...mainState.users,
@@ -172,7 +151,7 @@ export function registerCallbacks(bot: TelegramBot) {
         });
 
         await renderScreen(bot, chatId, {
-          section: SECTION.MAIN,
+          section: SECTION.ADMIN_PANEL,
           text: USERS_TEXTS.ADD_SUCCESSFUL,
           withBackButton: true,
         });
@@ -183,11 +162,11 @@ export function registerCallbacks(bot: TelegramBot) {
       case CALLBACK_TYPE.NEW_ROLE_FOR_EXIST_USER: {
         const role = params[0] as UserRole;
         const state = getChatState(chatId);
-        const mainState = state.sections?.[SECTION.MAIN];
+        const mainState = state.sections?.[SECTION.ADMIN_PANEL];
 
         if (!mainState || mainState.flowStep !== "edit_user" || !mainState.users.editingUserId) {
           await renderScreen(bot, chatId, {
-            section: SECTION.MAIN,
+            section: SECTION.ADMIN_PANEL,
             text: USERS_ERRORS.USER_NOT_CHOOSE_MESSAGE,
           });
           return;
@@ -199,7 +178,7 @@ export function registerCallbacks(bot: TelegramBot) {
           mode: "idle",
           sections: {
             ...state.sections,
-            [SECTION.MAIN]: {
+            [SECTION.ADMIN_PANEL]: {
               ...mainState,
               users: {
                 ...mainState.users,
@@ -210,7 +189,7 @@ export function registerCallbacks(bot: TelegramBot) {
         });
 
         await renderScreen(bot, chatId, {
-          section: SECTION.MAIN,
+          section: SECTION.ADMIN_PANEL,
           text: USERS_TEXTS.ROLE_RENEWED + role,
           withBackButton: true,
         });
@@ -219,24 +198,31 @@ export function registerCallbacks(bot: TelegramBot) {
       }
 
 			case CALLBACK_TYPE.EDIT_RUB_TO_BYN: {
-				await editPriceFormation(bot, chatId, "edit_rub_to_byn");
+				await editRates(bot, chatId, "edit_rub_to_byn");
 				return;
 			}
 
 			case CALLBACK_TYPE.EDIT_RUB_TO_USD: {
-				await editPriceFormation(bot, chatId, "edit_rub_to_usd");
+				await editRates(bot, chatId, "edit_rub_to_usd");
 				return;
 			}
 
-			case CALLBACK_TYPE.EDIT_RETAIL_MULT: {
-				await editPriceFormation(bot, chatId, "edit_retail_mult");
-				return;
-			}
+      case CALLBACK_TYPE.RENEW_PRICE: {
+        try {
+          await loadPricesFormats();
+          await bot.sendMessage(chatId, ADMIN_TEXTS.RENEW_PRICE_SUCCESS, {
+            parse_mode: "HTML",
+          });
+          await safeAnswerCallback(bot, query.id);
+        } catch (error) {
+          await bot.sendMessage(chatId, ADMIN_TEXTS.RENEW_PRICE_ERROR, {
+            parse_mode: "HTML",
+          });
+          await safeAnswerCallback(bot, query.id);
+        }
 
-			case CALLBACK_TYPE.EDIT_WHOLESALE_MULT: {
-				await editPriceFormation(bot, chatId, "edit_wholesale_mult");
-				return;
-			}
+        return;
+      }
 
       case CALLBACK_TYPE.BRAND: {
         const state = getChatState(chatId);

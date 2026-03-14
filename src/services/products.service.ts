@@ -3,7 +3,7 @@ import path from "path";
 import { Product, ProductFilters } from "../types";
 import { priceFormat } from "../utils";
 import { getUser } from "./users.service";
-import { getPriceFormation } from "./price.service";
+import { getPriceFormation, getRates } from "./price.service";
 import { sortProducts } from "../utils";
 
 const PRODUCTS_PATH = path.resolve(__dirname, "../data/products.json");
@@ -42,6 +42,7 @@ export function getProducts(
 	filters: ProductFilters = {},
 ): Product[] {
 	const userRole = getUser(chatId)?.role;
+	const rates = getRates();
 	const priceFormation = getPriceFormation();
 
 	return Array.from(products.values())
@@ -61,12 +62,20 @@ export function getProducts(
 		})
 		.map(product => ({
 			...product,
-			price: priceFormat(product.price, priceFormation, userRole),
+			price: priceFormat(
+        product.price,
+        rates,
+        priceFormation,
+        product.category,
+        product.brand,
+        userRole
+      ),
 		}))
 }
 
 export function getProductById(chatId: number, id?: string): Product | undefined {
   const userRole = getUser(chatId)?.role;
+  const rates = getRates();
   const priceFormation = getPriceFormation();
 
   if (!id) return undefined;
@@ -75,6 +84,13 @@ export function getProductById(chatId: number, id?: string): Product | undefined
 
 	return {
     ...product,
-    price: priceFormat(product.price, priceFormation, userRole),
+    price: priceFormat(
+      product.price,
+      rates,
+      priceFormation,
+      product.category,
+      product.brand,
+      userRole
+    ),
   };
 }

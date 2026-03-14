@@ -27,14 +27,14 @@ export async function addUserInputHandler(
   text: string
 ) {
   const state = getChatState(chatId);
-  const mainState = state.sections?.[SECTION.MAIN];
+  const mainState = state.sections?.[SECTION.ADMIN_PANEL];
   if (!mainState) return;
 
   const newUserId = Number(text.trim());
 
   if (Number.isNaN(newUserId)) {
     await renderScreen(bot, chatId, {
-      section: SECTION.MAIN,
+      section: SECTION.ADMIN_PANEL,
       text: USERS_ERRORS.ID_NUMBER,
       withBackButton: true,
     });
@@ -43,7 +43,7 @@ export async function addUserInputHandler(
 
   if (newUserId === chatId) {
     await renderScreen(bot, chatId, {
-      section: SECTION.MAIN,
+      section: SECTION.ADMIN_PANEL,
       text: USERS_ERRORS.ADD_MYSELF,
       withBackButton: true,
     });
@@ -52,7 +52,7 @@ export async function addUserInputHandler(
 
   if (!isAdmin(chatId)) {
     await renderScreen(bot, chatId, {
-      section: SECTION.MAIN,
+      section: SECTION.ADMIN_PANEL,
       text: USERS_ERRORS.ONLY_ADMIN,
       withBackButton: true,
     });
@@ -62,7 +62,7 @@ export async function addUserInputHandler(
   const user = getUser(newUserId);
   if (user) {
     await renderScreen(bot, chatId, {
-      section: SECTION.MAIN,
+      section: SECTION.ADMIN_PANEL,
       text: USERS_ERRORS.USER_EXIST,
       withBackButton: true,
     });
@@ -72,7 +72,7 @@ export async function addUserInputHandler(
   setChatState(chatId, {
     sections: {
       ...state.sections,
-      [SECTION.MAIN]: {
+      [SECTION.ADMIN_PANEL]: {
         ...mainState,
         users: {
           ...mainState.users,
@@ -85,7 +85,7 @@ export async function addUserInputHandler(
   const isSuperAdminUser = isSuperAdmin(chatId);
 
   await renderScreen(bot, chatId, {
-    section: SECTION.MAIN,
+    section: SECTION.ADMIN_PANEL,
     text: USERS_TEXTS.CHOOSE_ROLE,
     inlineKeyboard: addUserRoleKeyboard(isSuperAdminUser),
     withBackButton: true,

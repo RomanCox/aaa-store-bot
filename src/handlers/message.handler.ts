@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
-import { CART_TEXTS, MENU_TEXTS } from "../texts";
+import { CART_TEXTS, MENU_TEXTS, START_TEXTS } from "../texts";
 import { getChatState, setChatState } from "../state/chat.state";
 import { CatalogFlowStep, ProductForCart, SECTION } from "../types";
 import { deleteUserInputHandler } from "./users/deleteUser.handler";
@@ -7,10 +7,12 @@ import { editUserInputHandler } from "./users/editUser.handler";
 import { addUserInputHandler } from "./users/addUser.handler";
 import { editPriceInputHandler } from "./price.handler";
 import { getProductById } from "../services/products.service";
-import { renderFlow } from "./renderFlow";
+import { renderFlow } from "../render/renderFlow";
 import { ordersHandler, ordersPageInputHandler } from "./orders.handler";
 import { usersPageInputHandler } from "../services/users.service";
 import { renderScreen } from "../render/renderScreen";
+import { safeDelete } from "../utils";
+import { adminKeyboard } from "../keyboards";
 
 export function registerMessages(bot: TelegramBot) {
   bot.on("message", async (msg) => {
@@ -86,18 +88,40 @@ export function registerMessages(bot: TelegramBot) {
 
         await ordersHandler(bot, chatId);
       },
+
+      [MENU_TEXTS.ADMIN_PANEL]: async () => {
+        setChatState(chatId, {
+          section: SECTION.ADMIN_PANEL,
+          mode: "idle",
+          sections: {
+            ...resetCatalogIfLeaving(),
+            [SECTION.ADMIN_PANEL]: {
+              ...state.sections?.[SECTION.ADMIN_PANEL],
+              flowStep: state.sections?.[SECTION.ADMIN_PANEL]?.flowStep ?? "main",
+              users: {
+                page: 1,
+                totalPages: 1,
+                editingUserId: undefined,
+                newUserId: undefined,
+              }
+            }
+          }
+        })
+
+        await renderScreen(bot, chatId, {
+          section: SECTION.ADMIN_PANEL,
+          text: START_TEXTS.ADMIN_PANEL,
+          inlineKeyboard: adminKeyboard(),
+          parse_mode: "HTML",
+        });
+      },
     };
 
     if (menuHandlers[text]) {
       await menuHandlers[text]();
 
       // Удаляем сообщение пользователя после обработки
-      try {
-        await bot.deleteMessage(chatId, msg.message_id);
-      } catch (e) {
-        console.log("Failed to delete user message:", e);
-      }
-
+      await safeDelete(bot, msg.message_id);
       return;
     }
 
@@ -111,8 +135,6 @@ export function registerMessages(bot: TelegramBot) {
 
       edit_rub_to_byn: async (t) => await editPriceInputHandler(bot, chatId, t),
       edit_rub_to_usd: async (t) => await editPriceInputHandler(bot, chatId, t),
-      edit_retail_mult: async (t) => await editPriceInputHandler(bot, chatId, t),
-      edit_wholesale_mult: async (t) => await editPriceInputHandler(bot, chatId, t),
 
       await_users_page_number: async (t) => {
         await usersPageInputHandler(bot, chatId, t);
@@ -192,12 +214,7 @@ export function registerMessages(bot: TelegramBot) {
       await handler(text);
 
       // Удаляем сообщение пользователя после обработки
-      try {
-        await bot.deleteMessage(chatId, msg.message_id);
-      } catch (e) {
-        console.log("Failed to delete user message:", e);
-      }
-
+      await safeDelete(bot, msg.message_id);
       return;
     }
   });
