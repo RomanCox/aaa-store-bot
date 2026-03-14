@@ -1,18 +1,5 @@
 import { IRates, PriceFormat, UserRole } from "../types";
 
-function getPercent(
-  price: number,
-  rules: { max?: number; percent: number }[]
-) {
-  for (const rule of rules) {
-    if (!rule.max || price <= rule.max) {
-      return rule.percent;
-    }
-  }
-
-  return 0;
-}
-
 function findPriceRule(
   priceUSD: number,
   category: string | undefined,

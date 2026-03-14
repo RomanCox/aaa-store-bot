@@ -1,7 +1,7 @@
 import { InlineKeyboardButton } from "node-telegram-bot-api";
 import { ADMIN_TEXTS } from "../texts";
 import { CALLBACK_TYPE } from "../types";
-import { getPriceFormation, getRates } from "../services/price.service";
+import { getRates } from "../services/price.service";
 
 export function adminKeyboard(): InlineKeyboardButton[][] {
 	const rates = getRates();
