@@ -1,15 +1,15 @@
 [
   {
-    "category": "Смартфон",
+    "category": "Смартфоны",
     "brand": "Apple",
     "prices": [
       {
         "max": 500,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 3
       },
       {
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 2
       },
       {
@@ -44,41 +44,41 @@
     ]
   },
   {
-    "category": "Смартфон",
+    "category": "Смартфоны",
     "brand": "Android",
     "prices": [
       {
         "max": 100,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 15
       },
       {
         "max": 150,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 10
       },
       {
         "max": 220,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 8
       },
       {
         "max": 300,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 6
       },
       {
         "max": 400,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 4
       },
       {
         "max": 500,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 3
       },
       {
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 2
       },
       {
@@ -122,16 +122,16 @@
     "prices": [
       {
         "max": 750,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 5
       },
       {
         "max": 999,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 4
       },
       {
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 3.5
       },
       {
@@ -155,16 +155,16 @@
     "prices": [
       {
         "max": 750,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 5
       },
       {
         "max": 999,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 4
       },
       {
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 3
       },
       {
@@ -187,7 +187,7 @@
     "brand": "Dyson",
     "prices": [
       {
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 10
       },
       {
@@ -201,16 +201,16 @@
     "prices": [
       {
         "max": 500,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 5
       },
       {
         "max": 750,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 4
       },
       {
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 3
       },
       {
@@ -234,11 +234,11 @@
     "prices": [
       {
         "max": 1000,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 5
       },
       {
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 3
       },
       {
@@ -256,7 +256,7 @@
     "category": "Монитор",
     "prices": [
       {
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 3
       },
       {
@@ -269,7 +269,7 @@
     "category": "Диски",
     "prices": [
       {
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 20
       },
       {
@@ -282,7 +282,7 @@
     "category": "Колонки",
     "prices": [
       {
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 10
       },
       {
@@ -296,11 +296,11 @@
     "prices": [
       {
         "max": 300,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 15
       },
       {
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 10
       },
       {
@@ -318,7 +318,7 @@
     "category": "Игровые приставки",
     "prices": [
       {
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 5
       },
       {
@@ -332,11 +332,11 @@
     "prices": [
       {
         "max": 100,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 10
       },
       {
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 8
       },
       {
@@ -356,11 +356,11 @@
     "prices": [
       {
         "max": 100,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 8
       },
       {
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 5
       },
       {
@@ -380,16 +380,16 @@
     "prices": [
       {
         "max": 100,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 18
       },
       {
         "max": 150,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 10
       },
       {
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 8
       },
       {
@@ -413,31 +413,31 @@
     "prices": [
       {
         "max": 100,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 15
       },
       {
         "max": 150,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 8
       },
       {
         "max": 200,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 7
       },
       {
         "max": 300,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 5
       },
       {
         "max": 400,
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 4.5
       },
       {
-        "type": "wholesail",
+        "type": "wholesale",
         "percent": 3
       },
       {

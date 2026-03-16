@@ -10,7 +10,6 @@ function findPriceRule(
   const candidates = formats.filter((f) => {
     if (f.category && f.category !== category) return false;
     return !(f.brand && f.brand !== brand);
-
   });
 
   for (const format of candidates) {
@@ -57,6 +56,7 @@ export function priceFormat(
 
   if (clientType === "wholesale") {
     const resultUSD = priceUSD * (1 + percent / 100);
+
     return String(Math.round(resultUSD));
   }
 
