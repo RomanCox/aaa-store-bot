@@ -3,10 +3,12 @@ export type Brand =
 	| "Apple"
 	| "Honor"
 	| "Xiaomi"
+	| "Pixel"
 	| "Sony"
 	| "Beats"
 	| "Marshall"
 	| "Bose"
+	| "JBL"
 	| "Harman Kardon"
 	| "Dyson"
 	| "Crest"
@@ -14,6 +16,9 @@ export type Brand =
 	| "Canon"
 	| "Logitech"
 	| "XBox"
+	| "Nintendo"
+	| "Steam"
+	| "Meta"
 	| "Яндекс";
 
 const BRAND_PREFIXES: Record<Brand, string[]> = {
@@ -39,10 +44,12 @@ const BRAND_PREFIXES: Record<Brand, string[]> = {
 	],
 	Honor: ["HONOR"],
 	Xiaomi: ["Xiaomi", "Redmi", "Note", "Poco"],
+  Pixel: ["Pixel"],
 	Sony: ["Sony", "PS5", "PlayStation", "📀"],
 	Beats: ["Beats"],
 	Marshall: ["Marshall"],
 	Bose: ["Bose"],
+  JBL: ["JBL", "Partybox", "Boombox"],
 	"Harman Kardon": ["Harman Kardon"],
 	Dyson: [
 		"Dyson",
@@ -55,6 +62,7 @@ const BRAND_PREFIXES: Record<Brand, string[]> = {
 		"AКБ Gen5",
 		"AKБ V11",
 		"V12",
+		"V12s",
 		"V16",
 		"V8",
 		"Pencilvac",
@@ -66,6 +74,9 @@ const BRAND_PREFIXES: Record<Brand, string[]> = {
 	Canon: ["Canon"],
   Logitech: ["Logitech"],
   XBox: ["Гаймпад XBox"],
+  Nintendo: ["Nintendo"],
+  Steam: ["Steam"],
+  Meta: ["Meta"],
   "Яндекс": ["Яндекс"]
 };
 
