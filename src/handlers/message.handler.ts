@@ -25,8 +25,7 @@ export function registerMessages(bot: TelegramBot) {
 
     const state = getChatState(chatId);
 
-    //TODO add checking state.uiVersion !== undefined after testing (new users should not see the warning - their state.uiVersion will change anyway)
-    if (state.uiVersion !== UI_VERSION) {
+    if (state.uiVersion && state.uiVersion !== UI_VERSION) {
       await bot.sendMessage(chatId,
         COMMON_TEXTS.BOT_UI_UPDATED,
         {
