@@ -3,7 +3,6 @@ export type Brand =
 	| "Apple"
 	| "Honor"
 	| "Xiaomi"
-	| "Poco"
 	| "Sony"
 	| "Beats"
 	| "Marshall"
@@ -35,8 +34,7 @@ const BRAND_PREFIXES: Record<Brand, string[]> = {
 		"Display",
 	],
 	Honor: ["HONOR"],
-	Xiaomi: ["Xiaomi", "Redmi", "Note"],
-	Poco: ["Poco"],
+	Xiaomi: ["Xiaomi", "Redmi", "Note", "Poco"],
 	Sony: ["Sony", "PS5", "PlayStation", "📀"],
 	Beats: ["Beats"],
 	Marshall: ["Marshall"],

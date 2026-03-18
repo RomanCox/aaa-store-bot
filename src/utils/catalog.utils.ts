@@ -1,16 +1,3 @@
-export function storageToNumber(storage?: string): number {
-  if (!storage) return 0;
-
-  const s = storage.toUpperCase();
-  const match = s.match(/(\d+)/);
-  if (!match) return 0;
-
-  const value = Number(match[1]);
-
-  if (s.includes("TB")) return value * 1024;
-  return value;
-}
-
 export function extractMemorySubstring(name: string): string | null {
   const text = name.trim();
 
@@ -68,4 +55,19 @@ export function compareSpecs(a: string | null, b: string | null): number {
   }
 
   return 0;
+}
+
+export function extractModelKey(name: string): string {
+  const text = name.toUpperCase();
+
+  // 1. Чипы Apple: M1, M2, M3, M4 (в скобках или без)
+  const chipMatch = text.match(/\bM\d+\b/);
+  if (chipMatch) return chipMatch[0];
+
+  // 2. iPhone / iPad / Samsung — ищем число после бренда/линейки
+  // например: iPhone 14, iPad 10, Galaxy S23
+  const numberMatch = text.match(/\b(?:IPHONE|IPAD|GALAXY|NOTE|TAB)\s*\D*\s*(\d{1,2})\b/);
+  if (numberMatch) return numberMatch[1];
+
+  return "";
 }

@@ -1,5 +1,5 @@
 export const MAX_PRICE = 20000;
-export const TELEGRAM_MESSAGE_LIMIT = 4096;
+export const TELEGRAM_MESSAGE_LIMIT = 3900;
 export const USERS_PER_PAGE = 5;
 export const ORDERS_PER_PAGE = 5;
 export const MAX_BUTTONS_FOR_AMOUNT_KEYBOARD = 10;

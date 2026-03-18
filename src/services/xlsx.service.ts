@@ -49,7 +49,8 @@ function mapRowToProduct(row: Record<string, unknown>): Product {
 		model: String(row["Модель"] ?? "").trim(),
 		storage: row["Хранилище"] ? String(row["Хранилище"]).trim() : undefined,
 		price: String(row["Цена"] ?? "").trim(),
-		country: row["Страна"] ? String(row["Страна"]).trim() : undefined,
+		// country: row["Страна"] ? String(row["Страна"]).trim() : undefined,
+		country: row["Страна"] ? String(row["Страна"]) : undefined,
 		sim: row["Тип SIM"] ? String(row["Тип SIM"]).trim() : undefined,
 	};
 }

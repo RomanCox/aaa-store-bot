@@ -1,1 +1,474 @@
-[]
+[
+  {
+    "category": "Смартфоны",
+    "brand": "Apple",
+    "prices": [
+      {
+        "max": 500,
+        "type": "wholesale",
+        "percent": 3
+      },
+      {
+        "type": "wholesale",
+        "percent": 2
+      },
+      {
+        "max": 600,
+        "type": "retail",
+        "percent": 10
+      },
+      {
+        "max": 700,
+        "type": "retail",
+        "percent": 9
+      },
+      {
+        "max": 800,
+        "type": "retail",
+        "percent": 8.5
+      },
+      {
+        "max": 900,
+        "type": "retail",
+        "percent": 7.5
+      },
+      {
+        "max": 1050,
+        "type": "retail",
+        "percent": 7
+      },
+      {
+        "type": "retail",
+        "percent": 6.5
+      }
+    ]
+  },
+  {
+    "category": "Смартфоны",
+    "brand": "Android",
+    "prices": [
+      {
+        "max": 100,
+        "type": "wholesale",
+        "percent": 15
+      },
+      {
+        "max": 150,
+        "type": "wholesale",
+        "percent": 10
+      },
+      {
+        "max": 220,
+        "type": "wholesale",
+        "percent": 8
+      },
+      {
+        "max": 300,
+        "type": "wholesale",
+        "percent": 6
+      },
+      {
+        "max": 400,
+        "type": "wholesale",
+        "percent": 4
+      },
+      {
+        "max": 500,
+        "type": "wholesale",
+        "percent": 3
+      },
+      {
+        "type": "wholesale",
+        "percent": 2
+      },
+      {
+        "max": 100,
+        "type": "retail",
+        "percent": 20
+      },
+      {
+        "max": 150,
+        "type": "retail",
+        "percent": 20
+      },
+      {
+        "max": 220,
+        "type": "retail",
+        "percent": 16
+      },
+      {
+        "max": 300,
+        "type": "retail",
+        "percent": 13
+      },
+      {
+        "max": 400,
+        "type": "retail",
+        "percent": 10
+      },
+      {
+        "max": 500,
+        "type": "retail",
+        "percent": 8
+      },
+      {
+        "type": "retail",
+        "percent": 7
+      }
+    ]
+  },
+  {
+    "category": "Ноутбуки",
+    "prices": [
+      {
+        "max": 750,
+        "type": "wholesale",
+        "percent": 5
+      },
+      {
+        "max": 999,
+        "type": "wholesale",
+        "percent": 4
+      },
+      {
+        "type": "wholesale",
+        "percent": 3.5
+      },
+      {
+        "max": 750,
+        "type": "retail",
+        "percent": 13
+      },
+      {
+        "max": 999,
+        "type": "retail",
+        "percent": 12
+      },
+      {
+        "type": "retail",
+        "percent": 11
+      }
+    ]
+  },
+  {
+    "category": "Планшеты",
+    "prices": [
+      {
+        "max": 750,
+        "type": "wholesale",
+        "percent": 5
+      },
+      {
+        "max": 999,
+        "type": "wholesale",
+        "percent": 4
+      },
+      {
+        "type": "wholesale",
+        "percent": 3
+      },
+      {
+        "max": 750,
+        "type": "retail",
+        "percent": 12
+      },
+      {
+        "max": 999,
+        "type": "retail",
+        "percent": 8
+      },
+      {
+        "type": "retail",
+        "percent": 7
+      }
+    ]
+  },
+  {
+    "brand": "Dyson",
+    "prices": [
+      {
+        "type": "wholesale",
+        "percent": 10
+      },
+      {
+        "type": "retail",
+        "percent": 18
+      }
+    ]
+  },
+  {
+    "category": "Часы",
+    "prices": [
+      {
+        "max": 500,
+        "type": "wholesale",
+        "percent": 5
+      },
+      {
+        "max": 750,
+        "type": "wholesale",
+        "percent": 4
+      },
+      {
+        "type": "wholesale",
+        "percent": 3
+      },
+      {
+        "max": 500,
+        "type": "retail",
+        "percent": 12
+      },
+      {
+        "max": 750,
+        "type": "retail",
+        "percent": 10
+      },
+      {
+        "type": "retail",
+        "percent": 8
+      }
+    ]
+  },
+  {
+    "category": "Компьютер",
+    "prices": [
+      {
+        "max": 1000,
+        "type": "wholesale",
+        "percent": 5
+      },
+      {
+        "type": "wholesale",
+        "percent": 3
+      },
+      {
+        "max": 1000,
+        "type": "retail",
+        "percent": 10
+      },
+      {
+        "type": "retail",
+        "percent": 8
+      }
+    ]
+  },
+  {
+    "category": "Монитор",
+    "prices": [
+      {
+        "type": "wholesale",
+        "percent": 3
+      },
+      {
+        "type": "retail",
+        "percent": 10
+      }
+    ]
+  },
+  {
+    "category": "Диски",
+    "prices": [
+      {
+        "type": "wholesale",
+        "percent": 20
+      },
+      {
+        "type": "retail",
+        "percent": 40
+      }
+    ]
+  },
+  {
+    "category": "Колонки",
+    "prices": [
+      {
+        "type": "wholesale",
+        "percent": 10
+      },
+      {
+        "type": "retail",
+        "percent": 30
+      }
+    ]
+  },
+  {
+    "category": "Саундбары",
+    "prices": [
+      {
+        "max": 300,
+        "type": "wholesale",
+        "percent": 15
+      },
+      {
+        "type": "wholesale",
+        "percent": 10
+      },
+      {
+        "max": 300,
+        "type": "retail",
+        "percent": 25
+      },
+      {
+        "type": "retail",
+        "percent": 20
+      }
+    ]
+  },
+  {
+    "category": "Игровые приставки",
+    "prices": [
+      {
+        "type": "wholesale",
+        "percent": 5
+      },
+      {
+        "type": "retail",
+        "percent": 10
+      }
+    ]
+  },
+  {
+    "category": "Геймпады",
+    "prices": [
+      {
+        "max": 100,
+        "type": "wholesale",
+        "percent": 10
+      },
+      {
+        "type": "wholesale",
+        "percent": 8
+      },
+      {
+        "max": 100,
+        "type": "retail",
+        "percent": 20
+      },
+      {
+        "type": "retail",
+        "percent": 10
+      }
+    ]
+  },
+  {
+    "category": "Аксессуары",
+    "brand": "Apple",
+    "prices": [
+      {
+        "max": 100,
+        "type": "wholesale",
+        "percent": 8
+      },
+      {
+        "type": "wholesale",
+        "percent": 5
+      },
+      {
+        "max": 100,
+        "type": "retail",
+        "percent": 20
+      },
+      {
+        "type": "retail",
+        "percent": 15
+      }
+    ]
+  },
+  {
+    "category": "Аксессуары",
+    "brand": "Dyson",
+    "prices": [
+      {
+        "max": 100,
+        "type": "wholesale",
+        "percent": 18
+      },
+      {
+        "max": 150,
+        "type": "wholesale",
+        "percent": 10
+      },
+      {
+        "type": "wholesale",
+        "percent": 8
+      },
+      {
+        "max": 100,
+        "type": "retail",
+        "percent": 30
+      },
+      {
+        "max": 150,
+        "type": "retail",
+        "percent": 25
+      },
+      {
+        "type": "retail",
+        "percent": 20
+      }
+    ]
+  },
+  {
+    "category": "Наушники",
+    "prices": [
+      {
+        "max": 100,
+        "type": "wholesale",
+        "percent": 15
+      },
+      {
+        "max": 150,
+        "type": "wholesale",
+        "percent": 8
+      },
+      {
+        "max": 200,
+        "type": "wholesale",
+        "percent": 7
+      },
+      {
+        "max": 300,
+        "type": "wholesale",
+        "percent": 5
+      },
+      {
+        "max": 400,
+        "type": "wholesale",
+        "percent": 4.5
+      },
+      {
+        "type": "wholesale",
+        "percent": 3
+      },
+      {
+        "max": 100,
+        "type": "retail",
+        "percent": 25
+      },
+      {
+        "max": 150,
+        "type": "retail",
+        "percent": 20
+      },
+      {
+        "max": 200,
+        "type": "retail",
+        "percent": 18
+      },
+      {
+        "max": 300,
+        "type": "retail",
+        "percent": 16
+      },
+      {
+        "max": 400,
+        "type": "retail",
+        "percent": 12
+      },
+      {
+        "type": "retail",
+        "percent": 10
+      }
+    ]
+  }
+]

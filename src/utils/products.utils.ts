@@ -1,4 +1,5 @@
 import { Product } from "../types";
+import { compareSpecs, extractMemorySubstring, extractModelKey } from "./catalog.utils";
 
 const BRAND_ORDER = [
 	"Apple",
@@ -70,13 +71,17 @@ function compare(a?: string, b?: string): number {
 }
 
 export function sortProducts(products: Product[]): Product[] {
-	return [...products].sort((a, b) =>
-		compare(a.brand, b.brand) ||
-		compare(a.category, b.category) ||
-		compare(a.model, b.model) ||
-		compare(a.storage, b.storage) ||
-		compare(a.name, b.name)
-	);
+  return [...products].sort((a, b) =>
+    compare(a.brand, b.brand) ||
+    compare(a.category, b.category) ||
+    compare(a.model, b.model) ||
+    compare(extractModelKey(a.name ?? ""), extractModelKey(b.name ?? "")) ||
+    compareSpecs(
+      extractMemorySubstring(a.name),
+      extractMemorySubstring(b.name)
+    ) ||
+    compare(a.name, b.name)
+  );
 }
 
 export function getBrands(products: Product[]): string[] {

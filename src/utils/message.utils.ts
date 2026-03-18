@@ -1,30 +1,13 @@
 import { Product } from "../types";
-import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
 import { compareSpecs, extractMemorySubstring } from "./catalog.utils";
-
-export function splitMessage(lines: string[], limit = TELEGRAM_MESSAGE_LIMIT): string[] {
-	const messages: string[] = [];
-	let current = "";
-
-	for (const line of lines) {
-		if ((current + line + "\n").length > limit) {
-			if (current) messages.push(current.trim());
-			current = line + "\n";
-		} else {
-			current += line + "\n";
-		}
-	}
-
-	if (current) messages.push(current.trim());
-	return messages;
-}
+import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
 
 function formatProductLine(product: Product): string {
 	const name = product.name
 	const price = product.price
 	const country = product.country ?? ""
 
-	return `${name} - ${price} ${country}`.trim()
+	return `${name} - ${price} ${country}`
 }
 
 function getProductGroupKey(product: Product): string | null {
@@ -113,7 +96,7 @@ export function buildMessagesWithProducts(products: Product[]): ProductMessage[]
       })
     ) {
       if (currentMessage) {
-        messages.push({ text: currentMessage.trim(), products: currentProducts });
+        messages.push({ text: currentMessage, products: currentProducts });
       }
 
       currentMessage = "";
@@ -139,8 +122,8 @@ export function buildMessagesWithProducts(products: Product[]): ProductMessage[]
 
     const line = formatProductLine(product);
 
-    if ((currentMessage + line + "\n").length > 4096) {
-      messages.push({ text: currentMessage.trim(), products: currentProducts });
+    if ((currentMessage + line + "\n").length > TELEGRAM_MESSAGE_LIMIT) {
+      messages.push({ text: currentMessage, products: currentProducts });
       currentMessage = "";
       currentProducts = [];
       prevModel = null;
@@ -159,7 +142,7 @@ export function buildMessagesWithProducts(products: Product[]): ProductMessage[]
   }
 
   if (currentMessage) {
-    messages.push({ text: currentMessage.trim(), products: currentProducts });
+    messages.push({ text: currentMessage, products: currentProducts });
   }
 
   return messages;
