@@ -10,7 +10,11 @@ export type Brand =
 	| "Harman Kardon"
 	| "Dyson"
 	| "Crest"
-	| "Sonos";
+	| "Sonos"
+	| "Canon"
+	| "Logitech"
+	| "XBox"
+	| "Яндекс";
 
 const BRAND_PREFIXES: Record<Brand, string[]> = {
 	Samsung: ["Samsung", "Galaxy"],
@@ -51,6 +55,7 @@ const BRAND_PREFIXES: Record<Brand, string[]> = {
 		"AКБ Gen5",
 		"AKБ V11",
 		"V12",
+		"V16",
 		"V8",
 		"Pencilvac",
     "Paddle Brush",
@@ -58,6 +63,10 @@ const BRAND_PREFIXES: Record<Brand, string[]> = {
 	],
 	Crest: ["Crest"],
 	Sonos: ["Sonos"],
+	Canon: ["Canon"],
+  Logitech: ["Logitech"],
+  XBox: ["Гаймпад XBox"],
+  "Яндекс": ["Яндекс"]
 };
 
 export function resolveBrandFromName(name: string): Brand | undefined {
