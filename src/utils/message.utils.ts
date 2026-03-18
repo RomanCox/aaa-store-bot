@@ -1,6 +1,6 @@
 import { Product } from "../types";
-
-const TELEGRAM_MESSAGE_LIMIT = 4096;
+import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
+import { compareSpecs, extractMemorySubstring } from "./catalog.utils";
 
 export function splitMessage(lines: string[], limit = TELEGRAM_MESSAGE_LIMIT): string[] {
 	const messages: string[] = [];
@@ -45,19 +45,19 @@ function formatProductLine(product: Product): string {
 	return `${name} - ${price} ${country}`.trim()
 }
 
-function extractStorage(product: Product): string {
-	let rest = product.name;
-
-	if (product.brand) {
-		rest = rest.replace(product.brand, "").trim();
-	}
-
-	if (product.model) {
-		rest = rest.replace(product.model, "").trim();
-	}
-
-	return rest.split(" ")[0] ?? "";
-}
+// function extractStorage(product: Product): string {
+// 	let rest = product.name;
+//
+// 	if (product.brand) {
+// 		rest = rest.replace(product.brand, "").trim();
+// 	}
+//
+// 	if (product.model) {
+// 		rest = rest.replace(product.model, "").trim();
+// 	}
+//
+// 	return rest.split(" ")[0] ?? "";
+// }
 
 function getProductGroupKey(product: Product): string | null {
 	const brand = product.brand?.toLowerCase() ?? "";
@@ -158,13 +158,15 @@ export function buildMessagesWithProducts(products: Product[]): ProductMessage[]
     }
 
     const model = product.model ?? "";
-    const storage = extractStorage(product);
+    const storage = extractMemorySubstring(product.name ?? null);
 
-    if (
-      currentMessage &&
-      ((prevModel && model !== prevModel) || (prevStorage && storage !== prevStorage))
-    ) {
-      currentMessage += "\n";
+    if (currentMessage) {
+      const modelChanged = prevModel && model !== prevModel;
+      const storageChanged = prevStorage && storage && compareSpecs(prevStorage, storage) !== 0;
+
+      if (modelChanged || storageChanged) {
+        currentMessage += "\n";
+      }
     }
 
     const line = formatProductLine(product);

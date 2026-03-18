@@ -31,7 +31,7 @@ export function registerStart(bot: TelegramBot) {
         text: AUTH_TEXTS.notActivated(chatId),
         inlineKeyboard: [
           [{ text: START_TEXTS.CHECK_ACCESS, callback_data: START_ACTIONS.CHECK_ACCESS }],
-          [{ text: START_TEXTS.WRITE_MANAGER, url: ENV.MANAGER_URL }],
+          [{ text: START_TEXTS.WRITE_MANAGER, url: ENV.RETAIL_MANAGER_URL }],
         ],
         parse_mode: "HTML",
       });

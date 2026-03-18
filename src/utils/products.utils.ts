@@ -1,5 +1,4 @@
 import { Product } from "../types";
-import { stringWithoutSpaces } from "./stringFormat";
 
 const BRAND_ORDER = [
 	"Apple",
@@ -18,9 +17,11 @@ const BRAND_ORDER = [
 const CATEGORY_ORDER = [
 	"Смартфоны",
 	"Ноутбуки",
+  "Компьютер",
 	"Планшеты",
 	"Наушники",
 	"Часы",
+  "Джойстики",
 	"Аксессуары",
 ] as const;
 

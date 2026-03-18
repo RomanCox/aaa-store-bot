@@ -1,171 +1,12 @@
 [
   {
-    "id": "1800",
-    "category": "Компьютер",
-    "name": "iMac M3 (8/10/8/256) Green",
-    "model": "iMac M3",
-    "storage": "256 GB",
-    "price": "110300",
-    "country": "🇮🇳"
-  },
-  {
-    "id": "1803",
-    "category": "Компьютер",
-    "name": "iMac M3 (8/10/8/256) Pink",
-    "model": "iMac M3",
-    "storage": "256 GB",
-    "price": "110300",
-    "country": "🇮🇳"
-  },
-  {
-    "id": "1830",
-    "category": "Компьютер",
-    "name": "iMac M3 (8/10/16/1Tb) Yellow",
-    "model": "iMac M3",
-    "storage": "1024 GB",
-    "price": "162300",
-    "country": "🇷🇺"
-  },
-  {
-    "id": "1838",
-    "category": "Компьютер",
-    "name": "iMac M3 (8/10/24/1Tb) Pink",
-    "model": "iMac M3",
-    "storage": "1024 GB",
-    "price": "190300",
-    "country": "🇷🇺"
-  },
-  {
-    "id": "1839",
-    "category": "Компьютер",
-    "name": "iMac M3 (8/10/24/1Tb) Purple",
-    "model": "iMac M3",
-    "storage": "1024 GB",
-    "price": "190300",
-    "country": "🇷🇺"
-  },
-  {
-    "id": "1837",
-    "category": "Компьютер",
-    "name": "iMac M3 (8/10/24/1Tb) Yellow",
-    "model": "iMac M3",
-    "storage": "1024 GB",
-    "price": "190300",
-    "country": "🇷🇺"
-  },
-  {
-    "id": "1729",
-    "category": "Компьютер",
-    "name": "iMac M4 (8/8/16/256) Blue",
-    "model": "iMac M4",
-    "storage": "256 GB",
-    "price": "139300",
-    "country": "🇺🇸 🇬🇧"
-  },
-  {
-    "id": "1728",
-    "category": "Компьютер",
-    "name": "iMac M4 (8/8/16/256) Silver",
-    "model": "iMac M4",
-    "storage": "256 GB",
-    "price": "139300",
-    "country": "🇺🇸 🇬🇧"
-  },
-  {
-    "id": "1760",
-    "category": "Компьютер",
-    "name": "iMac M4 (10/10/16/1Tb) Yellow",
-    "model": "iMac M4",
-    "storage": "1024 GB",
-    "price": "191300",
-    "country": "🇷🇺"
-  },
-  {
-    "id": "1735",
-    "category": "Компьютер",
-    "name": "iMac M4 (10/10/16/256) Silver",
-    "model": "iMac M4",
-    "storage": "256 GB",
-    "price": "155800",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "1765",
-    "category": "Компьютер",
-    "name": "iMac M4 (10/10/24/512) Green",
-    "model": "iMac M4",
-    "storage": "512 GB",
-    "price": "192300",
-    "country": "🇷🇺"
-  },
-  {
-    "id": "1766",
-    "category": "Компьютер",
-    "name": "iMac M4 (10/10/24/512) Orange",
-    "model": "iMac M4",
-    "storage": "512 GB",
-    "price": "192300",
-    "country": "🇷🇺"
-  },
-  {
-    "id": "1769",
-    "category": "Компьютер",
-    "name": "iMac M4 (10/10/24/512) Purple",
-    "model": "iMac M4",
-    "storage": "512 GB",
-    "price": "192300",
-    "country": "🇷🇺"
-  },
-  {
-    "id": "1783",
-    "category": "Компьютер",
-    "name": "iMac M4 (10/10/32/512) Purple",
-    "model": "iMac M4",
-    "storage": "512 GB",
-    "price": "207300",
-    "country": "🇷🇺"
-  },
-  {
-    "id": "1842",
-    "category": "Компьютер",
-    "name": "Mac Mini M4 (16/512)",
-    "model": "Mac Mini M4",
-    "storage": "512 GB",
-    "price": "62300",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "1843",
-    "category": "Компьютер",
-    "name": "Mac Mini M4 pro (24/512)",
-    "model": "Mac Mini M4",
-    "storage": "512 GB",
-    "price": "120300",
-    "country": "🇭🇰"
-  },
-  {
-    "id": "13470",
-    "category": "Пылесосы",
-    "name": "V15 SV47 Detect Absolute Yellow/Nickel",
-    "model": "V15 SV47",
-    "price": "48800",
-    "country": "🇪🇺"
-  },
-  {
-    "id": "13479",
-    "category": "Пылесосы",
-    "name": "V15s Detect Submarine Yellow/Nickel SV47",
-    "model": "V15s Detect Submarine",
-    "price": "55300",
-    "country": "🇬🇧"
-  },
-  {
-    "id": "13478",
-    "category": "Пылесосы",
-    "name": "V15s Detect Submarine Yellow/Nickel SV47",
-    "model": "V15s Detect Submarine",
-    "price": "50500",
-    "country": "🇪🇺"
+    "id": "24325",
+    "category": "Аксессуары",
+    "name": "Apple Airtag 1Pac",
+    "brand": "Apple",
+    "model": "Airtag",
+    "price": "3000",
+    "hidden": false
   },
   {
     "id": "24326",
@@ -173,7 +14,8 @@
     "name": "Apple Airtag 4Pack",
     "brand": "Apple",
     "model": "Airtag",
-    "price": "7400"
+    "price": "7100",
+    "hidden": false
   },
   {
     "id": "24329",
@@ -181,7 +23,8 @@
     "name": "Apple Pencil 2",
     "brand": "Apple",
     "model": "Pencil",
-    "price": "7200"
+    "price": "7100",
+    "hidden": false
   },
   {
     "id": "24331",
@@ -189,7 +32,8 @@
     "name": "Apple Pencil Pro",
     "brand": "Apple",
     "model": "Pencil",
-    "price": "8900"
+    "price": "8700",
+    "hidden": false
   },
   {
     "id": "24330",
@@ -197,8 +41,77 @@
     "name": "Apple Pencil USB-C",
     "brand": "Apple",
     "model": "Pencil",
-    "price": "6900",
-    "country": "🇦🇪"
+    "price": "8000",
+    "hidden": false
+  },
+  {
+    "id": "24328",
+    "category": "Аксессуары",
+    "name": "Apple TV 4K 64GB",
+    "brand": "Apple",
+    "model": "Apple TV",
+    "storage": "64 GB",
+    "price": "13800",
+    "hidden": false
+  },
+  {
+    "id": "24327",
+    "category": "Аксессуары",
+    "name": "Apple TV 4K 128GB",
+    "brand": "Apple",
+    "model": "Apple TV",
+    "storage": "128 GB",
+    "price": "15300",
+    "hidden": false
+  },
+  {
+    "id": "24345",
+    "category": "Аксессуары",
+    "name": "Magic Keyboard iPad Pro 11 M4 White",
+    "brand": "Apple",
+    "model": "Magic Keyboard",
+    "price": "24800",
+    "country": "🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "24340",
+    "category": "Аксессуары",
+    "name": "Magic Keyboard Touch ID Numeric USB-C Black",
+    "brand": "Apple",
+    "model": "Magic Keyboard",
+    "price": "18800",
+    "country": "🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "24341",
+    "category": "Аксессуары",
+    "name": "Magic Keyboard Touch ID Numeric USB-C White",
+    "brand": "Apple",
+    "model": "Magic Keyboard",
+    "price": "17800",
+    "country": "🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "24338",
+    "category": "Аксессуары",
+    "name": "Magic Keyboard Touch ID USB-C White",
+    "brand": "Apple",
+    "model": "Magic Keyboard",
+    "price": "15300",
+    "country": "🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "24335",
+    "category": "Аксессуары",
+    "name": "Magic Mouse USB-C Black",
+    "brand": "Apple",
+    "model": "Magic Mouse",
+    "price": "9000",
+    "hidden": false
   },
   {
     "id": "24334",
@@ -206,7 +119,17 @@
     "name": "Magic Mouse USB-C White",
     "brand": "Apple",
     "model": "Magic Mouse",
-    "price": "8300"
+    "price": "7500",
+    "hidden": false
+  },
+  {
+    "id": "24337",
+    "category": "Аксессуары",
+    "name": "Magic Trackpad Black",
+    "brand": "Apple",
+    "model": "Magic Trackpad",
+    "price": "14300",
+    "hidden": false
   },
   {
     "id": "34712",
@@ -214,26 +137,266 @@
     "name": "Ultra 3 49 Natural Milanese Loop L",
     "brand": "Apple",
     "model": "Ultra2",
-    "price": "75300",
-    "country": "🇸🇬"
+    "price": "79800",
+    "country": "🇺🇸",
+    "hidden": true
   },
   {
-    "id": "34713",
-    "category": "Дроны",
-    "name": "Ultra 3 49 Natural Milanese Loop S",
+    "id": "34722",
+    "category": "Компьютер",
+    "name": "iMac M1 (8/8/8/512) Silver",
     "brand": "Apple",
-    "model": "Ultra2",
-    "price": "75300",
-    "country": "🇩🇿"
+    "model": "iMac M1",
+    "storage": "512 GB",
+    "price": "90300",
+    "hidden": false
   },
   {
-    "id": "1846",
-    "category": "Монитор",
-    "name": "Display 27 5K Standard glass - Tilt- and height-adjustable stand",
+    "id": "1800",
+    "category": "Компьютер",
+    "name": "iMac M3 (8/10/8/256) Green",
     "brand": "Apple",
-    "model": "Display",
-    "price": "195300",
-    "country": "🇺🇸"
+    "model": "iMac M3",
+    "storage": "256 GB",
+    "price": "112300",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "1803",
+    "category": "Компьютер",
+    "name": "iMac M3 (8/10/8/256) Pink",
+    "brand": "Apple",
+    "model": "iMac M3",
+    "storage": "256 GB",
+    "price": "112300",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "1830",
+    "category": "Компьютер",
+    "name": "iMac M3 (8/10/16/1Tb) Yellow",
+    "brand": "Apple",
+    "model": "iMac M3",
+    "storage": "1024 GB",
+    "price": "162300",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "1815",
+    "category": "Компьютер",
+    "name": "iMac M3 (8/10/16/512) Orange",
+    "brand": "Apple",
+    "model": "iMac M3",
+    "storage": "512 GB",
+    "price": "157300",
+    "hidden": false
+  },
+  {
+    "id": "1818",
+    "category": "Компьютер",
+    "name": "iMac M3 (8/10/16/512) Purple",
+    "brand": "Apple",
+    "model": "iMac M3",
+    "storage": "512 GB",
+    "price": "157300",
+    "hidden": false
+  },
+  {
+    "id": "1839",
+    "category": "Компьютер",
+    "name": "iMac M3 (8/10/24/1Tb) Purple",
+    "brand": "Apple",
+    "model": "iMac M3",
+    "storage": "1024 GB",
+    "price": "190300",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "1837",
+    "category": "Компьютер",
+    "name": "iMac M3 (8/10/24/1Tb) Yellow",
+    "brand": "Apple",
+    "model": "iMac M3",
+    "storage": "1024 GB",
+    "price": "190300",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "1729",
+    "category": "Компьютер",
+    "name": "iMac M4 (8/8/16/256) Blue",
+    "brand": "Apple",
+    "model": "iMac M4",
+    "storage": "256 GB",
+    "price": "138300",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "1733",
+    "category": "Компьютер",
+    "name": "iMac M4 (8/8/16/256) Pink",
+    "brand": "Apple",
+    "model": "iMac M4",
+    "storage": "256 GB",
+    "price": "138300",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "1742",
+    "category": "Компьютер",
+    "name": "iMac M4 (8/8/16/512) Silver",
+    "brand": "Apple",
+    "model": "iMac M4",
+    "storage": "512 GB",
+    "price": "157300",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "1756",
+    "category": "Компьютер",
+    "name": "iMac M4 (10/10/16/1Tb) Silver",
+    "brand": "Apple",
+    "model": "iMac M4",
+    "storage": "1024 GB",
+    "price": "203800",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "1760",
+    "category": "Компьютер",
+    "name": "iMac M4 (10/10/16/1Tb) Yellow",
+    "brand": "Apple",
+    "model": "iMac M4",
+    "storage": "1024 GB",
+    "price": "200300",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "1736",
+    "category": "Компьютер",
+    "name": "iMac M4 (10/10/16/256) Blue",
+    "brand": "Apple",
+    "model": "iMac M4",
+    "storage": "256 GB",
+    "price": "153800",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "1737",
+    "category": "Компьютер",
+    "name": "iMac M4 (10/10/16/256) Green",
+    "brand": "Apple",
+    "model": "iMac M4",
+    "storage": "256 GB",
+    "price": "153800",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "1740",
+    "category": "Компьютер",
+    "name": "iMac M4 (10/10/16/256) Pink",
+    "brand": "Apple",
+    "model": "iMac M4",
+    "storage": "256 GB",
+    "price": "151800",
+    "country": "🇭🇰",
+    "hidden": false
+  },
+  {
+    "id": "1735",
+    "category": "Компьютер",
+    "name": "iMac M4 (10/10/16/256) Silver",
+    "brand": "Apple",
+    "model": "iMac M4",
+    "storage": "256 GB",
+    "price": "153800",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "1770",
+    "category": "Компьютер",
+    "name": "iMac M4 (10/10/24/1Tb) Silver",
+    "brand": "Apple",
+    "model": "iMac M4",
+    "storage": "1024 GB",
+    "price": "220300",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "1769",
+    "category": "Компьютер",
+    "name": "iMac M4 (10/10/24/512) Purple",
+    "brand": "Apple",
+    "model": "iMac M4",
+    "storage": "512 GB",
+    "price": "204800",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "1840",
+    "category": "Компьютер",
+    "name": "Mac Mini M2 (8/512)",
+    "brand": "Apple",
+    "model": "Mac Mini M2",
+    "storage": "512 GB",
+    "price": "48300",
+    "hidden": false
+  },
+  {
+    "id": "34723",
+    "category": "Компьютер",
+    "name": "Mac Mini M4 (16/1TB)",
+    "brand": "Apple",
+    "model": "Mac Mini M4",
+    "storage": "1024 GB",
+    "price": "120300",
+    "hidden": false
+  },
+  {
+    "id": "1841",
+    "category": "Компьютер",
+    "name": "Mac Mini M4 (16/256)",
+    "brand": "Apple",
+    "model": "Mac Mini M4",
+    "storage": "256 GB",
+    "price": "51800",
+    "country": "🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "34726",
+    "category": "Компьютер",
+    "name": "Mac Studio M2 Max (32/1Tb)",
+    "brand": "Apple",
+    "model": "Mac Studio",
+    "storage": "1024 GB",
+    "price": "190300",
+    "hidden": false
+  },
+  {
+    "id": "34725",
+    "category": "Компьютер",
+    "name": "Mac Studio M2 Max (32/512)",
+    "brand": "Apple",
+    "model": "Mac Studio",
+    "storage": "512 GB",
+    "price": "163300",
+    "hidden": false
   },
   {
     "id": "1721",
@@ -241,7 +404,9 @@
     "name": "AirPods 4",
     "brand": "Apple",
     "model": "4",
-    "price": "8300"
+    "price": "10000",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "1722",
@@ -249,8 +414,9 @@
     "name": "AirPods 4 ANC",
     "brand": "Apple",
     "model": "4",
-    "price": "11200",
-    "country": "🇺🇸"
+    "price": "12500",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "1726",
@@ -258,8 +424,8 @@
     "name": "AirPods Max Blue",
     "brand": "Apple",
     "model": "Max",
-    "price": "40300",
-    "country": "🇺🇸"
+    "price": "45300",
+    "hidden": false
   },
   {
     "id": "1723",
@@ -267,8 +433,8 @@
     "name": "AirPods Max Midnight",
     "brand": "Apple",
     "model": "Max",
-    "price": "40800",
-    "country": "🇺🇸"
+    "price": "40300",
+    "hidden": false
   },
   {
     "id": "1727",
@@ -276,7 +442,18 @@
     "name": "AirPods Max Purple",
     "brand": "Apple",
     "model": "Max",
-    "price": "40600"
+    "price": "42300",
+    "hidden": false
+  },
+  {
+    "id": "1724",
+    "category": "Наушники",
+    "name": "AirPods Max Starlight",
+    "brand": "Apple",
+    "model": "Max",
+    "price": "45300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "970",
@@ -284,8 +461,8 @@
     "name": "AirPods Pro 2 USB-C",
     "brand": "Apple",
     "model": "Pro 2",
-    "price": "13800",
-    "country": "🇮🇳"
+    "price": "15000",
+    "hidden": false
   },
   {
     "id": "34270",
@@ -293,17 +470,59 @@
     "name": "AirPods Pro 3",
     "brand": "Apple",
     "model": "Pro 3",
-    "price": "18200"
+    "price": "17800",
+    "hidden": false
   },
   {
-    "id": "1640",
+    "id": "1639",
     "category": "Ноутбуки",
-    "name": "MacBook Air 13 M1 8/256 Gold MGND3",
+    "name": "MacBook Air 13 M1 8/256 Space Grey MGN63",
     "brand": "Apple",
     "model": "Air 13 M1",
     "storage": "256 GB",
-    "price": "48800",
-    "country": "🇮🇳"
+    "price": "54300",
+    "hidden": false
+  },
+  {
+    "id": "1650",
+    "category": "Ноутбуки",
+    "name": "MacBook Air 13 M2 16/256 Midnight MC7X4",
+    "brand": "Apple",
+    "model": "Air 13 M2",
+    "storage": "256 GB",
+    "price": "54300",
+    "hidden": false
+  },
+  {
+    "id": "1663",
+    "category": "Ноутбуки",
+    "name": "MacBook Air 13 M3 24/512 Midnight MC8Q4",
+    "brand": "Apple",
+    "model": "Air 13 M3",
+    "storage": "512 GB",
+    "price": "103800",
+    "country": "🇸🇬",
+    "hidden": false
+  },
+  {
+    "id": "34476",
+    "category": "Ноутбуки",
+    "name": "MacBook Air 13 M4 16/1TB Midnight Z1CY000YL",
+    "brand": "Apple",
+    "model": "Air 13 M4",
+    "storage": "1024 GB",
+    "price": "135300",
+    "hidden": false
+  },
+  {
+    "id": "34479",
+    "category": "Ноутбуки",
+    "name": "MacBook Air 13 M4 16/1TB Sky Blue Z1H70014V",
+    "brand": "Apple",
+    "model": "Air 13 M4",
+    "storage": "1024 GB",
+    "price": "135300",
+    "hidden": false
   },
   {
     "id": "1678",
@@ -312,8 +531,20 @@
     "brand": "Apple",
     "model": "Air 13 M4",
     "storage": "256 GB",
-    "price": "71200",
-    "country": "🇺🇸"
+    "price": "80800",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "1679",
+    "category": "Ноутбуки",
+    "name": "MacBook Air 13 M4 16/256 Silver MW0W3",
+    "brand": "Apple",
+    "model": "Air 13 M4",
+    "storage": "256 GB",
+    "price": "78300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1680",
@@ -322,8 +553,9 @@
     "brand": "Apple",
     "model": "Air 13 M4",
     "storage": "256 GB",
-    "price": "70800",
-    "country": "🇮🇳"
+    "price": "80800",
+    "country": "🇷🇺",
+    "hidden": false
   },
   {
     "id": "1682",
@@ -332,8 +564,8 @@
     "brand": "Apple",
     "model": "Air 13 M4",
     "storage": "512 GB",
-    "price": "90300",
-    "country": "🇺🇸"
+    "price": "108300",
+    "hidden": false
   },
   {
     "id": "1685",
@@ -342,28 +574,19 @@
     "brand": "Apple",
     "model": "Air 13 M4",
     "storage": "512 GB",
-    "price": "87000",
-    "country": "🇺🇸"
+    "price": "111300",
+    "hidden": false
   },
   {
-    "id": "1684",
+    "id": "1686",
     "category": "Ноутбуки",
-    "name": "MacBook Air 13 M4 16/512 Starlight MW103",
+    "name": "MacBook Air 13 M4 24/512 Midnight MC6C4",
     "brand": "Apple",
     "model": "Air 13 M4",
     "storage": "512 GB",
-    "price": "89200",
-    "country": "🇦🇪"
-  },
-  {
-    "id": "1687",
-    "category": "Ноутбуки",
-    "name": "MacBook Air 13 M4 24/512 Silver MC654",
-    "brand": "Apple",
-    "model": "Air 13 M4",
-    "storage": "512 GB",
-    "price": "108300",
-    "country": "🇬🇧"
+    "price": "119300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1689",
@@ -372,18 +595,20 @@
     "brand": "Apple",
     "model": "Air 13 M4",
     "storage": "512 GB",
-    "price": "105300",
-    "country": "🇺🇸"
+    "price": "119300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
-    "id": "1688",
+    "id": "34785",
     "category": "Ноутбуки",
-    "name": "MacBook Air 13 M4 24/512 Starlight MC6A4",
+    "name": "MacBook Air 15 M2 16/1TB Midnight MQTM3",
     "brand": "Apple",
-    "model": "Air 13 M4",
-    "storage": "512 GB",
-    "price": "106300",
-    "country": "🇺🇸"
+    "model": "Air 15 M2",
+    "storage": "1024 GB",
+    "price": "117300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "1671",
@@ -392,18 +617,30 @@
     "brand": "Apple",
     "model": "Air 15 M3",
     "storage": "512 GB",
-    "price": "94300",
-    "country": "🇦🇪"
+    "price": "81300",
+    "country": "🇸🇬",
+    "hidden": false
   },
   {
-    "id": "34486",
+    "id": "1673",
     "category": "Ноутбуки",
-    "name": "MacBook Air 15 M4 16/1 TB Silver Z1DC",
+    "name": "MacBook Air 15 M3 8/512 Starlight MRYT3",
+    "brand": "Apple",
+    "model": "Air 15 M3",
+    "storage": "512 GB",
+    "price": "81300",
+    "country": "🇸🇬",
+    "hidden": false
+  },
+  {
+    "id": "34485",
+    "category": "Ноутбуки",
+    "name": "MacBook Air 15 M4 16/1 TB Midnight Z1DH",
     "brand": "Apple",
     "model": "Air 15 M4",
     "storage": "1024 GB",
-    "price": "209300",
-    "country": "🇷🇺"
+    "price": "5155300",
+    "hidden": true
   },
   {
     "id": "34432",
@@ -412,8 +649,8 @@
     "brand": "Apple",
     "model": "Air 15 M4",
     "storage": "256 GB",
-    "price": "86300",
-    "country": "🇺🇸"
+    "price": "108300",
+    "hidden": false
   },
   {
     "id": "34435",
@@ -422,17 +659,8 @@
     "brand": "Apple",
     "model": "Air 15 M4",
     "storage": "256 GB",
-    "price": "84600"
-  },
-  {
-    "id": "34434",
-    "category": "Ноутбуки",
-    "name": "MacBook Air 15 M4 16/256 Starlight MW1J3",
-    "brand": "Apple",
-    "model": "Air 15 M4",
-    "storage": "256 GB",
-    "price": "84100",
-    "country": "🇺🇸"
+    "price": "107300",
+    "hidden": false
   },
   {
     "id": "1701",
@@ -441,8 +669,8 @@
     "brand": "Apple",
     "model": "Air 15 M4",
     "storage": "512 GB",
-    "price": "112300",
-    "country": "🇺🇸"
+    "price": "123300",
+    "hidden": false
   },
   {
     "id": "1704",
@@ -451,8 +679,8 @@
     "brand": "Apple",
     "model": "Air 15 M4",
     "storage": "512 GB",
-    "price": "112300",
-    "country": "🇺🇸"
+    "price": "122800",
+    "hidden": false
   },
   {
     "id": "1703",
@@ -461,48 +689,31 @@
     "brand": "Apple",
     "model": "Air 15 M4",
     "storage": "512 GB",
-    "price": "112300",
-    "country": "🇺🇸"
+    "price": "120300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
-    "id": "1705",
+    "id": "34794",
     "category": "Ноутбуки",
-    "name": "MacBook Air 15 M4 24/512 Midnight MC6L4",
+    "name": "MacBook Pro 13 M1 16/1 TB  Grey Z11D000GK",
     "brand": "Apple",
-    "model": "Air 15 M4",
-    "storage": "512 GB",
-    "price": "122100",
-    "country": "🇺🇸"
+    "model": "Pro 13 M1",
+    "storage": "1024 GB",
+    "price": "110300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
-    "id": "1706",
+    "id": "34793",
     "category": "Ноутбуки",
-    "name": "MacBook Air 15 M4 24/512 Silver MC6J4",
+    "name": "MacBook Pro 13 M1 16/512  Grey Z11C000E4",
     "brand": "Apple",
-    "model": "Air 15 M4",
+    "model": "Pro 13 M1",
     "storage": "512 GB",
-    "price": "127300",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "1708",
-    "category": "Ноутбуки",
-    "name": "MacBook Air 15 M4 24/512 Sky blue MC7D4",
-    "brand": "Apple",
-    "model": "Air 15 M4",
-    "storage": "512 GB",
-    "price": "122100",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "1707",
-    "category": "Ноутбуки",
-    "name": "MacBook Air 15 M4 24/512 Starlight MC6K4",
-    "brand": "Apple",
-    "model": "Air 15 M4",
-    "storage": "512 GB",
-    "price": "118600",
-    "country": "🇺🇸"
+    "price": "80300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34689",
@@ -511,7 +722,19 @@
     "brand": "Apple",
     "model": "Pro 14 M4",
     "storage": "1024 GB",
-    "price": "135300"
+    "price": "140800",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "34659",
+    "category": "Ноутбуки",
+    "name": "MacBook Pro 14 М4 Pro 24/1TB Space Black MX2J3",
+    "brand": "Apple",
+    "model": "Pro 14 M4 Pro",
+    "storage": "1024 GB",
+    "price": "190300",
+    "hidden": false
   },
   {
     "id": "34494",
@@ -520,7 +743,8 @@
     "brand": "Apple",
     "model": "Pro 14 M5",
     "storage": "1024 GB",
-    "price": "138800"
+    "price": "139800",
+    "hidden": false
   },
   {
     "id": "34495",
@@ -529,7 +753,59 @@
     "brand": "Apple",
     "model": "Pro 14 M5",
     "storage": "1024 GB",
-    "price": "139300"
+    "price": "151800",
+    "hidden": false
+  },
+  {
+    "id": "34496",
+    "category": "Ноутбуки",
+    "name": "MacBook Pro 14 М5 24/1TB (2025) Black",
+    "brand": "Apple",
+    "model": "Pro 14 M5",
+    "storage": "1024 GB",
+    "price": "170300",
+    "hidden": false
+  },
+  {
+    "id": "34497",
+    "category": "Ноутбуки",
+    "name": "MacBook Pro 14 М5 24/1TB (2025) Silver",
+    "brand": "Apple",
+    "model": "Pro 14 M5",
+    "storage": "1024 GB",
+    "price": "164800",
+    "hidden": false
+  },
+  {
+    "id": "34446",
+    "category": "Ноутбуки",
+    "name": "MacBook Pro 14 M1 16/1 TB Silver MKGT3",
+    "brand": "Apple",
+    "model": "Pro 14 M1",
+    "storage": "1024 GB",
+    "price": "123300",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "34450",
+    "category": "Ноутбуки",
+    "name": "MacBook Pro 14 M4 Pro 24/512 Black MX2H3",
+    "brand": "Apple",
+    "model": "Pro 14 M4 Pro",
+    "storage": "512 GB",
+    "price": "152300",
+    "hidden": false
+  },
+  {
+    "id": "34492",
+    "category": "Ноутбуки",
+    "name": "MacBook Pro 14 M5 16/512 (2025) Black",
+    "brand": "Apple",
+    "model": "Pro 14 M5",
+    "storage": "512 GB",
+    "price": "128300",
+    "hidden": false
   },
   {
     "id": "34493",
@@ -538,8 +814,18 @@
     "brand": "Apple",
     "model": "Pro 14 M5",
     "storage": "512 GB",
-    "price": "127300",
-    "country": "🇺🇸"
+    "price": "130300",
+    "hidden": false
+  },
+  {
+    "id": "34448",
+    "category": "Ноутбуки",
+    "name": "MacBook Pro 16 M1 Max 32/1 TB Silver  MK1H3",
+    "brand": "Apple",
+    "model": "Pro 16 M1",
+    "storage": "1024 GB",
+    "price": "137300",
+    "hidden": false
   },
   {
     "id": "34463",
@@ -548,8 +834,9 @@
     "brand": "Apple",
     "model": "Pro 16 M4 Pro",
     "storage": "512 GB",
-    "price": "183300",
-    "country": "🇺🇸"
+    "price": "196300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19413",
@@ -558,8 +845,9 @@
     "brand": "Apple",
     "model": "iPad 11",
     "storage": "128 GB",
-    "price": "39300",
-    "country": "🇺🇸"
+    "price": "36300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19409",
@@ -568,8 +856,9 @@
     "brand": "Apple",
     "model": "iPad 11",
     "storage": "128 GB",
-    "price": "28500",
-    "country": "🇺🇸"
+    "price": "28200",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19410",
@@ -578,8 +867,9 @@
     "brand": "Apple",
     "model": "iPad 11",
     "storage": "128 GB",
-    "price": "30100",
-    "country": "🇺🇸"
+    "price": "29300",
+    "country": "🇮🇳 🇺🇸",
+    "hidden": false
   },
   {
     "id": "19408",
@@ -588,8 +878,8 @@
     "brand": "Apple",
     "model": "iPad 11",
     "storage": "128 GB",
-    "price": "29200",
-    "country": "🇺🇸"
+    "price": "28800",
+    "hidden": false
   },
   {
     "id": "19411",
@@ -598,8 +888,9 @@
     "brand": "Apple",
     "model": "iPad 11",
     "storage": "128 GB",
-    "price": "29800",
-    "country": "🇺🇸"
+    "price": "28000",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19421",
@@ -608,8 +899,9 @@
     "brand": "Apple",
     "model": "iPad 11",
     "storage": "256 GB",
-    "price": "51800",
-    "country": "🇦🇪"
+    "price": "57800",
+    "country": "🇭🇰 🇺🇸",
+    "hidden": false
   },
   {
     "id": "19420",
@@ -619,7 +911,19 @@
     "model": "iPad 11",
     "storage": "256 GB",
     "price": "53300",
-    "country": "🇦🇪"
+    "country": "🇦🇪",
+    "hidden": false
+  },
+  {
+    "id": "19423",
+    "category": "Планшеты",
+    "name": "iPad 11 2025 256 LTE Yellow",
+    "brand": "Apple",
+    "model": "iPad 11",
+    "storage": "256 GB",
+    "price": "57300",
+    "country": "🇺🇸 🇭🇰",
+    "hidden": false
   },
   {
     "id": "19417",
@@ -628,8 +932,9 @@
     "brand": "Apple",
     "model": "iPad 11",
     "storage": "256 GB",
-    "price": "36100",
-    "country": "🇺🇸"
+    "price": "38000",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19418",
@@ -638,8 +943,8 @@
     "brand": "Apple",
     "model": "iPad 11",
     "storage": "256 GB",
-    "price": "40300",
-    "country": "🇺🇸"
+    "price": "38300",
+    "hidden": false
   },
   {
     "id": "19416",
@@ -648,8 +953,59 @@
     "brand": "Apple",
     "model": "iPad 11",
     "storage": "256 GB",
-    "price": "39300",
-    "country": "🇺🇸"
+    "price": "38300",
+    "hidden": false
+  },
+  {
+    "id": "19419",
+    "category": "Планшеты",
+    "name": "iPad 11 2025 256 Wi-Fi Yellow",
+    "brand": "Apple",
+    "model": "iPad 11",
+    "storage": "256 GB",
+    "price": "40200",
+    "country": "🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "34807",
+    "category": "Планшеты",
+    "name": "iPad 11 2025 512 Wi-Fi Blue",
+    "brand": "Apple",
+    "model": "iPad 11",
+    "storage": "512 GB",
+    "price": "51300",
+    "hidden": false
+  },
+  {
+    "id": "34808",
+    "category": "Планшеты",
+    "name": "iPad 11 2025 512 Wi-Fi Pink",
+    "brand": "Apple",
+    "model": "iPad 11",
+    "storage": "512 GB",
+    "price": "55300",
+    "hidden": false
+  },
+  {
+    "id": "34806",
+    "category": "Планшеты",
+    "name": "iPad 11 2025 512 Wi-Fi Silver",
+    "brand": "Apple",
+    "model": "iPad 11",
+    "storage": "512 GB",
+    "price": "53300",
+    "hidden": false
+  },
+  {
+    "id": "34809",
+    "category": "Планшеты",
+    "name": "iPad 11 2025 512 Wi-Fi Yellow",
+    "brand": "Apple",
+    "model": "iPad 11",
+    "storage": "512 GB",
+    "price": "55300",
+    "hidden": false
   },
   {
     "id": "19436",
@@ -658,18 +1014,8 @@
     "brand": "Apple",
     "model": "iPad Air 11",
     "storage": "1024 GB",
-    "price": "70300",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "19437",
-    "category": "Планшеты",
-    "name": "iPad Air 11 (M2) 2024 1Tb LTE Grey",
-    "brand": "Apple",
-    "model": "iPad Air 11",
-    "storage": "1024 GB",
-    "price": "70300",
-    "country": "🇺🇸"
+    "price": "71300",
+    "hidden": false
   },
   {
     "id": "19439",
@@ -677,8 +1023,9 @@
     "name": "iPad Air 11 (M2) 2024 1Tb LTE Purple",
     "brand": "Apple",
     "model": "iPad Air 11",
-    "price": "70300",
-    "country": "🇺🇸"
+    "price": "72800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19438",
@@ -687,8 +1034,31 @@
     "brand": "Apple",
     "model": "iPad Air 11",
     "storage": "1024 GB",
-    "price": "70300",
-    "country": "🇺🇸"
+    "price": "72800",
+    "country": "🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "34765",
+    "category": "Планшеты",
+    "name": "iPad Air 11 (M2) 2024 256 Wi-Fi Blue",
+    "brand": "Apple",
+    "model": "iPad Air 11",
+    "storage": "256 GB",
+    "price": "51800",
+    "country": "🇲🇽",
+    "hidden": false
+  },
+  {
+    "id": "34768",
+    "category": "Планшеты",
+    "name": "iPad Air 11 (M2) 2024 256 Wi-Fi Purple",
+    "brand": "Apple",
+    "model": "iPad Air 11",
+    "storage": "256 GB",
+    "price": "51800",
+    "country": "🇲🇽",
+    "hidden": false
   },
   {
     "id": "19428",
@@ -697,8 +1067,9 @@
     "brand": "Apple",
     "model": "iPad Air 11",
     "storage": "512 GB",
-    "price": "64300",
-    "country": "🇺🇸"
+    "price": "66800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19429",
@@ -707,8 +1078,9 @@
     "brand": "Apple",
     "model": "iPad Air 11",
     "storage": "512 GB",
-    "price": "64300",
-    "country": "🇺🇸"
+    "price": "66800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19431",
@@ -717,8 +1089,9 @@
     "brand": "Apple",
     "model": "iPad Air 11",
     "storage": "512 GB",
-    "price": "64300",
-    "country": "🇺🇸"
+    "price": "66800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19430",
@@ -727,8 +1100,9 @@
     "brand": "Apple",
     "model": "iPad Air 11",
     "storage": "512 GB",
-    "price": "64300",
-    "country": "🇺🇸"
+    "price": "66800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19426",
@@ -737,28 +1111,18 @@
     "brand": "Apple",
     "model": "iPad Air 11",
     "storage": "512 GB",
-    "price": "60300",
-    "country": "🇦🇪 🇲🇽"
+    "price": "62300",
+    "hidden": false
   },
   {
-    "id": "19479",
+    "id": "19473",
     "category": "Планшеты",
-    "name": "iPad Air 11 M3 (2025) 128 LTE Grey",
+    "name": "iPad Air 11 M3 (2025) 128 Wi-Fi Blue",
     "brand": "Apple",
     "model": "iPad Air 11",
     "storage": "128 GB",
-    "price": "57800",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "19475",
-    "category": "Планшеты",
-    "name": "iPad Air 11 M3 (2025) 128 Wi-Fi Grey",
-    "brand": "Apple",
-    "model": "iPad Air 11",
-    "storage": "128 GB",
-    "price": "45800",
-    "country": "🇺🇸"
+    "price": "44300",
+    "hidden": false
   },
   {
     "id": "19474",
@@ -767,68 +1131,53 @@
     "brand": "Apple",
     "model": "iPad Air 11",
     "storage": "128 GB",
-    "price": "46300",
-    "country": "🇺🇸"
+    "price": "46800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
-    "id": "19485",
+    "id": "19472",
     "category": "Планшеты",
-    "name": "iPad Air 11 M3 (2025) 256 LTE Blue",
+    "name": "iPad Air 11 M3 (2025) 128 Wi-Fi Starlight",
+    "brand": "Apple",
+    "model": "iPad Air 11",
+    "storage": "128 GB",
+    "price": "48100",
+    "country": "🇺🇸 🇭🇰",
+    "hidden": false
+  },
+  {
+    "id": "19481",
+    "category": "Планшеты",
+    "name": "iPad Air 11 M3 (2025) 256 Wi-Fi Blue",
     "brand": "Apple",
     "model": "iPad Air 11",
     "storage": "256 GB",
-    "price": "76300",
-    "country": "🇺🇸"
+    "price": "54300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
-    "id": "19484",
+    "id": "19482",
     "category": "Планшеты",
-    "name": "iPad Air 11 M3 (2025) 256 LTE Starlight",
+    "name": "iPad Air 11 M3 (2025) 256 Wi-Fi Purple",
     "brand": "Apple",
     "model": "iPad Air 11",
     "storage": "256 GB",
-    "price": "76300",
-    "country": "🇺🇸"
+    "price": "54800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
-    "id": "19489",
+    "id": "19480",
     "category": "Планшеты",
-    "name": "iPad Air 11 M3 (2025) 512 Wi-Fi Blue",
+    "name": "iPad Air 11 M3 (2025) 256 Wi-Fi Starlight",
     "brand": "Apple",
     "model": "iPad Air 11",
-    "storage": "512 GB",
-    "price": "73300",
-    "country": "🇭🇰"
-  },
-  {
-    "id": "19491",
-    "category": "Планшеты",
-    "name": "iPad Air 11 M3 (2025) 512 Wi-Fi Grey",
-    "brand": "Apple",
-    "model": "iPad Air 11",
-    "storage": "512 GB",
-    "price": "74300",
-    "country": "🇨🇳"
-  },
-  {
-    "id": "19490",
-    "category": "Планшеты",
-    "name": "iPad Air 11 M3 (2025) 512 Wi-Fi Purple",
-    "brand": "Apple",
-    "model": "iPad Air 11",
-    "storage": "512 GB",
-    "price": "73300",
-    "country": "🇭🇰"
-  },
-  {
-    "id": "19488",
-    "category": "Планшеты",
-    "name": "iPad Air 11 M3 (2025) 512 Wi-Fi Starlight",
-    "brand": "Apple",
-    "model": "iPad Air 11",
-    "storage": "512 GB",
-    "price": "73300",
-    "country": "🇭🇰"
+    "storage": "256 GB",
+    "price": "55800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19469",
@@ -837,8 +1186,9 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "1024 GB",
-    "price": "80300",
-    "country": "🇧🇷 🇺🇸 🇦🇪"
+    "price": "82800",
+    "country": "🇺🇸 🇦🇪 🇧🇷",
+    "hidden": false
   },
   {
     "id": "19468",
@@ -847,8 +1197,9 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "1024 GB",
-    "price": "80300",
-    "country": "🇺🇸"
+    "price": "82800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19470",
@@ -857,8 +1208,9 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "1024 GB",
-    "price": "80300",
-    "country": "🇺🇸"
+    "price": "82800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19471",
@@ -867,8 +1219,9 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "1024 GB",
-    "price": "80300",
-    "country": "🇺🇸 🇦🇪"
+    "price": "82800",
+    "country": "🇺🇸 🇦🇪",
+    "hidden": false
   },
   {
     "id": "19465",
@@ -877,8 +1230,9 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "1024 GB",
-    "price": "75800",
-    "country": "🇭🇰"
+    "price": "78300",
+    "country": "🇺🇸 🇭🇰",
+    "hidden": false
   },
   {
     "id": "19466",
@@ -887,8 +1241,9 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "1024 GB",
-    "price": "75800",
-    "country": "🇭🇰"
+    "price": "78300",
+    "country": "🇺🇸 🇭🇰",
+    "hidden": false
   },
   {
     "id": "19467",
@@ -897,8 +1252,9 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "1024 GB",
-    "price": "75800",
-    "country": "🇭🇰"
+    "price": "78300",
+    "country": "🇺🇸 🇭🇰",
+    "hidden": false
   },
   {
     "id": "19454",
@@ -907,8 +1263,9 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "256 GB",
-    "price": "67800",
-    "country": "🇺🇸"
+    "price": "70300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19453",
@@ -917,8 +1274,9 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "256 GB",
-    "price": "67800",
-    "country": "🇺🇸 🇨🇦"
+    "price": "70300",
+    "country": "🇺🇸 🇨🇦",
+    "hidden": false
   },
   {
     "id": "19455",
@@ -927,8 +1285,9 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "256 GB",
-    "price": "67800",
-    "country": "🇺🇸"
+    "price": "70300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19452",
@@ -937,18 +1296,9 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "256 GB",
-    "price": "67800",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "19449",
-    "category": "Планшеты",
-    "name": "iPad Air 13 (M2) 2024 256 Wi-Fi Grey",
-    "brand": "Apple",
-    "model": "iPad Air 13",
-    "storage": "256 GB",
-    "price": "62300",
-    "country": "🇨🇦 🇲🇽"
+    "price": "70300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19462",
@@ -957,8 +1307,9 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "512 GB",
-    "price": "73800",
-    "country": "🇺🇸"
+    "price": "76300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19461",
@@ -967,8 +1318,9 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "512 GB",
-    "price": "73800",
-    "country": "🇺🇸"
+    "price": "76300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19463",
@@ -977,8 +1329,9 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "512 GB",
-    "price": "73800",
-    "country": "🇺🇸"
+    "price": "76300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19460",
@@ -987,8 +1340,9 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "512 GB",
-    "price": "73800",
-    "country": "🇺🇸"
+    "price": "76300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19458",
@@ -997,28 +1351,9 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "512 GB",
-    "price": "69800",
-    "country": "🇺🇸 🇭🇰 🇦🇪"
-  },
-  {
-    "id": "19457",
-    "category": "Планшеты",
-    "name": "iPad Air 13 (M2) 2024 512 Wi-Fi Grey",
-    "brand": "Apple",
-    "model": "iPad Air 13",
-    "storage": "512 GB",
-    "price": "69800",
-    "country": "🇨🇦"
-  },
-  {
-    "id": "19459",
-    "category": "Планшеты",
-    "name": "iPad Air 13 (M2) 2024 512 Wi-Fi Purple",
-    "brand": "Apple",
-    "model": "iPad Air 13",
-    "storage": "512 GB",
-    "price": "69800",
-    "country": "🇭🇰"
+    "price": "72300",
+    "country": "🇦🇪 🇺🇸 🇭🇰",
+    "hidden": false
   },
   {
     "id": "19456",
@@ -1027,58 +1362,128 @@
     "brand": "Apple",
     "model": "iPad Air 13",
     "storage": "512 GB",
-    "price": "69800",
-    "country": "🇭🇰"
+    "price": "72300",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
-    "id": "19511",
+    "id": "19530",
     "category": "Планшеты",
-    "name": "iPad Air 13 M3 (2025) 128 LTE Grey",
+    "name": "iPad Air 13 M3 (2025) 1TB Wi-Fi Purple",
     "brand": "Apple",
     "model": "iPad Air 13",
-    "storage": "128 GB",
-    "price": "62300",
-    "country": "🇪🇺"
+    "storage": "1024 GB",
+    "price": "117300",
+    "hidden": false
   },
   {
-    "id": "19510",
+    "id": "19528",
     "category": "Планшеты",
-    "name": "iPad Air 13 M3 (2025) 128 LTE Purple",
+    "name": "iPad Air 13 M3 (2025) 1TB Wi-Fi Starlight",
     "brand": "Apple",
     "model": "iPad Air 13",
-    "storage": "128 GB",
-    "price": "61300",
-    "country": "🇪🇺"
+    "storage": "1024 GB",
+    "price": "118300",
+    "hidden": false
   },
   {
-    "id": "19507",
+    "id": "19355",
     "category": "Планшеты",
-    "name": "iPad Air 13 M3 (2025) 128 Wi-Fi Grey",
+    "name": "iPad mini 6 64gb LTE Purple",
     "brand": "Apple",
-    "model": "iPad Air 13",
-    "storage": "128 GB",
-    "price": "58300",
-    "country": "🇺🇸"
+    "model": "mini 6",
+    "storage": "64 GB",
+    "price": "37800",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
-    "id": "19517",
+    "id": "19354",
     "category": "Планшеты",
-    "name": "iPad Air 13 M3 (2025) 256 LTE Blue",
+    "name": "iPad mini 6 64gb LTE Starlight",
     "brand": "Apple",
-    "model": "iPad Air 13",
+    "model": "mini 6",
+    "storage": "64 GB",
+    "price": "37800",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "19360",
+    "category": "Планшеты",
+    "name": "iPad mini 6 256 LTE Grey",
+    "brand": "Apple",
+    "model": "mini 6",
     "storage": "256 GB",
-    "price": "91300",
-    "country": "🇺🇸"
+    "price": "48300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
-    "id": "19519",
+    "id": "19362",
     "category": "Планшеты",
-    "name": "iPad Air 13 M3 (2025) 256 LTE Grey",
+    "name": "iPad mini 6 256 LTE Pink",
     "brand": "Apple",
-    "model": "iPad Air 13",
+    "model": "mini 6",
     "storage": "256 GB",
-    "price": "91300",
-    "country": "🇺🇸"
+    "price": "48300",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "19363",
+    "category": "Планшеты",
+    "name": "iPad mini 6 256 LTE Purple",
+    "brand": "Apple",
+    "model": "mini 6",
+    "storage": "256 GB",
+    "price": "48300",
+    "country": "🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "19356",
+    "category": "Планшеты",
+    "name": "iPad mini 6 256 Wi-Fi Grey",
+    "brand": "Apple",
+    "model": "mini 6",
+    "storage": "256 GB",
+    "price": "33800",
+    "country": "🇺🇸 🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "19358",
+    "category": "Планшеты",
+    "name": "iPad mini 6 256 Wi-Fi Pink",
+    "brand": "Apple",
+    "model": "mini 6",
+    "storage": "256 GB",
+    "price": "33800",
+    "country": "🇮🇳 🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "19359",
+    "category": "Планшеты",
+    "name": "iPad mini 6 256 Wi-Fi Purple",
+    "brand": "Apple",
+    "model": "mini 6",
+    "storage": "256 GB",
+    "price": "33800",
+    "country": "🇮🇳 🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "19357",
+    "category": "Планшеты",
+    "name": "iPad mini 6 256 Wi-Fi Starlight",
+    "brand": "Apple",
+    "model": "mini 6",
+    "storage": "256 GB",
+    "price": "33800",
+    "country": "🇺🇸 🇮🇳",
+    "hidden": false
   },
   {
     "id": "19370",
@@ -1087,8 +1492,9 @@
     "brand": "Apple",
     "model": "mini 7",
     "storage": "128 GB",
-    "price": "49300",
-    "country": "🇪🇺"
+    "price": "53800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19368",
@@ -1097,8 +1503,9 @@
     "brand": "Apple",
     "model": "mini 7",
     "storage": "128 GB",
-    "price": "49800",
-    "country": "🇺🇸"
+    "price": "55300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19366",
@@ -1107,7 +1514,19 @@
     "brand": "Apple",
     "model": "mini 7",
     "storage": "128 GB",
-    "price": "37000"
+    "price": "36800",
+    "hidden": false
+  },
+  {
+    "id": "19364",
+    "category": "Планшеты",
+    "name": "iPad mini 7 128 Wi-Fi Grey",
+    "brand": "Apple",
+    "model": "mini 7",
+    "storage": "128 GB",
+    "price": "39100",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19367",
@@ -1116,8 +1535,19 @@
     "brand": "Apple",
     "model": "mini 7",
     "storage": "128 GB",
-    "price": "32300",
-    "country": "🇺🇸"
+    "price": "36800",
+    "hidden": false
+  },
+  {
+    "id": "19365",
+    "category": "Планшеты",
+    "name": "iPad mini 7 128 Wi-Fi Starlight",
+    "brand": "Apple",
+    "model": "mini 7",
+    "storage": "128 GB",
+    "price": "36700",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19378",
@@ -1126,8 +1556,9 @@
     "brand": "Apple",
     "model": "mini 7",
     "storage": "256 GB",
-    "price": "65300",
-    "country": "🇭🇰"
+    "price": "66300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19376",
@@ -1136,8 +1567,9 @@
     "brand": "Apple",
     "model": "mini 7",
     "storage": "256 GB",
-    "price": "65300",
-    "country": "🇭🇰"
+    "price": "66300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19379",
@@ -1146,8 +1578,9 @@
     "brand": "Apple",
     "model": "mini 7",
     "storage": "256 GB",
-    "price": "65800",
-    "country": "🇭🇰"
+    "price": "69800",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "19377",
@@ -1156,8 +1589,9 @@
     "brand": "Apple",
     "model": "mini 7",
     "storage": "256 GB",
-    "price": "65300",
-    "country": "🇭🇰"
+    "price": "69800",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "19374",
@@ -1166,8 +1600,8 @@
     "brand": "Apple",
     "model": "mini 7",
     "storage": "256 GB",
-    "price": "44800",
-    "country": "🇺🇸"
+    "price": "46800",
+    "hidden": false
   },
   {
     "id": "19372",
@@ -1176,8 +1610,9 @@
     "brand": "Apple",
     "model": "mini 7",
     "storage": "256 GB",
-    "price": "45600",
-    "country": "🇺🇸"
+    "price": "46300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19375",
@@ -1186,8 +1621,20 @@
     "brand": "Apple",
     "model": "mini 7",
     "storage": "256 GB",
-    "price": "45800",
-    "country": "🇺🇸"
+    "price": "46300",
+    "country": "🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "19373",
+    "category": "Планшеты",
+    "name": "iPad mini 7 256 Wi-Fi Starlight",
+    "brand": "Apple",
+    "model": "mini 7",
+    "storage": "256 GB",
+    "price": "46300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "19386",
@@ -1196,168 +1643,30 @@
     "brand": "Apple",
     "model": "mini 7",
     "storage": "512 GB",
-    "price": "85300",
-    "country": "🇭🇰"
-  },
-  {
-    "id": "19384",
-    "category": "Планшеты",
-    "name": "iPad mini 7 512 LTE Grey",
-    "brand": "Apple",
-    "model": "mini 7",
-    "storage": "512 GB",
-    "price": "85300",
-    "country": "🇭🇰"
-  },
-  {
-    "id": "19387",
-    "category": "Планшеты",
-    "name": "iPad mini 7 512 LTE Purple",
-    "brand": "Apple",
-    "model": "mini 7",
-    "storage": "512 GB",
-    "price": "85300",
-    "country": "🇭🇰"
-  },
-  {
-    "id": "19385",
-    "category": "Планшеты",
-    "name": "iPad mini 7 512 LTE Starlight",
-    "brand": "Apple",
-    "model": "mini 7",
-    "storage": "512 GB",
-    "price": "85300",
-    "country": "🇭🇰"
-  },
-  {
-    "id": "19558",
-    "category": "Планшеты",
-    "name": "iPad Pro 11 (M4) 256 LTE Black",
-    "brand": "Apple",
-    "model": "iPad Pro 11",
-    "storage": "256 GB",
-    "price": "85300",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "19557",
-    "category": "Планшеты",
-    "name": "iPad Pro 11 (M4) 256 Wi-Fi Silver",
-    "brand": "Apple",
-    "model": "iPad Pro 11",
-    "storage": "256 GB",
-    "price": "74800",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "19560",
-    "category": "Планшеты",
-    "name": "iPad Pro 11 (M4) 512 Wi-Fi Black",
-    "brand": "Apple",
-    "model": "iPad Pro 11",
-    "storage": "512 GB",
-    "price": "87300",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "34545",
-    "category": "Планшеты",
-    "name": "iPad Pro 11 (M5) 256 LTE Black",
-    "brand": "Apple",
-    "model": "iPad Pro 11",
-    "storage": "256 GB",
     "price": "87800",
-    "country": "🇺🇸"
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
-    "id": "34543",
+    "id": "19381",
     "category": "Планшеты",
-    "name": "iPad Pro 11 (M5) 256 Wi-Fi Black",
+    "name": "iPad mini 7 512 Wi-Fi Starlight",
     "brand": "Apple",
-    "model": "iPad Pro 11",
-    "storage": "256 GB",
-    "price": "73900",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "34544",
-    "category": "Планшеты",
-    "name": "iPad Pro 11 (M5) 256 Wi-Fi Silver",
-    "brand": "Apple",
-    "model": "iPad Pro 11",
-    "storage": "256 GB",
-    "price": "73700",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "34550",
-    "category": "Планшеты",
-    "name": "iPad Pro 11 (M5) 512 LTE Silver",
-    "brand": "Apple",
-    "model": "iPad Pro 11",
+    "model": "mini 7",
     "storage": "512 GB",
-    "price": "125300",
-    "country": "🇺🇸"
+    "price": "63800",
+    "hidden": false
   },
   {
-    "id": "34547",
-    "category": "Планшеты",
-    "name": "iPad Pro 11 (M5) 512 Wi-Fi Black",
-    "brand": "Apple",
-    "model": "iPad Pro 11",
-    "storage": "512 GB",
-    "price": "93300",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "34548",
-    "category": "Планшеты",
-    "name": "iPad Pro 11 (M5) 512 Wi-Fi Silver",
-    "brand": "Apple",
-    "model": "iPad Pro 11",
-    "storage": "512 GB",
-    "price": "93300",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "19574",
-    "category": "Планшеты",
-    "name": "iPad Pro 13 (M4) 256 LTE Black",
-    "brand": "Apple",
-    "model": "iPad Pro 13",
-    "storage": "256 GB",
-    "price": "88300",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "34683",
-    "category": "Планшеты",
-    "name": "iPad Pro 13 (M5) 256 LTE Black",
-    "brand": "Apple",
-    "model": "iPad Pro 13",
-    "storage": "256 GB",
-    "price": "95800",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "34681",
-    "category": "Планшеты",
-    "name": "iPad Pro 13 (M5) 256 Wi-Fi Black",
-    "brand": "Apple",
-    "model": "iPad Pro 13",
-    "storage": "256 GB",
-    "price": "93600",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "1138",
+    "id": "1129",
     "category": "Смартфоны",
-    "name": "iPhone 12 128 Purple",
+    "name": "iPhone 12 64 Black",
     "brand": "Apple",
     "model": "iPhone 12",
-    "storage": "128 GB",
-    "price": "33500",
-    "country": "🇦🇪"
+    "storage": "64 GB",
+    "price": "33400",
+    "country": "🇦🇺",
+    "hidden": false
   },
   {
     "id": "1149",
@@ -1366,8 +1675,9 @@
     "brand": "Apple",
     "model": "iPhone 13",
     "storage": "128 GB",
-    "price": "38500",
-    "country": "🇮🇳"
+    "price": "40700",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1147",
@@ -1376,8 +1686,31 @@
     "brand": "Apple",
     "model": "iPhone 13",
     "storage": "128 GB",
-    "price": "37700",
-    "country": "🇹🇭"
+    "price": "40200",
+    "country": "🇹🇭",
+    "hidden": false
+  },
+  {
+    "id": "1150",
+    "category": "Смартфоны",
+    "name": "iPhone 13 128 Pink",
+    "brand": "Apple",
+    "model": "iPhone 13",
+    "storage": "128 GB",
+    "price": "42100",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "1151",
+    "category": "Смартфоны",
+    "name": "iPhone 13 128 Red",
+    "brand": "Apple",
+    "model": "iPhone 13",
+    "storage": "128 GB",
+    "price": "42800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "1148",
@@ -1386,18 +1719,42 @@
     "brand": "Apple",
     "model": "iPhone 13",
     "storage": "128 GB",
-    "price": "38500",
-    "country": "🇮🇳"
+    "price": "42300",
+    "country": "🇹🇭",
+    "hidden": false
   },
   {
-    "id": "1161",
+    "id": "1159",
     "category": "Смартфоны",
-    "name": "iPhone 13 512 Blue",
+    "name": "iPhone 13 512 Midnight",
     "brand": "Apple",
     "model": "iPhone 13",
     "storage": "512 GB",
-    "price": "46300",
-    "country": "🇮🇳"
+    "price": "51800",
+    "country": "🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "1163",
+    "category": "Смартфоны",
+    "name": "iPhone 13 512 Red",
+    "brand": "Apple",
+    "model": "iPhone 13",
+    "storage": "512 GB",
+    "price": "49100",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "1160",
+    "category": "Смартфоны",
+    "name": "iPhone 13 512 Starlight",
+    "brand": "Apple",
+    "model": "iPhone 13",
+    "storage": "512 GB",
+    "price": "51800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "1167",
@@ -1406,8 +1763,9 @@
     "brand": "Apple",
     "model": "iPhone 14",
     "storage": "128 GB",
-    "price": "41900",
-    "country": "🇪🇺"
+    "price": "41300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1165",
@@ -1416,8 +1774,9 @@
     "brand": "Apple",
     "model": "iPhone 14",
     "storage": "128 GB",
-    "price": "40700",
-    "country": "🇮🇳"
+    "price": "42300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1166",
@@ -1426,8 +1785,9 @@
     "brand": "Apple",
     "model": "iPhone 14",
     "storage": "128 GB",
-    "price": "41600",
-    "country": "🇮🇳"
+    "price": "42500",
+    "country": "🇮🇩",
+    "hidden": false
   },
   {
     "id": "1188",
@@ -1436,9 +1796,10 @@
     "brand": "Apple",
     "model": "iPhone 14",
     "storage": "128 GB",
-    "price": "34700",
+    "price": "38800",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1171",
@@ -1447,39 +1808,42 @@
     "brand": "Apple",
     "model": "iPhone 14",
     "storage": "256 GB",
-    "price": "44400",
-    "country": "🇮🇳"
+    "price": "46800",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
-    "id": "1175",
+    "id": "1174",
     "category": "Смартфоны",
-    "name": "iPhone 14 256 Red",
+    "name": "iPhone 14 256 Purple",
     "brand": "Apple",
     "model": "iPhone 14",
     "storage": "256 GB",
-    "price": "43900",
-    "country": "🇪🇺"
+    "price": "44800",
+    "hidden": false
   },
   {
-    "id": "1176",
+    "id": "1192",
     "category": "Смартфоны",
-    "name": "iPhone 14 256 Yellow",
+    "name": "iPhone 14 256 Purple",
     "brand": "Apple",
     "model": "iPhone 14",
     "storage": "256 GB",
-    "price": "42900",
-    "country": "🇮🇳"
-  },
-  {
-    "id": "1194",
-    "category": "Смартфоны",
-    "name": "iPhone 14 256 Yellow",
-    "brand": "Apple",
-    "model": "iPhone 14",
-    "storage": "256 GB",
-    "price": "38500",
+    "price": "42800",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
+  },
+  {
+    "id": "1172",
+    "category": "Смартфоны",
+    "name": "iPhone 14 256 Starlight",
+    "brand": "Apple",
+    "model": "iPhone 14",
+    "storage": "256 GB",
+    "price": "50300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1179",
@@ -1488,8 +1852,9 @@
     "brand": "Apple",
     "model": "iPhone 14",
     "storage": "512 GB",
-    "price": "48000",
-    "country": "🇮🇳"
+    "price": "51400",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "1197",
@@ -1498,9 +1863,10 @@
     "brand": "Apple",
     "model": "iPhone 14",
     "storage": "512 GB",
-    "price": "42400",
+    "price": "44100",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1177",
@@ -1509,8 +1875,9 @@
     "brand": "Apple",
     "model": "iPhone 14",
     "storage": "512 GB",
-    "price": "47100",
-    "country": "🇮🇳"
+    "price": "49000",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1195",
@@ -1519,9 +1886,10 @@
     "brand": "Apple",
     "model": "iPhone 14",
     "storage": "512 GB",
-    "price": "42500",
+    "price": "43800",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1180",
@@ -1530,8 +1898,9 @@
     "brand": "Apple",
     "model": "iPhone 14",
     "storage": "512 GB",
-    "price": "49600",
-    "country": "🇪🇺"
+    "price": "51400",
+    "country": "🇨🇦",
+    "hidden": false
   },
   {
     "id": "1198",
@@ -1540,9 +1909,21 @@
     "brand": "Apple",
     "model": "iPhone 14",
     "storage": "512 GB",
-    "price": "42400",
+    "price": "46800",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
+  },
+  {
+    "id": "1181",
+    "category": "Смартфоны",
+    "name": "iPhone 14 512 Red",
+    "brand": "Apple",
+    "model": "iPhone 14",
+    "storage": "512 GB",
+    "price": "46900",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "1178",
@@ -1551,8 +1932,9 @@
     "brand": "Apple",
     "model": "iPhone 14",
     "storage": "512 GB",
-    "price": "49400",
-    "country": "🇪🇺"
+    "price": "51400",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "1196",
@@ -1561,9 +1943,10 @@
     "brand": "Apple",
     "model": "iPhone 14",
     "storage": "512 GB",
-    "price": "42400",
+    "price": "44100",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1182",
@@ -1572,50 +1955,21 @@
     "brand": "Apple",
     "model": "iPhone 14",
     "storage": "512 GB",
-    "price": "44200",
-    "country": "🇮🇳"
+    "price": "47300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
-    "id": "1200",
-    "category": "Смартфоны",
-    "name": "iPhone 14 512 Yellow",
-    "brand": "Apple",
-    "model": "iPhone 14",
-    "storage": "512 GB",
-    "price": "39000",
-    "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "1218",
-    "category": "Смартфоны",
-    "name": "iPhone 14 512 Yellow",
-    "brand": "Apple",
-    "model": "iPhone 14",
-    "storage": "512 GB",
-    "price": "43600",
-    "country": "🇨🇳",
-    "sim": "Dual SIM"
-  },
-  {
-    "id": "1223",
+    "id": "1241",
     "category": "Смартфоны",
     "name": "iPhone 14 Plus 128 Red",
     "brand": "Apple",
     "model": "iPhone 14 Plus",
     "storage": "128 GB",
-    "price": "43100"
-  },
-  {
-    "id": "1260",
-    "category": "Смартфоны",
-    "name": "iPhone 14 Plus 128 Yellow",
-    "brand": "Apple",
-    "model": "iPhone 14 Plus",
-    "storage": "128 GB",
-    "price": "40400",
-    "country": "🇭🇰",
-    "sim": "Dual SIM"
+    "price": "40900",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1224",
@@ -1624,8 +1978,104 @@
     "brand": "Apple",
     "model": "iPhone 14 Plus",
     "storage": "128 GB",
+    "price": "44300",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "1242",
+    "category": "Смартфоны",
+    "name": "iPhone 14 Plus 128 Yellow",
+    "brand": "Apple",
+    "model": "iPhone 14 Plus",
+    "storage": "128 GB",
+    "price": "41800",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
+  },
+  {
+    "id": "1260",
+    "category": "Смартфоны",
+    "name": "iPhone 14 Plus 128 Yellow",
+    "brand": "Apple",
+    "model": "iPhone 14 Plus",
+    "storage": "128 GB",
     "price": "41700",
-    "country": "🇮🇳"
+    "country": "🇭🇰",
+    "sim": "Dual SIM",
+    "hidden": false
+  },
+  {
+    "id": "1245",
+    "category": "Смартфоны",
+    "name": "iPhone 14 Plus 256 Blue",
+    "brand": "Apple",
+    "model": "iPhone 14 Plus",
+    "storage": "256 GB",
+    "price": "46600",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
+  },
+  {
+    "id": "1243",
+    "category": "Смартфоны",
+    "name": "iPhone 14 Plus 256 Midnight",
+    "brand": "Apple",
+    "model": "iPhone 14 Plus",
+    "storage": "256 GB",
+    "price": "46600",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
+  },
+  {
+    "id": "1246",
+    "category": "Смартфоны",
+    "name": "iPhone 14 Plus 256 Purple",
+    "brand": "Apple",
+    "model": "iPhone 14 Plus",
+    "storage": "256 GB",
+    "price": "46600",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
+  },
+  {
+    "id": "1247",
+    "category": "Смартфоны",
+    "name": "iPhone 14 Plus 256 Red",
+    "brand": "Apple",
+    "model": "iPhone 14 Plus",
+    "storage": "256 GB",
+    "price": "43700",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
+  },
+  {
+    "id": "1229",
+    "category": "Смартфоны",
+    "name": "iPhone 14 Plus 256 Red",
+    "brand": "Apple",
+    "model": "iPhone 14 Plus",
+    "storage": "256 GB",
+    "price": "47800",
+    "country": "🇪🇺",
+    "hidden": false
+  },
+  {
+    "id": "1244",
+    "category": "Смартфоны",
+    "name": "iPhone 14 Plus 256 Starlight",
+    "brand": "Apple",
+    "model": "iPhone 14 Plus",
+    "storage": "256 GB",
+    "price": "46600",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1230",
@@ -1634,8 +2084,9 @@
     "brand": "Apple",
     "model": "iPhone 14 Plus",
     "storage": "256 GB",
-    "price": "45500",
-    "country": "🇮🇳"
+    "price": "47800",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1233",
@@ -1644,8 +2095,9 @@
     "brand": "Apple",
     "model": "iPhone 14 Plus",
     "storage": "512 GB",
-    "price": "49900",
-    "country": "🇮🇳"
+    "price": "53300",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "1231",
@@ -1654,8 +2106,9 @@
     "brand": "Apple",
     "model": "iPhone 14 Plus",
     "storage": "512 GB",
-    "price": "49800",
-    "country": "🇮🇳"
+    "price": "53500",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1234",
@@ -1664,8 +2117,9 @@
     "brand": "Apple",
     "model": "iPhone 14 Plus",
     "storage": "512 GB",
-    "price": "49800",
-    "country": "🇮🇳"
+    "price": "53500",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1235",
@@ -1674,18 +2128,32 @@
     "brand": "Apple",
     "model": "iPhone 14 Plus",
     "storage": "512 GB",
-    "price": "49800",
-    "country": "🇮🇳"
+    "price": "53300",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
-    "id": "1236",
+    "id": "1232",
+    "category": "Смартфоны",
+    "name": "iPhone 14 Plus 512 Starlight",
+    "brand": "Apple",
+    "model": "iPhone 14 Plus",
+    "storage": "512 GB",
+    "price": "53500",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "1254",
     "category": "Смартфоны",
     "name": "iPhone 14 Plus 512 Yellow",
     "brand": "Apple",
     "model": "iPhone 14 Plus",
     "storage": "512 GB",
-    "price": "46900",
-    "country": "🇪🇺"
+    "price": "47800",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1272",
@@ -1694,20 +2162,10 @@
     "brand": "Apple",
     "model": "iPhone 14 Plus",
     "storage": "512 GB",
-    "price": "45400",
+    "price": "49700",
     "country": "🇭🇰",
-    "sim": "Dual SIM"
-  },
-  {
-    "id": "1288",
-    "category": "Смартфоны",
-    "name": "iPhone 15 128 Black",
-    "brand": "Apple",
-    "model": "iPhone 15",
-    "storage": "128 GB",
-    "price": "43800",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "Dual SIM",
+    "hidden": false
   },
   {
     "id": "1273",
@@ -1716,19 +2174,9 @@
     "brand": "Apple",
     "model": "iPhone 15",
     "storage": "128 GB",
-    "price": "45200",
-    "country": "🇮🇳"
-  },
-  {
-    "id": "1305",
-    "category": "Смартфоны",
-    "name": "iPhone 15 128 Blue",
-    "brand": "Apple",
-    "model": "iPhone 15",
-    "storage": "128 GB",
-    "price": "43800",
-    "country": "🇨🇳",
-    "sim": "Dual SIM"
+    "price": "46600",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1275",
@@ -1737,8 +2185,32 @@
     "brand": "Apple",
     "model": "iPhone 15",
     "storage": "128 GB",
-    "price": "44700",
-    "country": "🇮🇳"
+    "price": "44900",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "1277",
+    "category": "Смартфоны",
+    "name": "iPhone 15 128 Green",
+    "brand": "Apple",
+    "model": "iPhone 15",
+    "storage": "128 GB",
+    "price": "50300",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "1289",
+    "category": "Смартфоны",
+    "name": "iPhone 15 128 Pink",
+    "brand": "Apple",
+    "model": "iPhone 15",
+    "storage": "128 GB",
+    "price": "42300",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1274",
@@ -1747,8 +2219,9 @@
     "brand": "Apple",
     "model": "iPhone 15",
     "storage": "128 GB",
-    "price": "46400",
-    "country": "🇮🇳"
+    "price": "48100",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1276",
@@ -1757,8 +2230,21 @@
     "brand": "Apple",
     "model": "iPhone 15",
     "storage": "128 GB",
-    "price": "43700",
-    "country": "🇮🇳"
+    "price": "45700",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "1293",
+    "category": "Смартфоны",
+    "name": "iPhone 15 256 Black",
+    "brand": "Apple",
+    "model": "iPhone 15",
+    "storage": "256 GB",
+    "price": "53300",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1278",
@@ -1767,8 +2253,9 @@
     "brand": "Apple",
     "model": "iPhone 15",
     "storage": "256 GB",
-    "price": "52600",
-    "country": "🇮🇳"
+    "price": "54100",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1280",
@@ -1777,8 +2264,20 @@
     "brand": "Apple",
     "model": "iPhone 15",
     "storage": "256 GB",
-    "price": "52500",
-    "country": "🇮🇳"
+    "price": "54100",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "1282",
+    "category": "Смартфоны",
+    "name": "iPhone 15 256 Green",
+    "brand": "Apple",
+    "model": "iPhone 15",
+    "storage": "256 GB",
+    "price": "62400",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "1279",
@@ -1787,8 +2286,9 @@
     "brand": "Apple",
     "model": "iPhone 15",
     "storage": "256 GB",
-    "price": "53100",
-    "country": "🇮🇳"
+    "price": "62300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1298",
@@ -1797,9 +2297,10 @@
     "brand": "Apple",
     "model": "iPhone 15",
     "storage": "512 GB",
-    "price": "55600",
+    "price": "59300",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1283",
@@ -1808,18 +2309,9 @@
     "brand": "Apple",
     "model": "iPhone 15",
     "storage": "512 GB",
-    "price": "65100",
-    "country": "🇮🇳"
-  },
-  {
-    "id": "1285",
-    "category": "Смартфоны",
-    "name": "iPhone 15 512 Blue",
-    "brand": "Apple",
-    "model": "iPhone 15",
-    "storage": "512 GB",
-    "price": "60500",
-    "country": "🇮🇳"
+    "price": "77000",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "1300",
@@ -1828,9 +2320,21 @@
     "brand": "Apple",
     "model": "iPhone 15",
     "storage": "512 GB",
-    "price": "55700",
+    "price": "59300",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
+  },
+  {
+    "id": "1285",
+    "category": "Смартфоны",
+    "name": "iPhone 15 512 Blue",
+    "brand": "Apple",
+    "model": "iPhone 15",
+    "storage": "512 GB",
+    "price": "68400",
+    "country": "🇨🇦",
+    "hidden": false
   },
   {
     "id": "1302",
@@ -1839,30 +2343,21 @@
     "brand": "Apple",
     "model": "iPhone 15",
     "storage": "512 GB",
-    "price": "55700",
+    "price": "58900",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
-    "id": "1284",
+    "id": "1287",
     "category": "Смартфоны",
-    "name": "iPhone 15 512 Pink",
+    "name": "iPhone 15 512 Green",
     "brand": "Apple",
     "model": "iPhone 15",
     "storage": "512 GB",
-    "price": "66400",
-    "country": "🇦🇪"
-  },
-  {
-    "id": "1299",
-    "category": "Смартфоны",
-    "name": "iPhone 15 512 Pink",
-    "brand": "Apple",
-    "model": "iPhone 15",
-    "storage": "512 GB",
-    "price": "55700",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "price": "65900",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "1301",
@@ -1871,19 +2366,21 @@
     "brand": "Apple",
     "model": "iPhone 15",
     "storage": "512 GB",
-    "price": "54700",
+    "price": "59300",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
-    "id": "1318",
+    "id": "1286",
     "category": "Смартфоны",
-    "name": "iPhone 15 Plus 128 Black",
+    "name": "iPhone 15 512 Yellow",
     "brand": "Apple",
-    "model": "iPhone 15 Plus",
-    "storage": "128 GB",
-    "price": "51000",
-    "country": "🇮🇳"
+    "model": "iPhone 15",
+    "storage": "512 GB",
+    "price": "62800",
+    "country": "🇯🇵",
+    "hidden": false
   },
   {
     "id": "1320",
@@ -1892,8 +2389,9 @@
     "brand": "Apple",
     "model": "iPhone 15 Plus",
     "storage": "128 GB",
-    "price": "47000",
-    "country": "🇪🇺"
+    "price": "52300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1322",
@@ -1902,8 +2400,9 @@
     "brand": "Apple",
     "model": "iPhone 15 Plus",
     "storage": "128 GB",
-    "price": "48500",
-    "country": "🇮🇳"
+    "price": "51900",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "1319",
@@ -1912,19 +2411,9 @@
     "brand": "Apple",
     "model": "iPhone 15 Plus",
     "storage": "128 GB",
-    "price": "49700",
-    "country": "🇮🇳"
-  },
-  {
-    "id": "1334",
-    "category": "Смартфоны",
-    "name": "iPhone 15 Plus 128 Pink",
-    "brand": "Apple",
-    "model": "iPhone 15 Plus",
-    "storage": "128 GB",
-    "price": "46300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "price": "54300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1321",
@@ -1933,18 +2422,20 @@
     "brand": "Apple",
     "model": "iPhone 15 Plus",
     "storage": "128 GB",
-    "price": "47300",
-    "country": "🇧🇷"
+    "price": "52100",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
-    "id": "1323",
+    "id": "1325",
     "category": "Смартфоны",
-    "name": "iPhone 15 Plus 256 Black",
+    "name": "iPhone 15 Plus 256 Blue",
     "brand": "Apple",
     "model": "iPhone 15 Plus",
     "storage": "256 GB",
-    "price": "62400",
-    "country": "🇮🇳"
+    "price": "67300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1327",
@@ -1953,8 +2444,9 @@
     "brand": "Apple",
     "model": "iPhone 15 Plus",
     "storage": "256 GB",
-    "price": "54200",
-    "country": "🇯🇵"
+    "price": "56500",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1324",
@@ -1963,8 +2455,9 @@
     "brand": "Apple",
     "model": "iPhone 15 Plus",
     "storage": "256 GB",
-    "price": "54200",
-    "country": "🇮🇳"
+    "price": "61300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1326",
@@ -1973,8 +2466,9 @@
     "brand": "Apple",
     "model": "iPhone 15 Plus",
     "storage": "256 GB",
-    "price": "52500",
-    "country": "🇮🇳"
+    "price": "55600",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "1328",
@@ -1983,8 +2477,9 @@
     "brand": "Apple",
     "model": "iPhone 15 Plus",
     "storage": "512 GB",
-    "price": "64100",
-    "country": "🇮🇳"
+    "price": "68800",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1330",
@@ -1993,8 +2488,9 @@
     "brand": "Apple",
     "model": "iPhone 15 Plus",
     "storage": "512 GB",
-    "price": "62300",
-    "country": "🇮🇳"
+    "price": "72400",
+    "country": "🇸🇬",
+    "hidden": false
   },
   {
     "id": "1332",
@@ -2003,8 +2499,9 @@
     "brand": "Apple",
     "model": "iPhone 15 Plus",
     "storage": "512 GB",
-    "price": "59100",
-    "country": "🇧🇷"
+    "price": "62300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1329",
@@ -2013,8 +2510,9 @@
     "brand": "Apple",
     "model": "iPhone 15 Plus",
     "storage": "512 GB",
-    "price": "61100",
-    "country": "🇧🇷"
+    "price": "71300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1331",
@@ -2023,19 +2521,9 @@
     "brand": "Apple",
     "model": "iPhone 15 Plus",
     "storage": "512 GB",
-    "price": "55500",
-    "country": "🇦🇪 🇪🇺"
-  },
-  {
-    "id": "1391",
-    "category": "Смартфоны",
-    "name": "iPhone 15 Pro 1 TB Black",
-    "brand": "Apple",
-    "model": "iPhone 15 Pro",
-    "storage": "1024 GB",
-    "price": "87300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "price": "59000",
+    "country": "🇯🇵",
+    "hidden": false
   },
   {
     "id": "1377",
@@ -2044,41 +2532,19 @@
     "brand": "Apple",
     "model": "iPhone 15 Pro",
     "storage": "1024 GB",
-    "price": "101800",
-    "country": "🇪🇺"
+    "price": "108800",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
-    "id": "1393",
+    "id": "1365",
     "category": "Смартфоны",
-    "name": "iPhone 15 Pro 1 TB Blue",
-    "brand": "Apple",
-    "model": "iPhone 15 Pro",
-    "storage": "1024 GB",
-    "price": "84400",
-    "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "1392",
-    "category": "Смартфоны",
-    "name": "iPhone 15 Pro 1 TB White",
-    "brand": "Apple",
-    "model": "iPhone 15 Pro",
-    "storage": "1024 GB",
-    "price": "83000",
-    "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "1379",
-    "category": "Смартфоны",
-    "name": "iPhone 15 Pro 128 Black",
+    "name": "iPhone 15 Pro 128 Blue",
     "brand": "Apple",
     "model": "iPhone 15 Pro",
     "storage": "128 GB",
-    "price": "63500",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "price": "64000",
+    "hidden": false
   },
   {
     "id": "1381",
@@ -2087,9 +2553,21 @@
     "brand": "Apple",
     "model": "iPhone 15 Pro",
     "storage": "128 GB",
-    "price": "63500",
+    "price": "64900",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
+  },
+  {
+    "id": "1366",
+    "category": "Смартфоны",
+    "name": "iPhone 15 Pro 128 Natural",
+    "brand": "Apple",
+    "model": "iPhone 15 Pro",
+    "storage": "128 GB",
+    "price": "76800",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "1382",
@@ -2098,9 +2576,10 @@
     "brand": "Apple",
     "model": "iPhone 15 Pro",
     "storage": "128 GB",
-    "price": "63500",
+    "price": "64900",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1380",
@@ -2109,20 +2588,10 @@
     "brand": "Apple",
     "model": "iPhone 15 Pro",
     "storage": "128 GB",
-    "price": "63500",
+    "price": "64900",
     "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "1383",
-    "category": "Смартфоны",
-    "name": "iPhone 15 Pro 256 Black",
-    "brand": "Apple",
-    "model": "iPhone 15 Pro",
-    "storage": "256 GB",
-    "price": "72300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1385",
@@ -2131,31 +2600,21 @@
     "brand": "Apple",
     "model": "iPhone 15 Pro",
     "storage": "256 GB",
-    "price": "71500",
+    "price": "74300",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
-    "id": "1386",
+    "id": "1371",
     "category": "Смартфоны",
-    "name": "iPhone 15 Pro 256 Natural",
+    "name": "iPhone 15 Pro 512 Black",
     "brand": "Apple",
     "model": "iPhone 15 Pro",
-    "storage": "256 GB",
-    "price": "72300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "1384",
-    "category": "Смартфоны",
-    "name": "iPhone 15 Pro 256 White",
-    "brand": "Apple",
-    "model": "iPhone 15 Pro",
-    "storage": "256 GB",
-    "price": "71800",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "storage": "512 GB",
+    "price": "92800",
+    "country": "🇦🇪 🇪🇺",
+    "hidden": false
   },
   {
     "id": "1387",
@@ -2164,9 +2623,10 @@
     "brand": "Apple",
     "model": "iPhone 15 Pro",
     "storage": "512 GB",
-    "price": "78200",
+    "price": "84300",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1389",
@@ -2175,20 +2635,32 @@
     "brand": "Apple",
     "model": "iPhone 15 Pro",
     "storage": "512 GB",
-    "price": "78100",
+    "price": "83800",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
-    "id": "1390",
+    "id": "1373",
+    "category": "Смартфоны",
+    "name": "iPhone 15 Pro 512 Blue",
+    "brand": "Apple",
+    "model": "iPhone 15 Pro",
+    "storage": "512 GB",
+    "price": "94800",
+    "country": "🇦🇪 🇪🇺",
+    "hidden": false
+  },
+  {
+    "id": "1374",
     "category": "Смартфоны",
     "name": "iPhone 15 Pro 512 Natural",
     "brand": "Apple",
     "model": "iPhone 15 Pro",
     "storage": "512 GB",
-    "price": "78100",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "price": "92800",
+    "country": "🇦🇪 🇪🇺",
+    "hidden": false
   },
   {
     "id": "1388",
@@ -2197,53 +2669,43 @@
     "brand": "Apple",
     "model": "iPhone 15 Pro",
     "storage": "512 GB",
-    "price": "78100",
+    "price": "84300",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
-    "id": "1433",
+    "id": "1372",
     "category": "Смартфоны",
-    "name": "iPhone 15 Pro Max 1 TB Blue",
+    "name": "iPhone 15 Pro 512 White",
     "brand": "Apple",
-    "model": "iPhone 15 Pro Max",
-    "storage": "1024 GB",
+    "model": "iPhone 15 Pro",
+    "storage": "512 GB",
     "price": "92300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "country": "🇰🇷",
+    "hidden": false
   },
   {
-    "id": "1434",
-    "category": "Смартфоны",
-    "name": "iPhone 15 Pro Max 1 TB Natural",
-    "brand": "Apple",
-    "model": "iPhone 15 Pro Max",
-    "storage": "1024 GB",
-    "price": "92300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "1432",
-    "category": "Смартфоны",
-    "name": "iPhone 15 Pro Max 1 TB White",
-    "brand": "Apple",
-    "model": "iPhone 15 Pro Max",
-    "storage": "1024 GB",
-    "price": "92300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "1423",
+    "id": "1411",
     "category": "Смартфоны",
     "name": "iPhone 15 Pro Max 256 Black",
     "brand": "Apple",
     "model": "iPhone 15 Pro Max",
-    "storage": "1024 GB",
-    "price": "77300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "storage": "256 GB",
+    "price": "86300",
+    "country": "🇦🇪 🇪🇺",
+    "hidden": false
+  },
+  {
+    "id": "1413",
+    "category": "Смартфоны",
+    "name": "iPhone 15 Pro Max 256 Blue",
+    "brand": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "storage": "256 GB",
+    "price": "84100",
+    "country": "🇺🇿",
+    "hidden": false
   },
   {
     "id": "1425",
@@ -2252,20 +2714,32 @@
     "brand": "Apple",
     "model": "iPhone 15 Pro Max",
     "storage": "256 GB",
-    "price": "75800",
+    "price": "82500",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
-    "id": "1426",
+    "id": "1414",
     "category": "Смартфоны",
     "name": "iPhone 15 Pro Max 256 Natural",
     "brand": "Apple",
     "model": "iPhone 15 Pro Max",
     "storage": "256 GB",
-    "price": "75800",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "price": "81600",
+    "country": "🇯🇵",
+    "hidden": false
+  },
+  {
+    "id": "1412",
+    "category": "Смартфоны",
+    "name": "iPhone 15 Pro Max 256 White",
+    "brand": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "storage": "256 GB",
+    "price": "86500",
+    "country": "🇸🇬",
+    "hidden": false
   },
   {
     "id": "1424",
@@ -2274,9 +2748,10 @@
     "brand": "Apple",
     "model": "iPhone 15 Pro Max",
     "storage": "256 GB",
-    "price": "76300",
+    "price": "81500",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1427",
@@ -2285,31 +2760,43 @@
     "brand": "Apple",
     "model": "iPhone 15 Pro Max",
     "storage": "512 GB",
-    "price": "86300",
+    "price": "89300",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
-    "id": "1428",
+    "id": "1415",
     "category": "Смартфоны",
-    "name": "iPhone 15 Pro Max 512 White",
+    "name": "iPhone 15 Pro Max 512 Black",
+    "brand": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "storage": "512 GB",
+    "price": "87300",
+    "country": "🇯🇵",
+    "hidden": false
+  },
+  {
+    "id": "1417",
+    "category": "Смартфоны",
+    "name": "iPhone 15 Pro Max 512 Blue",
     "brand": "Apple",
     "model": "iPhone 15 Pro Max",
     "storage": "512 GB",
     "price": "86300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "country": "🇯🇵",
+    "hidden": false
   },
   {
-    "id": "1462",
+    "id": "1418",
     "category": "Смартфоны",
-    "name": "iPhone 16 128 Black",
+    "name": "iPhone 15 Pro Max 512 Natural",
     "brand": "Apple",
-    "model": "iPhone 16",
-    "storage": "128 GB",
-    "price": "50500",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "model": "iPhone 15 Pro Max",
+    "storage": "512 GB",
+    "price": "92200",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "1447",
@@ -2318,8 +2805,33 @@
     "brand": "Apple",
     "model": "iPhone 16",
     "storage": "128 GB",
-    "price": "53600",
-    "country": "🇮🇳"
+    "price": "55000",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "1462",
+    "category": "Смартфоны",
+    "name": "iPhone 16 128 Black",
+    "brand": "Apple",
+    "model": "iPhone 16",
+    "storage": "128 GB",
+    "price": "52400",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
+  },
+  {
+    "id": "1465",
+    "category": "Смартфоны",
+    "name": "iPhone 16 128 Pink",
+    "brand": "Apple",
+    "model": "iPhone 16",
+    "storage": "128 GB",
+    "price": "52800",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1450",
@@ -2328,8 +2840,9 @@
     "brand": "Apple",
     "model": "iPhone 16",
     "storage": "128 GB",
-    "price": "53400",
-    "country": "🇮🇳"
+    "price": "57700",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1449",
@@ -2338,8 +2851,9 @@
     "brand": "Apple",
     "model": "iPhone 16",
     "storage": "128 GB",
-    "price": "53100",
-    "country": "🇮🇳"
+    "price": "53800",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1451",
@@ -2348,8 +2862,21 @@
     "brand": "Apple",
     "model": "iPhone 16",
     "storage": "128 GB",
-    "price": "53900",
-    "country": "🇮🇳"
+    "price": "55000",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "1466",
+    "category": "Смартфоны",
+    "name": "iPhone 16 128 Ultramarine",
+    "brand": "Apple",
+    "model": "iPhone 16",
+    "storage": "128 GB",
+    "price": "52500",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1448",
@@ -2358,8 +2885,21 @@
     "brand": "Apple",
     "model": "iPhone 16",
     "storage": "128 GB",
-    "price": "53500",
-    "country": "🇮🇳"
+    "price": "55000",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "1463",
+    "category": "Смартфоны",
+    "name": "iPhone 16 128 White",
+    "brand": "Apple",
+    "model": "iPhone 16",
+    "storage": "128 GB",
+    "price": "52800",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1452",
@@ -2368,8 +2908,9 @@
     "brand": "Apple",
     "model": "iPhone 16",
     "storage": "256 GB",
-    "price": "60100",
-    "country": "🇮🇳"
+    "price": "64200",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1455",
@@ -2378,8 +2919,9 @@
     "brand": "Apple",
     "model": "iPhone 16",
     "storage": "256 GB",
-    "price": "59300",
-    "country": "🇮🇳"
+    "price": "60500",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1454",
@@ -2388,8 +2930,21 @@
     "brand": "Apple",
     "model": "iPhone 16",
     "storage": "256 GB",
-    "price": "59100",
-    "country": "🇮🇳"
+    "price": "67300",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "1484",
+    "category": "Смартфоны",
+    "name": "iPhone 16 256 Teal",
+    "brand": "Apple",
+    "model": "iPhone 16",
+    "storage": "256 GB",
+    "price": "60800",
+    "country": "🇨🇳",
+    "sim": "Dual SIM",
+    "hidden": false
   },
   {
     "id": "1456",
@@ -2398,8 +2953,9 @@
     "brand": "Apple",
     "model": "iPhone 16",
     "storage": "256 GB",
-    "price": "59900",
-    "country": "🇮🇳"
+    "price": "64200",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1453",
@@ -2408,30 +2964,21 @@
     "brand": "Apple",
     "model": "iPhone 16",
     "storage": "256 GB",
-    "price": "60200",
-    "country": "🇮🇳"
+    "price": "68800",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
-    "id": "1475",
+    "id": "1474",
     "category": "Смартфоны",
-    "name": "iPhone 16 512 Pink",
+    "name": "iPhone 16 512 Teal",
     "brand": "Apple",
     "model": "iPhone 16",
     "storage": "512 GB",
-    "price": "62600",
+    "price": "66000",
     "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "1473",
-    "category": "Смартфоны",
-    "name": "iPhone 16 512 White",
-    "brand": "Apple",
-    "model": "iPhone 16",
-    "storage": "512 GB",
-    "price": "62600",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1492",
@@ -2440,8 +2987,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Plus",
     "storage": "128 GB",
-    "price": "58000",
-    "country": "🇮🇳"
+    "price": "62500",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1507",
@@ -2450,20 +2998,10 @@
     "brand": "Apple",
     "model": "iPhone 16 Plus",
     "storage": "128 GB",
-    "price": "58300",
+    "price": "59300",
     "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "1510",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Plus 128 Pink",
-    "brand": "Apple",
-    "model": "iPhone 16 Plus",
-    "storage": "128 GB",
-    "price": "58300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1495",
@@ -2472,8 +3010,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Plus",
     "storage": "128 GB",
-    "price": "58000",
-    "country": "🇮🇳"
+    "price": "62800",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1494",
@@ -2482,8 +3021,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Plus",
     "storage": "128 GB",
-    "price": "58200",
-    "country": "🇮🇳"
+    "price": "62600",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1496",
@@ -2492,8 +3032,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Plus",
     "storage": "128 GB",
-    "price": "56800",
-    "country": "🇮🇳"
+    "price": "60000",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1493",
@@ -2502,8 +3043,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Plus",
     "storage": "128 GB",
-    "price": "57100",
-    "country": "🇮🇳"
+    "price": "61500",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1497",
@@ -2512,8 +3054,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Plus",
     "storage": "256 GB",
-    "price": "68600",
-    "country": "🇮🇳"
+    "price": "70300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1500",
@@ -2522,19 +3065,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Plus",
     "storage": "256 GB",
-    "price": "68900",
-    "country": "🇮🇳"
-  },
-  {
-    "id": "1515",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Plus 256 Pink",
-    "brand": "Apple",
-    "model": "iPhone 16 Plus",
-    "storage": "256 GB",
-    "price": "66300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "price": "70300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1499",
@@ -2543,8 +3076,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Plus",
     "storage": "256 GB",
-    "price": "69000",
-    "country": "🇮🇳"
+    "price": "70300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1501",
@@ -2553,8 +3087,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Plus",
     "storage": "256 GB",
-    "price": "68800",
-    "country": "🇮🇳"
+    "price": "70300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1498",
@@ -2563,19 +3098,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Plus",
     "storage": "256 GB",
-    "price": "68600",
-    "country": "🇮🇳"
-  },
-  {
-    "id": "1517",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Plus 512 Black",
-    "brand": "Apple",
-    "model": "iPhone 16 Plus",
-    "storage": "512 GB",
-    "price": "68700",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "price": "70300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1502",
@@ -2584,8 +3109,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Plus",
     "storage": "512 GB",
-    "price": "80200",
-    "country": "🇦🇪"
+    "price": "82800",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1520",
@@ -2594,9 +3120,10 @@
     "brand": "Apple",
     "model": "iPhone 16 Plus",
     "storage": "512 GB",
-    "price": "69200",
+    "price": "77800",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1504",
@@ -2605,8 +3132,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Plus",
     "storage": "512 GB",
-    "price": "79600",
-    "country": "🇯🇵"
+    "price": "82800",
+    "country": "🇯🇵",
+    "hidden": false
   },
   {
     "id": "1519",
@@ -2615,20 +3143,10 @@
     "brand": "Apple",
     "model": "iPhone 16 Plus",
     "storage": "512 GB",
-    "price": "69200",
+    "price": "79300",
     "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "1534",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Plus 512 Teal",
-    "brand": "Apple",
-    "model": "iPhone 16 Plus",
-    "storage": "512 GB",
-    "price": "74800",
-    "country": "🇭🇰",
-    "sim": "Dual SIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1506",
@@ -2637,39 +3155,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Plus",
     "storage": "512 GB",
-    "price": "80600",
-    "country": "🇮🇳"
-  },
-  {
-    "id": "1521",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Plus 512 Ultramarine",
-    "brand": "Apple",
-    "model": "iPhone 16 Plus",
-    "storage": "512 GB",
-    "price": "68700",
-    "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "1569",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro 1 TB Desert",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro",
-    "storage": "1024 GB",
-    "price": "124500",
-    "country": "🇦🇪"
-  },
-  {
-    "id": "1570",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro 1 TB Natural",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro",
-    "storage": "1024 GB",
-    "price": "118900",
-    "country": "🇧🇷"
+    "price": "82800",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "1568",
@@ -2678,19 +3166,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Pro",
     "storage": "1024 GB",
-    "price": "108500",
-    "country": "🇦🇪"
-  },
-  {
-    "id": "1584",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro 1 TB White",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro",
-    "storage": "1024 GB",
-    "price": "108300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "price": "110500",
+    "country": "🇰🇼",
+    "hidden": false
   },
   {
     "id": "1571",
@@ -2699,9 +3177,10 @@
     "brand": "Apple",
     "model": "iPhone 16 Pro",
     "storage": "128 GB",
-    "price": "77300",
+    "price": "85300",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1587",
@@ -2710,31 +3189,10 @@
     "brand": "Apple",
     "model": "iPhone 16 Pro",
     "storage": "128 GB",
-    "price": "77400",
+    "price": "92500",
     "country": "🇨🇳",
-    "sim": "Dual SIM"
-  },
-  {
-    "id": "1573",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro 128 Desert",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro",
-    "storage": "128 GB",
-    "price": "74300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "1589",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro 128 Desert",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro",
-    "storage": "128 GB",
-    "price": "68600",
-    "country": "🇨🇳",
-    "sim": "Dual SIM"
+    "sim": "Dual SIM",
+    "hidden": false
   },
   {
     "id": "1557",
@@ -2743,19 +3201,33 @@
     "brand": "Apple",
     "model": "iPhone 16 Pro",
     "storage": "128 GB",
-    "price": "80500",
-    "country": "🇮🇳"
+    "price": "82700",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
-    "id": "1590",
+    "id": "1573",
     "category": "Смартфоны",
-    "name": "iPhone 16 Pro 128 Natural",
+    "name": "iPhone 16 Pro 128 Desert",
     "brand": "Apple",
     "model": "iPhone 16 Pro",
     "storage": "128 GB",
-    "price": "68500",
+    "price": "78300",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
+  },
+  {
+    "id": "1589",
+    "category": "Смартфоны",
+    "name": "iPhone 16 Pro 128 Desert",
+    "brand": "Apple",
+    "model": "iPhone 16 Pro",
+    "storage": "128 GB",
+    "price": "74300",
     "country": "🇨🇳",
-    "sim": "Dual SIM"
+    "sim": "Dual SIM",
+    "hidden": false
   },
   {
     "id": "1558",
@@ -2764,19 +3236,21 @@
     "brand": "Apple",
     "model": "iPhone 16 Pro",
     "storage": "128 GB",
-    "price": "88300",
-    "country": "🇪🇺"
+    "price": "94500",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
-    "id": "1588",
+    "id": "1590",
     "category": "Смартфоны",
-    "name": "iPhone 16 Pro 128 White",
+    "name": "iPhone 16 Pro 128 Natural",
     "brand": "Apple",
     "model": "iPhone 16 Pro",
     "storage": "128 GB",
-    "price": "68000",
+    "price": "74800",
     "country": "🇨🇳",
-    "sim": "Dual SIM"
+    "sim": "Dual SIM",
+    "hidden": false
   },
   {
     "id": "1556",
@@ -2785,49 +3259,21 @@
     "brand": "Apple",
     "model": "iPhone 16 Pro",
     "storage": "128 GB",
-    "price": "80400",
-    "country": "🇮🇳"
+    "price": "84200",
+    "country": "🇧🇷",
+    "hidden": false
   },
   {
-    "id": "1559",
+    "id": "1588",
     "category": "Смартфоны",
-    "name": "iPhone 16 Pro 256 Black",
+    "name": "iPhone 16 Pro 128 White",
     "brand": "Apple",
     "model": "iPhone 16 Pro",
-    "storage": "256 GB",
-    "price": "103500",
-    "country": "🇦🇪"
-  },
-  {
-    "id": "1575",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro 256 Black",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro",
-    "storage": "256 GB",
-    "price": "86300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "1561",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro 256 Desert",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro",
-    "storage": "256 GB",
-    "price": "102200",
-    "country": "🇦🇪"
-  },
-  {
-    "id": "1562",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro 256 Natural",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro",
-    "storage": "256 GB",
-    "price": "98200",
-    "country": "🇦🇪"
+    "storage": "128 GB",
+    "price": "73600",
+    "country": "🇨🇳",
+    "sim": "Dual SIM",
+    "hidden": false
   },
   {
     "id": "1579",
@@ -2836,20 +3282,21 @@
     "brand": "Apple",
     "model": "iPhone 16 Pro",
     "storage": "512 GB",
-    "price": "97300",
+    "price": "108300",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
-    "id": "1596",
+    "id": "1565",
     "category": "Смартфоны",
-    "name": "iPhone 16 Pro 512 White",
+    "name": "iPhone 16 Pro 512 Desert",
     "brand": "Apple",
     "model": "iPhone 16 Pro",
     "storage": "512 GB",
-    "price": "115400",
-    "country": "🇭🇰",
-    "sim": "Dual SIM"
+    "price": "108800",
+    "country": "🇯🇵",
+    "hidden": false
   },
   {
     "id": "1564",
@@ -2858,8 +3305,21 @@
     "brand": "Apple",
     "model": "iPhone 16 Pro",
     "storage": "512 GB",
-    "price": "110400",
-    "country": "🇦🇪"
+    "price": "133100",
+    "country": "🇦🇪",
+    "hidden": false
+  },
+  {
+    "id": "1596",
+    "category": "Смартфоны",
+    "name": "iPhone 16 Pro 512 White",
+    "brand": "Apple",
+    "model": "iPhone 16 Pro",
+    "storage": "512 GB",
+    "price": "113500",
+    "country": "🇭🇰",
+    "sim": "Dual SIM",
+    "hidden": false
   },
   {
     "id": "1611",
@@ -2868,19 +3328,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Pro Max",
     "storage": "1024 GB",
-    "price": "124400",
-    "country": "🇸🇬"
-  },
-  {
-    "id": "1623",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro Max 1 TB Black",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro Max",
-    "storage": "1024 GB",
-    "price": "115300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "price": "150600",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "1613",
@@ -2889,73 +3339,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Pro Max",
     "storage": "1024 GB",
-    "price": "122000",
-    "country": "🇮🇳"
-  },
-  {
-    "id": "1625",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro Max 1 TB Desert",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro Max",
-    "storage": "1024 GB",
-    "price": "114300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "1614",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro Max 1 TB Natural",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro Max",
-    "storage": "1024 GB",
-    "price": "122000",
-    "country": "🇮🇳"
-  },
-  {
-    "id": "1626",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro Max 1 TB Natural",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro Max",
-    "storage": "1024 GB",
-    "price": "117300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "1624",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro Max 1 TB White",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro Max",
-    "storage": "1024 GB",
-    "price": "117300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "1636",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro Max 1 TB White",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro Max",
-    "storage": "1024 GB",
-    "price": "120200",
-    "country": "🇭🇰",
-    "sim": "Dual SIM"
-  },
-  {
-    "id": "1615",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro Max 256 Black",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro Max",
-    "storage": "256 GB",
-    "price": "92300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "price": "143300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1627",
@@ -2964,9 +3350,22 @@
     "brand": "Apple",
     "model": "iPhone 16 Pro Max",
     "storage": "256 GB",
-    "price": "100500",
-    "country": "🇨🇳",
-    "sim": "Dual SIM"
+    "price": "97800",
+    "country": "🇭🇰",
+    "sim": "Dual SIM",
+    "hidden": false
+  },
+  {
+    "id": "1615",
+    "category": "Смартфоны",
+    "name": "iPhone 16 Pro Max 256 Black",
+    "brand": "Apple",
+    "model": "iPhone 16 Pro Max",
+    "storage": "256 GB",
+    "price": "100300",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1605",
@@ -2975,19 +3374,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Pro Max",
     "storage": "256 GB",
-    "price": "87200",
-    "country": "🇰🇼"
-  },
-  {
-    "id": "1617",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro Max 256 Desert",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro Max",
-    "storage": "256 GB",
-    "price": "86300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "price": "91800",
+    "country": "🇰🇼",
+    "hidden": false
   },
   {
     "id": "1606",
@@ -2996,18 +3385,9 @@
     "brand": "Apple",
     "model": "iPhone 16 Pro Max",
     "storage": "256 GB",
-    "price": "103500"
-  },
-  {
-    "id": "1618",
-    "category": "Смартфоны",
-    "name": "iPhone 16 Pro Max 256 Natural",
-    "brand": "Apple",
-    "model": "iPhone 16 Pro Max",
-    "storage": "256 GB",
-    "price": "94300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "price": "98300",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "1604",
@@ -3016,19 +3396,32 @@
     "brand": "Apple",
     "model": "iPhone 16 Pro Max",
     "storage": "256 GB",
-    "price": "104100",
-    "country": "🇦🇪"
+    "price": "107500",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
-    "id": "1619",
+    "id": "1607",
     "category": "Смартфоны",
     "name": "iPhone 16 Pro Max 512 Black",
     "brand": "Apple",
     "model": "iPhone 16 Pro Max",
     "storage": "512 GB",
-    "price": "105300",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "price": "130300",
+    "country": "🇮🇩",
+    "hidden": false
+  },
+  {
+    "id": "1633",
+    "category": "Смартфоны",
+    "name": "iPhone 16 Pro Max 512 Desert",
+    "brand": "Apple",
+    "model": "iPhone 16 Pro Max",
+    "storage": "512 GB",
+    "price": "122100",
+    "country": "🇭🇰",
+    "sim": "Dual SIM",
+    "hidden": false
   },
   {
     "id": "1621",
@@ -3037,9 +3430,43 @@
     "brand": "Apple",
     "model": "iPhone 16 Pro Max",
     "storage": "512 GB",
-    "price": "106600",
+    "price": "116300",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
+  },
+  {
+    "id": "1609",
+    "category": "Смартфоны",
+    "name": "iPhone 16 Pro Max 512 Desert",
+    "brand": "Apple",
+    "model": "iPhone 16 Pro Max",
+    "storage": "512 GB",
+    "price": "115300",
+    "country": "🇯🇵",
+    "hidden": false
+  },
+  {
+    "id": "1610",
+    "category": "Смартфоны",
+    "name": "iPhone 16 Pro Max 512 Natural",
+    "brand": "Apple",
+    "model": "iPhone 16 Pro Max",
+    "storage": "512 GB",
+    "price": "117800",
+    "country": "🇯🇵",
+    "hidden": false
+  },
+  {
+    "id": "1608",
+    "category": "Смартфоны",
+    "name": "iPhone 16 Pro Max 512 White",
+    "brand": "Apple",
+    "model": "iPhone 16 Pro Max",
+    "storage": "512 GB",
+    "price": "117800",
+    "country": "🇯🇵",
+    "hidden": false
   },
   {
     "id": "1543",
@@ -3048,9 +3475,10 @@
     "brand": "Apple",
     "model": "iPhone 16e",
     "storage": "128 GB",
-    "price": "39300",
+    "price": "38600",
     "country": "🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "1537",
@@ -3059,8 +3487,9 @@
     "brand": "Apple",
     "model": "iPhone 16e",
     "storage": "128 GB",
-    "price": "40700",
-    "country": "🇮🇳"
+    "price": "43800",
+    "country": "🇦🇺",
+    "hidden": false
   },
   {
     "id": "1538",
@@ -3069,8 +3498,20 @@
     "brand": "Apple",
     "model": "iPhone 16e",
     "storage": "128 GB",
-    "price": "39800",
-    "country": "🇮🇳"
+    "price": "43800",
+    "country": "🇦🇺",
+    "hidden": false
+  },
+  {
+    "id": "1539",
+    "category": "Смартфоны",
+    "name": "iPhone 16e 256 Black",
+    "brand": "Apple",
+    "model": "iPhone 16e",
+    "storage": "256 GB",
+    "price": "60300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "1540",
@@ -3079,28 +3520,21 @@
     "brand": "Apple",
     "model": "iPhone 16e",
     "storage": "256 GB",
-    "price": "52300",
-    "country": "🇮🇳"
+    "price": "60300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
-    "id": "1541",
+    "id": "1546",
     "category": "Смартфоны",
-    "name": "iPhone 16e 512 Black",
+    "name": "iPhone 16e 256 White",
     "brand": "Apple",
     "model": "iPhone 16e",
-    "storage": "512 GB",
-    "price": "58900",
-    "country": "🇯🇵"
-  },
-  {
-    "id": "1542",
-    "category": "Смартфоны",
-    "name": "iPhone 16e 512 White",
-    "brand": "Apple",
-    "model": "iPhone 16e",
-    "storage": "512 GB",
-    "price": "56100",
-    "country": "🇮🇳"
+    "storage": "256 GB",
+    "price": "49400",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34281",
@@ -3109,9 +3543,10 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "256 GB",
-    "price": "66400",
+    "price": "67100",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34271",
@@ -3120,8 +3555,9 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "256 GB",
-    "price": "68100",
-    "country": "🇮🇳"
+    "price": "70500",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "34275",
@@ -3130,8 +3566,9 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "256 GB",
-    "price": "69500",
-    "country": "🇮🇳"
+    "price": "70500",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "34285",
@@ -3140,20 +3577,10 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "256 GB",
-    "price": "65700",
+    "price": "66200",
     "country": "🇯🇵",
-    "sim": "ESIM"
-  },
-  {
-    "id": "34284",
-    "category": "Смартфоны",
-    "name": "iPhone 17 256 Mist Blue",
-    "brand": "Apple",
-    "model": "iPhone 17",
-    "storage": "256 GB",
-    "price": "65300",
-    "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34274",
@@ -3162,8 +3589,21 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "256 GB",
-    "price": "66500",
-    "country": "🇮🇳"
+    "price": "69500",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "34284",
+    "category": "Смартфоны",
+    "name": "iPhone 17 256 Mist Blue",
+    "brand": "Apple",
+    "model": "iPhone 17",
+    "storage": "256 GB",
+    "price": "66300",
+    "country": "🇯🇵",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34273",
@@ -3172,8 +3612,9 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "256 GB",
-    "price": "70400",
-    "country": "🇮🇳"
+    "price": "70500",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "34283",
@@ -3182,9 +3623,10 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "256 GB",
-    "price": "65900",
+    "price": "65700",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34272",
@@ -3193,8 +3635,9 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "256 GB",
-    "price": "67300",
-    "country": "🇮🇳"
+    "price": "70100",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "34282",
@@ -3203,9 +3646,21 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "256 GB",
-    "price": "64800",
+    "price": "66400",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
+  },
+  {
+    "id": "34276",
+    "category": "Смартфоны",
+    "name": "iPhone 17 512 Black",
+    "brand": "Apple",
+    "model": "iPhone 17",
+    "storage": "512 GB",
+    "price": "83800",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "34286",
@@ -3214,9 +3669,10 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "512 GB",
-    "price": "77100",
+    "price": "81600",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34280",
@@ -3225,8 +3681,9 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "512 GB",
-    "price": "85600",
-    "country": "🇮🇳"
+    "price": "83800",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "34290",
@@ -3235,9 +3692,10 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "512 GB",
-    "price": "79300",
+    "price": "82600",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34279",
@@ -3246,19 +3704,9 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "512 GB",
-    "price": "83000",
-    "country": "🇮🇳"
-  },
-  {
-    "id": "34289",
-    "category": "Смартфоны",
-    "name": "iPhone 17 512 Mist Blue",
-    "brand": "Apple",
-    "model": "iPhone 17",
-    "storage": "512 GB",
-    "price": "76100",
-    "country": "🇯🇵",
-    "sim": "ESIM"
+    "price": "82500",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "34278",
@@ -3267,8 +3715,9 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "512 GB",
-    "price": "84000",
-    "country": "🇮🇳"
+    "price": "83100",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "34288",
@@ -3277,9 +3726,10 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "512 GB",
-    "price": "78200",
+    "price": "83600",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34277",
@@ -3288,8 +3738,9 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "512 GB",
-    "price": "82300",
-    "country": "🇮🇳"
+    "price": "86600",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "34287",
@@ -3298,9 +3749,10 @@
     "brand": "Apple",
     "model": "iPhone 17",
     "storage": "512 GB",
-    "price": "77100",
+    "price": "83100",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34351",
@@ -3309,9 +3761,10 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro",
     "storage": "1024 GB",
-    "price": "122400",
+    "price": "131600",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34330",
@@ -3320,8 +3773,9 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro",
     "storage": "1024 GB",
-    "price": "134000",
-    "country": "🇰🇷"
+    "price": "141600",
+    "country": "🇰🇷",
+    "hidden": false
   },
   {
     "id": "34329",
@@ -3330,8 +3784,9 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro",
     "storage": "1024 GB",
-    "price": "130200",
-    "country": "🇭🇰"
+    "price": "138600",
+    "country": "🇰🇷",
+    "hidden": false
   },
   {
     "id": "34350",
@@ -3340,9 +3795,10 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro",
     "storage": "1024 GB",
-    "price": "117100",
+    "price": "130600",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34331",
@@ -3351,8 +3807,9 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro",
     "storage": "1024 GB",
-    "price": "135700",
-    "country": "🇭🇰"
+    "price": "144600",
+    "country": "🇰🇷",
+    "hidden": false
   },
   {
     "id": "34352",
@@ -3361,9 +3818,10 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro",
     "storage": "1024 GB",
-    "price": "125700",
+    "price": "138600",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34345",
@@ -3372,9 +3830,10 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro",
     "storage": "256 GB",
-    "price": "90000",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "price": "100100",
+    "country": "🇯🇵",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34324",
@@ -3383,18 +3842,9 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro",
     "storage": "256 GB",
-    "price": "99700",
-    "country": "🇭🇰"
-  },
-  {
-    "id": "34323",
-    "category": "Смартфоны",
-    "name": "iPhone 17 Pro 256 Orange",
-    "brand": "Apple",
-    "model": "iPhone 17 Pro",
-    "storage": "256 GB",
-    "price": "98100",
-    "country": "🇭🇰"
+    "price": "109100",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "34344",
@@ -3403,19 +3853,33 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro",
     "storage": "256 GB",
-    "price": "89600",
-    "country": "🇯🇵",
-    "sim": "ESIM"
+    "price": "98600",
+    "country": "🇦🇪",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
-    "id": "34325",
+    "id": "34365",
     "category": "Смартфоны",
-    "name": "iPhone 17 Pro 256 Silver",
+    "name": "iPhone 17 Pro 256 Orange",
     "brand": "Apple",
     "model": "iPhone 17 Pro",
     "storage": "256 GB",
-    "price": "100000",
-    "country": "🇰🇷"
+    "price": "105800",
+    "country": "🇨🇳",
+    "sim": "Dual SIM",
+    "hidden": false
+  },
+  {
+    "id": "34323",
+    "category": "Смартфоны",
+    "name": "iPhone 17 Pro 256 Orange",
+    "brand": "Apple",
+    "model": "iPhone 17 Pro",
+    "storage": "256 GB",
+    "price": "109600",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "34346",
@@ -3424,19 +3888,21 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro",
     "storage": "256 GB",
-    "price": "90700",
+    "price": "109600",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
-    "id": "34327",
+    "id": "34325",
     "category": "Смартфоны",
-    "name": "iPhone 17 Pro 512 Blue",
+    "name": "iPhone 17 Pro 256 Silver",
     "brand": "Apple",
     "model": "iPhone 17 Pro",
-    "storage": "512 GB",
-    "price": "117000",
-    "country": "🇭🇰"
+    "storage": "256 GB",
+    "price": "113100",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "34348",
@@ -3445,20 +3911,21 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro",
     "storage": "512 GB",
-    "price": "104700",
+    "price": "115100",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
-    "id": "34347",
+    "id": "34327",
     "category": "Смартфоны",
-    "name": "iPhone 17 Pro 512 Orange",
+    "name": "iPhone 17 Pro 512 Blue",
     "brand": "Apple",
     "model": "iPhone 17 Pro",
     "storage": "512 GB",
-    "price": "101400",
-    "country": "🇯🇵",
-    "sim": "ESIM"
+    "price": "128800",
+    "country": "🇰🇷",
+    "hidden": false
   },
   {
     "id": "34326",
@@ -3467,8 +3934,21 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro",
     "storage": "512 GB",
-    "price": "114300",
-    "country": "🇭🇰"
+    "price": "121100",
+    "country": "🇭🇰",
+    "hidden": false
+  },
+  {
+    "id": "34347",
+    "category": "Смартфоны",
+    "name": "iPhone 17 Pro 512 Orange",
+    "brand": "Apple",
+    "model": "iPhone 17 Pro",
+    "storage": "512 GB",
+    "price": "111600",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34349",
@@ -3477,9 +3957,10 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro",
     "storage": "512 GB",
-    "price": "107000",
+    "price": "119600",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34328",
@@ -3488,19 +3969,9 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro",
     "storage": "512 GB",
-    "price": "117700",
-    "country": "🇭🇰"
-  },
-  {
-    "id": "34360",
-    "category": "Смартфоны",
-    "name": "iPhone 17 Pro Max 1TB Blue",
-    "brand": "Apple",
-    "model": "iPhone 17 Pro Max",
-    "storage": "1024 GB",
-    "price": "126100",
-    "country": "🇯🇵",
-    "sim": "ESIM"
+    "price": "130100",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "34339",
@@ -3509,8 +3980,21 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "1024 GB",
-    "price": "143300",
-    "country": "🇭🇰"
+    "price": "162100",
+    "country": "🇭🇰",
+    "hidden": false
+  },
+  {
+    "id": "34360",
+    "category": "Смартфоны",
+    "name": "iPhone 17 Pro Max 1TB Blue",
+    "brand": "Apple",
+    "model": "iPhone 17 Pro Max",
+    "storage": "1024 GB",
+    "price": "141100",
+    "country": "🇯🇵",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34359",
@@ -3519,9 +4003,10 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "1024 GB",
-    "price": "125400",
+    "price": "136400",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34338",
@@ -3530,18 +4015,9 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "1024 GB",
-    "price": "141500",
-    "country": "🇸🇬"
-  },
-  {
-    "id": "34340",
-    "category": "Смартфоны",
-    "name": "iPhone 17 Pro Max 1TB Silver",
-    "brand": "Apple",
-    "model": "iPhone 17 Pro Max",
-    "storage": "1024 GB",
-    "price": "147100",
-    "country": "🇸🇬"
+    "price": "153800",
+    "country": "🇰🇷",
+    "hidden": false
   },
   {
     "id": "34361",
@@ -3550,19 +4026,21 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "1024 GB",
-    "price": "140800",
+    "price": "149100",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
-    "id": "34342",
+    "id": "34340",
     "category": "Смартфоны",
-    "name": "iPhone 17 Pro Max 2TB Blue",
+    "name": "iPhone 17 Pro Max 1TB Silver",
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
-    "storage": "2048 GB",
-    "price": "173900",
-    "country": "🇭🇰 🇮🇳 🇪🇺"
+    "storage": "1024 GB",
+    "price": "164100",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "34363",
@@ -3571,9 +4049,21 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "2048 GB",
-    "price": "146100",
-    "country": "🇯🇵",
-    "sim": "ESIM"
+    "price": "152300",
+    "country": "🇨🇦",
+    "sim": "ESIM",
+    "hidden": false
+  },
+  {
+    "id": "34342",
+    "category": "Смартфоны",
+    "name": "iPhone 17 Pro Max 2TB Blue",
+    "brand": "Apple",
+    "model": "iPhone 17 Pro Max",
+    "storage": "2048 GB",
+    "price": "181600",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "34362",
@@ -3582,9 +4072,10 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "2048 GB",
-    "price": "146200",
+    "price": "151600",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34341",
@@ -3593,8 +4084,9 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "2048 GB",
-    "price": "173500",
-    "country": "🇭🇰"
+    "price": "179600",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "34343",
@@ -3603,8 +4095,9 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "2048 GB",
-    "price": "175400",
-    "country": "🇭🇰"
+    "price": "195600",
+    "country": "🇰🇷",
+    "hidden": false
   },
   {
     "id": "34364",
@@ -3613,19 +4106,10 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "2048 GB",
-    "price": "151600",
+    "price": "161600",
     "country": "🇯🇵",
-    "sim": "ESIM"
-  },
-  {
-    "id": "34333",
-    "category": "Смартфоны",
-    "name": "iPhone 17 Pro Max 256 Blue",
-    "brand": "Apple",
-    "model": "iPhone 17 Pro Max",
-    "storage": "256 GB",
-    "price": "110200",
-    "country": "🇭🇰"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34354",
@@ -3634,20 +4118,21 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "256 GB",
-    "price": "98700",
+    "price": "109600",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
-    "id": "34353",
+    "id": "34333",
     "category": "Смартфоны",
-    "name": "iPhone 17 Pro Max 256 Orange",
+    "name": "iPhone 17 Pro Max 256 Blue",
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "256 GB",
-    "price": "98000",
-    "country": "🇯🇵",
-    "sim": "ESIM"
+    "price": "116800",
+    "country": "🇰🇷",
+    "hidden": false
   },
   {
     "id": "34332",
@@ -3656,8 +4141,21 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "256 GB",
-    "price": "108300",
-    "country": "🇭🇰"
+    "price": "118300",
+    "country": "🇭🇰",
+    "hidden": false
+  },
+  {
+    "id": "34353",
+    "category": "Смартфоны",
+    "name": "iPhone 17 Pro Max 256 Orange",
+    "brand": "Apple",
+    "model": "iPhone 17 Pro Max",
+    "storage": "256 GB",
+    "price": "106600",
+    "country": "🇯🇵",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34355",
@@ -3666,9 +4164,10 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "256 GB",
-    "price": "101700",
+    "price": "111600",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34334",
@@ -3677,8 +4176,9 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "256 GB",
-    "price": "111300",
-    "country": "🇭🇰"
+    "price": "118600",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "34336",
@@ -3687,8 +4187,9 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "512 GB",
-    "price": "127200",
-    "country": "🇭🇰"
+    "price": "137100",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "34357",
@@ -3697,9 +4198,10 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "512 GB",
-    "price": "117400",
+    "price": "121800",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34335",
@@ -3708,8 +4210,9 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "512 GB",
-    "price": "126100",
-    "country": "🇭🇰"
+    "price": "133100",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "34356",
@@ -3718,20 +4221,10 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "512 GB",
-    "price": "110800",
+    "price": "119300",
     "country": "🇯🇵",
-    "sim": "ESIM"
-  },
-  {
-    "id": "34358",
-    "category": "Смартфоны",
-    "name": "iPhone 17 Pro Max 512 Silver",
-    "brand": "Apple",
-    "model": "iPhone 17 Pro Max",
-    "storage": "512 GB",
-    "price": "120400",
-    "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34337",
@@ -3740,19 +4233,21 @@
     "brand": "Apple",
     "model": "iPhone 17 Pro Max",
     "storage": "512 GB",
-    "price": "130200",
-    "country": "🇭🇰"
+    "price": "139100",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
-    "id": "34319",
+    "id": "34358",
     "category": "Смартфоны",
-    "name": "iPhone Air 1TB Black",
+    "name": "iPhone 17 Pro Max 512 Silver",
     "brand": "Apple",
-    "model": "iPhone Air",
-    "storage": "1024 GB",
-    "price": "102900",
+    "model": "iPhone 17 Pro Max",
+    "storage": "512 GB",
+    "price": "130100",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34322",
@@ -3761,9 +4256,22 @@
     "brand": "Apple",
     "model": "iPhone Air",
     "storage": "1024 GB",
-    "price": "100600",
+    "price": "102500",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
+  },
+  {
+    "id": "34321",
+    "category": "Смартфоны",
+    "name": "iPhone Air 1TB Sky Blue",
+    "brand": "Apple",
+    "model": "iPhone Air",
+    "storage": "1024 GB",
+    "price": "104800",
+    "country": "🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34320",
@@ -3772,9 +4280,10 @@
     "brand": "Apple",
     "model": "iPhone Air",
     "storage": "1024 GB",
-    "price": "100600",
-    "country": "🇯🇵",
-    "sim": "ESIM"
+    "price": "109000",
+    "country": "🇯🇵 🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34311",
@@ -3783,9 +4292,10 @@
     "brand": "Apple",
     "model": "iPhone Air",
     "storage": "256 GB",
-    "price": "68200",
-    "country": "🇺🇸",
-    "sim": "ESIM"
+    "price": "79800",
+    "country": "🇯🇵",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34314",
@@ -3794,9 +4304,10 @@
     "brand": "Apple",
     "model": "iPhone Air",
     "storage": "256 GB",
-    "price": "67600",
+    "price": "71800",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34313",
@@ -3805,9 +4316,10 @@
     "brand": "Apple",
     "model": "iPhone Air",
     "storage": "256 GB",
-    "price": "72200",
-    "country": "🇯🇵",
-    "sim": "ESIM"
+    "price": "71300",
+    "country": "🇨🇳",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34312",
@@ -3816,9 +4328,10 @@
     "brand": "Apple",
     "model": "iPhone Air",
     "storage": "256 GB",
-    "price": "68000",
-    "country": "🇦🇪",
-    "sim": "ESIM"
+    "price": "73300",
+    "country": "🇯🇵 🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34315",
@@ -3827,20 +4340,10 @@
     "brand": "Apple",
     "model": "iPhone Air",
     "storage": "512 GB",
-    "price": "86200",
-    "country": "🇺🇸",
-    "sim": "ESIM"
-  },
-  {
-    "id": "34318",
-    "category": "Смартфоны",
-    "name": "iPhone Air 512 Gold",
-    "brand": "Apple",
-    "model": "iPhone Air",
-    "storage": "512 GB",
-    "price": "84100",
+    "price": "107300",
     "country": "🇯🇵",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34317",
@@ -3849,9 +4352,10 @@
     "brand": "Apple",
     "model": "iPhone Air",
     "storage": "512 GB",
-    "price": "81700",
+    "price": "87300",
     "country": "🇯🇵 🇺🇸",
-    "sim": "ESIM"
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "34316",
@@ -3860,9 +4364,10 @@
     "brand": "Apple",
     "model": "iPhone Air",
     "storage": "512 GB",
-    "price": "84500",
-    "country": "🇯🇵",
-    "sim": "ESIM"
+    "price": "105000",
+    "country": "🇯🇵 🇺🇸",
+    "sim": "ESIM",
+    "hidden": false
   },
   {
     "id": "16220",
@@ -3870,51 +4375,9 @@
     "name": "S10 42 Gold Ti Milanese Loop",
     "brand": "Apple",
     "model": "S10",
-    "price": "49800",
-    "country": "🇸🇬 🇶🇦"
-  },
-  {
-    "id": "16175",
-    "category": "Часы",
-    "name": "S10 42 Jet Black (M/L)",
-    "brand": "Apple",
-    "model": "S10",
-    "price": "25500"
-  },
-  {
-    "id": "16217",
-    "category": "Часы",
-    "name": "S10 42 Natural Ti Milanese Loop",
-    "brand": "Apple",
-    "model": "S10",
-    "price": "55300",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "16193",
-    "category": "Часы",
-    "name": "S10 46 Jet Black (S/M)",
-    "brand": "Apple",
-    "model": "S10",
-    "price": "25800"
-  },
-  {
-    "id": "16191",
-    "category": "Часы",
-    "name": "S10 46 Jet Black lnk Sport Loop",
-    "brand": "Apple",
-    "model": "S10",
-    "price": "25800",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "16209",
-    "category": "Часы",
-    "name": "S10 46 Rose Gold (M/L)",
-    "brand": "Apple",
-    "model": "S10",
-    "price": "25200",
-    "country": "🇺🇸"
+    "price": "52300",
+    "country": "🇸🇬 🇶🇦",
+    "hidden": false
   },
   {
     "id": "16205",
@@ -3922,26 +4385,19 @@
     "name": "S10 46 Rose Gold Sport Loop",
     "brand": "Apple",
     "model": "S10",
-    "price": "23700",
-    "country": "🇺🇸"
+    "price": "25300",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
-    "id": "34392",
+    "id": "34696",
     "category": "Часы",
-    "name": "S11 42 Jet Black (M/L)",
+    "name": "S11 42 Jet Black SB Black (S/M)",
     "brand": "Apple",
     "model": "S11",
-    "price": "26800",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "34393",
-    "category": "Часы",
-    "name": "S11 42 Jet Black (S/M)",
-    "brand": "Apple",
-    "model": "S11",
-    "price": "27200",
-    "country": "🇺🇸"
+    "price": "28800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34412",
@@ -3949,17 +4405,9 @@
     "name": "S11 42 Natural Milanese",
     "brand": "Apple",
     "model": "S11",
-    "price": "61600",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "34394",
-    "category": "Часы",
-    "name": "S11 42 Rose Gold (M/L)",
-    "brand": "Apple",
-    "model": "S11",
-    "price": "27600",
-    "country": "🇺🇸"
+    "price": "65300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34396",
@@ -3967,17 +4415,9 @@
     "name": "S11 42 Silver Purp Fog (S/M)",
     "brand": "Apple",
     "model": "S11",
-    "price": "27300",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "34416",
-    "category": "Часы",
-    "name": "S11 46 Gold Ti Milanese Loop SM",
-    "brand": "Apple",
-    "model": "S11",
-    "price": "68800",
-    "country": "🇺🇸"
+    "price": "30300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34679",
@@ -3986,7 +4426,8 @@
     "brand": "Apple",
     "model": "S11",
     "price": "28800",
-    "country": "🇺🇸"
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34402",
@@ -3994,8 +4435,9 @@
     "name": "S11 46 Jet Black (M/L)",
     "brand": "Apple",
     "model": "S11",
-    "price": "29500",
-    "country": "🇺🇸"
+    "price": "30200",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34403",
@@ -4003,8 +4445,9 @@
     "name": "S11 46 Jet Black (S/M)",
     "brand": "Apple",
     "model": "S11",
-    "price": "30000",
-    "country": "🇺🇸"
+    "price": "29800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34404",
@@ -4012,8 +4455,8 @@
     "name": "S11 46 Rose Gold  (M/L)",
     "brand": "Apple",
     "model": "S11",
-    "price": "30700",
-    "country": "🇺🇸"
+    "price": "30300",
+    "hidden": false
   },
   {
     "id": "34399",
@@ -4021,35 +4464,18 @@
     "name": "S11 46 Silver (S/M)",
     "brand": "Apple",
     "model": "S11",
-    "price": "28400",
-    "country": "🇺🇸"
+    "price": "30300",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
-    "id": "34406",
+    "id": "34407",
     "category": "Часы",
-    "name": "S11 46 Silver Purp Fog (S/M)",
+    "name": "S11 46 Silver Purp Fog (M/L)",
     "brand": "Apple",
     "model": "S11",
-    "price": "29300",
-    "country": "🇺🇸"
-  },
-  {
-    "id": "34414",
-    "category": "Часы",
-    "name": "S11 46 Slate Ti Milanese Loop SM",
-    "brand": "Apple",
-    "model": "S11",
-    "price": "69300",
-    "country": "🇸🇬"
-  },
-  {
-    "id": "34714",
-    "category": "Часы",
-    "name": "Ultra 3 49 Black Anchor Blue Ocean Band",
-    "brand": "Apple",
-    "model": "Ultra3",
-    "price": "59300",
-    "country": "🇺🇸"
+    "price": "31300",
+    "hidden": false
   },
   {
     "id": "34428",
@@ -4057,8 +4483,9 @@
     "name": "Ultra 3 49 Black Black Alpine Loop L",
     "brand": "Apple",
     "model": "Ultra3",
-    "price": "60300",
-    "country": "🇩🇿"
+    "price": "61300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34429",
@@ -4066,8 +4493,9 @@
     "name": "Ultra 3 49 Black Black Alpine Loop M",
     "brand": "Apple",
     "model": "Ultra3",
-    "price": "57300",
-    "country": "🇺🇸"
+    "price": "61800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34704",
@@ -4076,16 +4504,27 @@
     "brand": "Apple",
     "model": "Ultra3",
     "price": "59300",
-    "country": "🇺🇸"
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
-    "id": "34471",
+    "id": "34427",
     "category": "Часы",
-    "name": "Ultra 3 49 Black-Black Milanese Loop M",
+    "name": "Ultra 3 49 Black Ti Black Ocean Band",
     "brand": "Apple",
     "model": "Ultra3",
-    "price": "70300",
-    "country": "🇩🇿"
+    "price": "59300",
+    "hidden": false
+  },
+  {
+    "id": "34426",
+    "category": "Часы",
+    "name": "Ultra 3 49 Black-Black Milanese Loop L",
+    "brand": "Apple",
+    "model": "Ultra3",
+    "price": "79800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34425",
@@ -4093,8 +4532,9 @@
     "name": "Ultra 3 49 Black-Black/Charcoal Trail Loop M/L",
     "brand": "Apple",
     "model": "Ultra3",
-    "price": "58400",
-    "country": "🇩🇿"
+    "price": "60300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34424",
@@ -4102,7 +4542,18 @@
     "name": "Ultra 3 49 Black-Black/Charcoal Trail Loop S/M",
     "brand": "Apple",
     "model": "Ultra3",
-    "price": "58500"
+    "price": "59800",
+    "hidden": false
+  },
+  {
+    "id": "34541",
+    "category": "Часы",
+    "name": "Ultra 3 49 Natural Anchor Blue Ocean Band",
+    "brand": "Apple",
+    "model": "Ultra3",
+    "price": "66300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34703",
@@ -4110,8 +4561,19 @@
     "name": "Ultra 3 49 Natural Black Alpine Loop S",
     "brand": "Apple",
     "model": "Ultra3",
-    "price": "61300",
-    "country": "🇺🇸"
+    "price": "65300",
+    "country": "🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "34473",
+    "category": "Часы",
+    "name": "Ultra 3 49 Natural Blue Alpine Loop L",
+    "brand": "Apple",
+    "model": "Ultra3",
+    "price": "65300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34430",
@@ -4119,34 +4581,29 @@
     "name": "Ultra 3 49 Natural Blue Alpine Loop M",
     "brand": "Apple",
     "model": "Ultra3",
-    "price": "61000"
+    "price": "65300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
-    "id": "34475",
+    "id": "34423",
     "category": "Часы",
-    "name": "Ultra 3 49 Natural Trail Loop Blue ML",
+    "name": "Ultra 3 49 Natural Milanese Loop M",
     "brand": "Apple",
     "model": "Ultra3",
-    "price": "63300",
-    "country": "🇩🇿"
+    "price": "78800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
-    "id": "34474",
+    "id": "16251",
     "category": "Часы",
-    "name": "Ultra 3 49 Natural Trail Loop Blue SM",
-    "brand": "Apple",
-    "model": "Ultra3",
-    "price": "63300",
-    "country": "🇩🇿"
-  },
-  {
-    "id": "34710",
-    "category": "Часы",
-    "name": "Ultra2 49 Black Black Trail Loop S/M",
+    "name": "Ultra2 49 Black-Black Milanese Loop M",
     "brand": "Apple",
     "model": "Ultra2",
-    "price": "46300",
-    "country": "🇶🇦"
+    "price": "57300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "16252",
@@ -4154,26 +4611,78 @@
     "name": "Ultra2 49 Black-Black Milanese Loop M",
     "brand": "Apple",
     "model": "Ultra2",
-    "price": "54800",
-    "country": "🇶🇦"
+    "price": "61300",
+    "country": "🇶🇦",
+    "hidden": false
   },
   {
-    "id": "34216",
+    "id": "16247",
     "category": "Часы",
-    "name": "Ultra2 49 Natural Blue Trail Loop S/M",
+    "name": "Ultra2 49 Black-Black Ocean Band",
     "brand": "Apple",
     "model": "Ultra2",
-    "price": "48300",
-    "country": "🇺🇸"
+    "price": "51800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
-    "id": "34221",
+    "id": "16237",
     "category": "Часы",
-    "name": "Ultra2 49 Natural Milanese L",
+    "name": "Ultra2 49 Black-Dark Green Alpine Loop L",
     "brand": "Apple",
     "model": "Ultra2",
-    "price": "60300",
-    "country": "🇶🇦"
+    "price": "50300",
+    "hidden": false
+  },
+  {
+    "id": "16236",
+    "category": "Часы",
+    "name": "Ultra2 49 Black-Dark Green Alpine Loop M",
+    "brand": "Apple",
+    "model": "Ultra2",
+    "price": "52800",
+    "country": "🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "34701",
+    "category": "Часы",
+    "name": "Ultra2 49 Natural Tan Alpine Loop L",
+    "brand": "Apple",
+    "model": "Ultra2",
+    "price": "55300",
+    "country": "🇦🇪",
+    "hidden": false
+  },
+  {
+    "id": "34700",
+    "category": "Часы",
+    "name": "Ultra2 49 Natural Tan Alpine Loop M",
+    "brand": "Apple",
+    "model": "Ultra2",
+    "price": "55300",
+    "country": "🇦🇪",
+    "hidden": false
+  },
+  {
+    "id": "34699",
+    "category": "Часы",
+    "name": "Ultra2 49 Natural Tan Alpine Loop S",
+    "brand": "Apple",
+    "model": "Ultra2",
+    "price": "55300",
+    "country": "🇦🇪",
+    "hidden": false
+  },
+  {
+    "id": "34219",
+    "category": "Часы",
+    "name": "Ultra2 49 Natural-White Ocean Band",
+    "brand": "Apple",
+    "model": "Ultra2",
+    "price": "55300",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34098",
@@ -4181,7 +4690,8 @@
     "name": "Beats Pill Matte Black",
     "brand": "Beats",
     "model": "Pill",
-    "price": "12800"
+    "price": "12800",
+    "hidden": false
   },
   {
     "id": "34103",
@@ -4189,7 +4699,18 @@
     "name": "Beats Powerbeats Pro 2 Jet Black",
     "brand": "Beats",
     "model": "Powerbeats Pro 2",
-    "price": "18300"
+    "price": "18800",
+    "hidden": false
+  },
+  {
+    "id": "34105",
+    "category": "Наушники",
+    "name": "Beats Powerbeats Pro 2 Orange",
+    "brand": "Beats",
+    "model": "Powerbeats Pro 2",
+    "price": "17800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34104",
@@ -4197,15 +4718,29 @@
     "name": "Beats Powerbeats Pro 2 Purple",
     "brand": "Beats",
     "model": "Powerbeats Pro 2",
-    "price": "18300"
+    "price": "17800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
-    "id": "34102",
+    "id": "34115",
     "category": "Наушники",
-    "name": "Beats Powerbeats Pro Black",
+    "name": "Beats Solo 4 Black",
     "brand": "Beats",
-    "model": "Powerbeats Pro",
-    "price": "13300"
+    "model": "Solo 4",
+    "price": "14800",
+    "country": "🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "34118",
+    "category": "Наушники",
+    "name": "Beats Solo 4 Blue",
+    "brand": "Beats",
+    "model": "Solo 4",
+    "price": "14800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34107",
@@ -4213,7 +4748,29 @@
     "name": "Beats Studio Pro Black",
     "brand": "Beats",
     "model": "Studio Pro",
-    "price": "18300"
+    "price": "17800",
+    "country": "🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "34110",
+    "category": "Наушники",
+    "name": "Beats Studio Pro Brown",
+    "brand": "Beats",
+    "model": "Studio Pro",
+    "price": "18300",
+    "country": "🇺🇸",
+    "hidden": false
+  },
+  {
+    "id": "34106",
+    "category": "Наушники",
+    "name": "Beats Studio Pro Navy",
+    "brand": "Beats",
+    "model": "Studio Pro",
+    "price": "17800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34109",
@@ -4221,7 +4778,9 @@
     "name": "Beats Studio Pro Sand",
     "brand": "Beats",
     "model": "Studio Pro",
-    "price": "18300"
+    "price": "17800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34111",
@@ -4229,7 +4788,9 @@
     "name": "Beats Studio Pro White",
     "brand": "Beats",
     "model": "Studio Pro",
-    "price": "19300"
+    "price": "17800",
+    "country": "🇺🇸",
+    "hidden": false
   },
   {
     "id": "34127",
@@ -4237,7 +4798,8 @@
     "name": "Bose Portable Smart Speaker Black",
     "brand": "Bose",
     "model": "Smart Speaker",
-    "price": "15300"
+    "price": "15300",
+    "hidden": false
   },
   {
     "id": "34128",
@@ -4245,7 +4807,8 @@
     "name": "Bose Portable Smart Speaker Luxe Silver",
     "brand": "Bose",
     "model": "Smart Speaker",
-    "price": "15300"
+    "price": "15300",
+    "hidden": false
   },
   {
     "id": "34129",
@@ -4253,7 +4816,8 @@
     "name": "Bose SoundLink Max Portable черный",
     "brand": "Bose",
     "model": "SoundLink",
-    "price": "35300"
+    "price": "35300",
+    "hidden": false
   },
   {
     "id": "34097",
@@ -4261,7 +4825,8 @@
     "name": "Bose QuietComfort 45 SE Black",
     "brand": "Bose",
     "model": "QuietComfort 45 SE",
-    "price": "15300"
+    "price": "15300",
+    "hidden": false
   },
   {
     "id": "34090",
@@ -4269,7 +4834,8 @@
     "name": "Bose Ultra Open Earbuds Black",
     "brand": "Bose",
     "model": "Ultra",
-    "price": "21600"
+    "price": "15300",
+    "hidden": false
   },
   {
     "id": "34091",
@@ -4277,23 +4843,8 @@
     "name": "Bose Ultra Open Earbuds White",
     "brand": "Bose",
     "model": "Ultra",
-    "price": "15300"
-  },
-  {
-    "id": "34152",
-    "category": "Диски",
-    "name": "📀PS5 God of War (рус)",
-    "brand": "CD",
-    "model": "Disk",
-    "price": "2700"
-  },
-  {
-    "id": "34142",
-    "category": "Диски",
-    "name": "📀PS5 UFC5",
-    "brand": "CD",
-    "model": "Disk",
-    "price": "2600"
+    "price": "15300",
+    "hidden": false
   },
   {
     "id": "13414",
@@ -4301,7 +4852,8 @@
     "name": "Насадка для животных Pet Grooming",
     "brand": "Dyson",
     "model": "Для Животных",
-    "price": "15300"
+    "price": "15300",
+    "hidden": false
   },
   {
     "id": "13417",
@@ -4309,15 +4861,8 @@
     "name": "Насадка Лазер для V15",
     "brand": "Dyson",
     "model": "V15 Насадки",
-    "price": "16300"
-  },
-  {
-    "id": "13408",
-    "category": "Аксессуары",
-    "name": "Подставка для выпрямителя HT01",
-    "brand": "Dyson",
-    "model": "Подставка для HT01",
-    "price": "6800"
+    "price": "16300",
+    "hidden": false
   },
   {
     "id": "13416",
@@ -4325,7 +4870,8 @@
     "name": "Щелевая Насадка для V15",
     "brand": "Dyson",
     "model": "V15 Насадки",
-    "price": "12300"
+    "price": "12300",
+    "hidden": false
   },
   {
     "id": "13413",
@@ -4333,7 +4879,8 @@
     "name": "AКБ Gen5",
     "brand": "Dyson",
     "model": "АКБ",
-    "price": "17800"
+    "price": "17800",
+    "hidden": false
   },
   {
     "id": "13412",
@@ -4341,7 +4888,8 @@
     "name": "AKБ V11",
     "brand": "Dyson",
     "model": "АКБ",
-    "price": "15800"
+    "price": "15800",
+    "hidden": false
   },
   {
     "id": "13407",
@@ -4349,7 +4897,8 @@
     "name": "Dyson HD16 Case",
     "brand": "Dyson",
     "model": "Кейс для HD16",
-    "price": "6300"
+    "price": "6300",
+    "hidden": false
   },
   {
     "id": "13405",
@@ -4357,7 +4906,8 @@
     "name": "Dyson HT01 Case Pale Rose",
     "brand": "Dyson",
     "model": "Кейс для HT01",
-    "price": "5300"
+    "price": "4500",
+    "hidden": false
   },
   {
     "id": "13409",
@@ -4365,7 +4915,8 @@
     "name": "Dyson PH04 фильтры",
     "brand": "Dyson",
     "model": "Фильтр",
-    "price": "16300"
+    "price": "16300",
+    "hidden": false
   },
   {
     "id": "13397",
@@ -4373,7 +4924,8 @@
     "name": "Dyson Travel Bag Black/Cooper",
     "brand": "Dyson",
     "model": "Дорожная сумка",
-    "price": "4800"
+    "price": "4800",
+    "hidden": false
   },
   {
     "id": "13398",
@@ -4381,7 +4933,17 @@
     "name": "Dyson Travel Bag Black/Fuchsia",
     "brand": "Dyson",
     "model": "Дорожная сумка",
-    "price": "4800"
+    "price": "5800",
+    "hidden": false
+  },
+  {
+    "id": "13399",
+    "category": "Аксессуары",
+    "name": "Paddle Brush Pale Rose",
+    "brand": "Dyson",
+    "model": "Paddle",
+    "price": "2300",
+    "hidden": false
   },
   {
     "id": "13402",
@@ -4389,7 +4951,48 @@
     "name": "Round Brush Pale Rose",
     "brand": "Dyson",
     "model": "Paddle",
-    "price": "6800"
+    "price": "6800",
+    "hidden": false
+  },
+  {
+    "id": "13383",
+    "category": "Выпрямитель",
+    "name": "Dyson HT01 Ceramic Pink - без кейса",
+    "brand": "Dyson",
+    "model": "HT01",
+    "price": "29300",
+    "country": "🇨🇳",
+    "hidden": false
+  },
+  {
+    "id": "13381",
+    "category": "Выпрямитель",
+    "name": "Dyson HT01 Ceramic Pink - без кейса",
+    "brand": "Dyson",
+    "model": "HT01",
+    "price": "32300",
+    "country": "🇰🇷",
+    "hidden": false
+  },
+  {
+    "id": "13391",
+    "category": "Выпрямитель",
+    "name": "Dyson HT01 Jasper Plum - без кейса",
+    "brand": "Dyson",
+    "model": "HT01",
+    "price": "30300",
+    "country": "🇭🇰",
+    "hidden": false
+  },
+  {
+    "id": "34191",
+    "category": "Выпрямитель",
+    "name": "Dyson HT01 Kanzan Pink - с кейсом",
+    "brand": "Dyson",
+    "model": "HT01",
+    "price": "33300",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "13371",
@@ -4397,8 +5000,19 @@
     "name": "Dyson HT01 Nickel/Cooper - без кейса",
     "brand": "Dyson",
     "model": "HT01",
-    "price": "27300",
-    "country": "🇨🇳 🇦🇪 🇮🇳"
+    "price": "29300",
+    "country": "🇨🇳 🇦🇪",
+    "hidden": false
+  },
+  {
+    "id": "13379",
+    "category": "Выпрямитель",
+    "name": "Dyson HT01 Red Velvet - без кейса",
+    "brand": "Dyson",
+    "model": "HT01",
+    "price": "32300",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "13429",
@@ -4406,8 +5020,9 @@
     "name": "Dyson PH05 Gold/White",
     "brand": "Dyson",
     "model": "PH05",
-    "price": "55800",
-    "country": "🇬🇧"
+    "price": "66300",
+    "country": "🇬🇧",
+    "hidden": false
   },
   {
     "id": "13419",
@@ -4416,7 +5031,8 @@
     "brand": "Dyson",
     "model": "Big Ball",
     "price": "41300",
-    "country": "🇬🇧"
+    "country": "🇬🇧",
+    "hidden": false
   },
   {
     "id": "13440",
@@ -4424,8 +5040,9 @@
     "name": "Gen5 SV23 Detect Absolute Purple",
     "brand": "Dyson",
     "model": "Gen5 SV23",
-    "price": "49600",
-    "country": "🇪🇺"
+    "price": "49500",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "13441",
@@ -4433,8 +5050,9 @@
     "name": "Gen5 SV23 Detect Absolute Purple",
     "brand": "Dyson",
     "model": "Gen5 SV23",
-    "price": "57300",
-    "country": "🇬🇧"
+    "price": "54300",
+    "country": "🇬🇧",
+    "hidden": false
   },
   {
     "id": "34197",
@@ -4443,7 +5061,8 @@
     "brand": "Dyson",
     "model": "Pencilvac",
     "price": "53300",
-    "country": "🇨🇳"
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "13449",
@@ -4451,8 +5070,9 @@
     "name": "V8 SV25 Absolute Nickel/Yellow",
     "brand": "Dyson",
     "model": "V8 SV25",
-    "price": "29800",
-    "country": "🇬🇧"
+    "price": "28800",
+    "country": "🇬🇧",
+    "hidden": false
   },
   {
     "id": "13451",
@@ -4460,8 +5080,9 @@
     "name": "V8 SV25 Silver/Nickel",
     "brand": "Dyson",
     "model": "V8 SV25",
-    "price": "24800",
-    "country": "🇬🇧"
+    "price": "25800",
+    "country": "🇬🇧",
+    "hidden": false
   },
   {
     "id": "13463",
@@ -4469,8 +5090,59 @@
     "name": "V12 Slim Absolute detected Yellow/Nickel",
     "brand": "Dyson",
     "model": "V12 Slim Absolute",
-    "price": "34300",
-    "country": "🇬🇧"
+    "price": "34800",
+    "country": "🇬🇧",
+    "hidden": false
+  },
+  {
+    "id": "13472",
+    "category": "Пылесосы",
+    "name": "V15 SV47 Detect Absolute Gold/Gold",
+    "brand": "Dyson",
+    "model": "V15 SV47",
+    "price": "45100",
+    "country": "🇪🇺",
+    "hidden": false
+  },
+  {
+    "id": "13471",
+    "category": "Пылесосы",
+    "name": "V15 SV47 Detect Absolute Yellow/Nickel",
+    "brand": "Dyson",
+    "model": "V15 SV47",
+    "price": "43300",
+    "country": "🇬🇧",
+    "hidden": false
+  },
+  {
+    "id": "13470",
+    "category": "Пылесосы",
+    "name": "V15 SV47 Detect Absolute Yellow/Nickel",
+    "brand": "Dyson",
+    "model": "V15 SV47",
+    "price": "49300",
+    "country": "🇪🇺",
+    "hidden": false
+  },
+  {
+    "id": "13478",
+    "category": "Пылесосы",
+    "name": "V15s Detect Submarine Yellow/Nickel SV47",
+    "brand": "Dyson",
+    "model": "V15s Detect Submarine",
+    "price": "50300",
+    "country": "🇪🇺",
+    "hidden": false
+  },
+  {
+    "id": "13479",
+    "category": "Пылесосы",
+    "name": "V15s Detect Submarine Yellow/Nickel SV47",
+    "brand": "Dyson",
+    "model": "V15s Detect Submarine",
+    "price": "54300",
+    "country": "🇬🇧",
+    "hidden": false
   },
   {
     "id": "34175",
@@ -4478,16 +5150,9 @@
     "name": "Dyson HS05 Long Ceramic Pink",
     "brand": "Dyson",
     "model": "HS05",
-    "price": "46800",
-    "country": "🇭🇰"
-  },
-  {
-    "id": "13341",
-    "category": "Стайлеры",
-    "name": "Dyson HS05 Long Ceramic Pop",
-    "brand": "Dyson",
-    "model": "HS05",
-    "price": "40300"
+    "price": "48800",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "13342",
@@ -4495,17 +5160,9 @@
     "name": "Dyson HS05 Long Ceramic Pop",
     "brand": "Dyson",
     "model": "HS05",
-    "price": "43800",
-    "country": "🇭🇰"
-  },
-  {
-    "id": "13336",
-    "category": "Стайлеры",
-    "name": "Dyson HS05 Long Nickel / Copper",
-    "brand": "Dyson",
-    "model": "HS05",
-    "price": "33300",
-    "country": "🇨🇳"
+    "price": "44800",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "13335",
@@ -4514,7 +5171,18 @@
     "brand": "Dyson",
     "model": "HS05",
     "price": "50300",
-    "country": "🇪🇺"
+    "country": "🇪🇺",
+    "hidden": false
+  },
+  {
+    "id": "13336",
+    "category": "Стайлеры",
+    "name": "Dyson HS05 Long Nickel / Copper",
+    "brand": "Dyson",
+    "model": "HS05",
+    "price": "38800",
+    "country": "🇨🇳",
+    "hidden": false
   },
   {
     "id": "13344",
@@ -4522,17 +5190,29 @@
     "name": "Dyson HS05 Long Orange Topaz",
     "brand": "Dyson",
     "model": "HS05",
-    "price": "57300",
-    "country": "🇨🇳"
+    "price": "59300",
+    "country": "🇨🇳",
+    "hidden": false
   },
   {
-    "id": "13363",
+    "id": "13362",
+    "category": "Стайлеры",
+    "name": "Dyson HS08 Ceramic Patina Topaz Strait+Wavy",
+    "brand": "Dyson",
+    "model": "HS08",
+    "price": "37300",
+    "country": "🇨🇳",
+    "hidden": false
+  },
+  {
+    "id": "13364",
     "category": "Стайлеры",
     "name": "Dyson HS08 Jusper Plum Strait+Wavy",
     "brand": "Dyson",
     "model": "HS08",
-    "price": "50300",
-    "country": "🇰🇷"
+    "price": "37800",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "13358",
@@ -4540,8 +5220,28 @@
     "name": "Dyson HS08 Red Velvet Airwrap Diffuse for Curly",
     "brand": "Dyson",
     "model": "HS08",
-    "price": "41300",
-    "country": "🇭🇰"
+    "price": "40300",
+    "country": "🇭🇰",
+    "hidden": false
+  },
+  {
+    "id": "13354",
+    "category": "Стайлеры",
+    "name": "Dyson HS08 Vinca Blue Topaz Airwrap Strait+Wavy",
+    "brand": "Dyson",
+    "model": "HS08",
+    "price": "33800",
+    "country": "🇨🇳",
+    "hidden": false
+  },
+  {
+    "id": "34188",
+    "category": "Стайлеры",
+    "name": "Dyson HS09 Airwrap Co-Anda 2X  Ceramic Pink",
+    "brand": "Dyson",
+    "model": "HS09",
+    "price": "47800",
+    "hidden": false
   },
   {
     "id": "34189",
@@ -4549,8 +5249,9 @@
     "name": "Dyson HS09 Airwrap Co-Anda 2X  Ceramic Pink",
     "brand": "Dyson",
     "model": "HS09",
-    "price": "46300",
-    "country": "🇭🇰"
+    "price": "52300",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "13366",
@@ -4558,17 +5259,19 @@
     "name": "Dyson HS09 Airwrap Co-Anda 2X Jasper Plum",
     "brand": "Dyson",
     "model": "HS09",
-    "price": "48100",
-    "country": "🇭🇰"
+    "price": "48800",
+    "country": "🇲🇾",
+    "hidden": false
   },
   {
-    "id": "13286",
-    "category": "Фены",
-    "name": "Dyson HD07 Antrazit/Fuchsia",
+    "id": "13365",
+    "category": "Стайлеры",
+    "name": "Dyson HS09 Airwrap Co-Anda 2X Jasper Plum",
     "brand": "Dyson",
-    "model": "HD07",
-    "price": "32300",
-    "country": "🇬🇧"
+    "model": "HS09",
+    "price": "50300",
+    "country": "🇰🇷",
+    "hidden": false
   },
   {
     "id": "13246",
@@ -4577,7 +5280,8 @@
     "brand": "Dyson",
     "model": "HD08",
     "price": "30300",
-    "country": "🇮🇳"
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "13302",
@@ -4586,16 +5290,18 @@
     "brand": "Dyson",
     "model": "HD16",
     "price": "42800",
-    "country": "🇭🇰"
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
-    "id": "13310",
+    "id": "13311",
     "category": "Фены",
-    "name": "Dyson HD16 Ceramic pink -без кейса",
+    "name": "Dyson HD16 Ceramic pink - с кейсом",
     "brand": "Dyson",
     "model": "HD16",
-    "price": "28100",
-    "country": "🇭🇰"
+    "price": "41800",
+    "country": "🇰🇷",
+    "hidden": false
   },
   {
     "id": "13320",
@@ -4603,8 +5309,9 @@
     "name": "Dyson HD16 Red Velvet/Gold - с кейсом",
     "brand": "Dyson",
     "model": "HD16",
-    "price": "33800",
-    "country": "🇭🇰"
+    "price": "32800",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "13315",
@@ -4612,8 +5319,29 @@
     "name": "Dyson HD16 Strawberry Bronze - с кейсом",
     "brand": "Dyson",
     "model": "HD16",
-    "price": "38300",
-    "country": "🇪🇺"
+    "price": "40800",
+    "country": "🇪🇺",
+    "hidden": false
+  },
+  {
+    "id": "13313",
+    "category": "Фены",
+    "name": "Dyson HD16 Strawberry Bronze -без кейса",
+    "brand": "Dyson",
+    "model": "HD16",
+    "price": "35300",
+    "country": "🇪🇺",
+    "hidden": false
+  },
+  {
+    "id": "13332",
+    "category": "Фены",
+    "name": "Dyson HD17 Supersonic R Ceramik Pink - с кейсом",
+    "brand": "Dyson",
+    "model": "HD17",
+    "price": "35800",
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "13325",
@@ -4621,8 +5349,9 @@
     "name": "Dyson HD17 Supersonic R Jasper Plum - без кейса",
     "brand": "Dyson",
     "model": "HD17",
-    "price": "34300",
-    "country": "🇪🇺"
+    "price": "32300",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "13328",
@@ -4631,7 +5360,8 @@
     "brand": "Dyson",
     "model": "HD17",
     "price": "36300",
-    "country": "🇭🇰"
+    "country": "🇭🇰",
+    "hidden": false
   },
   {
     "id": "34054",
@@ -4639,17 +5369,8 @@
     "name": "Harman Kardon Aura studio 4 Black",
     "brand": "Harman Kardon",
     "model": "Aura studio 4",
-    "price": "24300"
-  },
-  {
-    "id": "7560",
-    "category": "Смартфоны",
-    "name": "HONOR 400 12/256 Desert Gold",
-    "brand": "Honor",
-    "model": "400",
-    "storage": "256 GB",
-    "price": "26800",
-    "country": "🇬🇧"
+    "price": "24300",
+    "hidden": false
   },
   {
     "id": "7561",
@@ -4658,8 +5379,9 @@
     "brand": "Honor",
     "model": "400",
     "storage": "256 GB",
-    "price": "26900",
-    "country": "🇪🇺"
+    "price": "26800",
+    "country": "🇬🇧",
+    "hidden": false
   },
   {
     "id": "7565",
@@ -4668,47 +5390,29 @@
     "brand": "Honor",
     "model": "Magic 7 Pro",
     "storage": "512 GB",
-    "price": "59300",
-    "country": "🇬🇧"
+    "price": "59800",
+    "country": "🇬🇧",
+    "hidden": false
   },
   {
-    "id": "7546",
+    "id": "7526",
     "category": "Смартфоны",
-    "name": "HONOR X9c 12/256 Black",
+    "name": "HONOR X7c 6/128 Green",
     "brand": "Honor",
-    "model": "X9c",
-    "storage": "256 GB",
-    "price": "22500",
-    "country": "🇬🇧"
+    "model": "X7c",
+    "storage": "128 GB",
+    "price": "10000",
+    "country": "🇷🇺",
+    "hidden": false
   },
   {
-    "id": "7549",
-    "category": "Смартфоны",
-    "name": "HONOR X9c 12/256 Jade Cyan",
-    "brand": "Honor",
-    "model": "X9c",
-    "storage": "256 GB",
-    "price": "22500",
-    "country": "🇬🇧"
-  },
-  {
-    "id": "7548",
-    "category": "Смартфоны",
-    "name": "HONOR X9c 12/256 Purple",
-    "brand": "Honor",
-    "model": "X9c",
-    "storage": "256 GB",
-    "price": "22500",
-    "country": "🇬🇧"
-  },
-  {
-    "id": "27521",
-    "category": "Наушники",
-    "name": "Marshall Major 4 Blaсk",
+    "id": "27551",
+    "category": "Колонки",
+    "name": "Marshall Kilburn 2 Black and Brass",
     "brand": "Marshall",
-    "model": "Major 4",
-    "price": "5900",
-    "country": "🇪🇺"
+    "model": "Kilburn 2",
+    "price": "26300",
+    "hidden": false
   },
   {
     "id": "27522",
@@ -4716,8 +5420,8 @@
     "name": "Marshall Major 4 Brown",
     "brand": "Marshall",
     "model": "Major 4",
-    "price": "6100",
-    "country": "🇪🇺"
+    "price": "5800",
+    "hidden": false
   },
   {
     "id": "27526",
@@ -4725,8 +5429,9 @@
     "name": "Marshall Major 5 Blue",
     "brand": "Marshall",
     "model": "Major 5",
-    "price": "7300",
-    "country": "🇪🇺"
+    "price": "6300",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "27524",
@@ -4734,8 +5439,9 @@
     "name": "Marshall Major 5 Brown",
     "brand": "Marshall",
     "model": "Major 5",
-    "price": "7100",
-    "country": "🇪🇺"
+    "price": "6300",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "27525",
@@ -4743,8 +5449,9 @@
     "name": "Marshall Major 5 Cream",
     "brand": "Marshall",
     "model": "Major 5",
-    "price": "7300",
-    "country": "🇪🇺"
+    "price": "6300",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "27533",
@@ -4752,7 +5459,8 @@
     "name": "Marshall Monitor 3 black",
     "brand": "Marshall",
     "model": "Monitor 3",
-    "price": "24300"
+    "price": "22300",
+    "hidden": false
   },
   {
     "id": "27534",
@@ -4760,7 +5468,8 @@
     "name": "Marshall Monitor 3 black ANС",
     "brand": "Marshall",
     "model": "Monitor 3",
-    "price": "25300"
+    "price": "22300",
+    "hidden": false
   },
   {
     "id": "27530",
@@ -4768,147 +5477,52 @@
     "name": "Marshall Motif 2 black",
     "brand": "Marshall",
     "model": "Motif 2",
-    "price": "13300"
+    "price": "12800",
+    "hidden": false
   },
   {
-    "id": "7762",
+    "id": "7767",
     "category": "Смартфоны",
-    "name": "Poco F7 Pro 12/256 Black",
-    "brand": "Poco",
-    "model": "F7 Pro",
-    "storage": "256 GB",
-    "price": "35200",
-    "country": "🇪🇺"
-  },
-  {
-    "id": "7763",
-    "category": "Смартфоны",
-    "name": "Poco F7 Pro 12/256 Blue",
-    "brand": "Poco",
-    "model": "F7 Pro",
-    "storage": "256 GB",
-    "price": "35200",
-    "country": "🇪🇺"
-  },
-  {
-    "id": "7765",
-    "category": "Смартфоны",
-    "name": "Poco F7 Pro 12/512 Black",
+    "name": "Poco F7 Pro 12/512 Silver",
     "brand": "Poco",
     "model": "F7 Pro",
     "storage": "512 GB",
-    "price": "39200",
-    "country": "🇪🇺"
+    "price": "39800",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
-    "id": "7747",
+    "id": "7748",
     "category": "Смартфоны",
-    "name": "Poco X7 5G 8/256 Black",
+    "name": "Poco X7 5G 8/256 Green",
     "brand": "Poco",
     "model": "X7",
     "storage": "256 GB",
     "price": "18300",
-    "country": "🇪🇺"
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
-    "id": "7749",
+    "id": "7752",
     "category": "Смартфоны",
-    "name": "Poco X7 5G 8/256 Silver",
-    "brand": "Poco",
-    "model": "X7",
-    "storage": "256 GB",
-    "price": "18300",
-    "country": "🇪🇺"
-  },
-  {
-    "id": "7750",
-    "category": "Смартфоны",
-    "name": "Poco X7 5G 12/512 Black",
+    "name": "Poco X7 5G 12/512 Silver",
     "brand": "Poco",
     "model": "X7",
     "storage": "512 GB",
-    "price": "21400",
-    "country": "🇪🇺"
+    "price": "22900",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
-    "id": "7754",
+    "id": "7753",
     "category": "Смартфоны",
-    "name": "Poco X7 Pro 8/256 Green",
+    "name": "Poco X7 Pro 8/256 Black",
     "brand": "Poco",
     "model": "X7 Pro",
     "storage": "256 GB",
-    "price": "22300",
-    "country": "🇰🇿"
-  },
-  {
-    "id": "7755",
-    "category": "Смартфоны",
-    "name": "Poco X7 Pro 8/256 Yellow",
-    "brand": "Poco",
-    "model": "X7 Pro",
-    "storage": "256 GB",
-    "price": "22300",
-    "country": "🇰🇿"
-  },
-  {
-    "id": "7760",
-    "category": "Смартфоны",
-    "name": "Poco X7 Pro 12/512 Green",
-    "brand": "Poco",
-    "model": "X7 Pro",
-    "storage": "512 GB",
-    "price": "26300",
-    "country": "🇪🇺"
-  },
-  {
-    "id": "7761",
-    "category": "Смартфоны",
-    "name": "Poco X7 Pro 12/512 Yellow",
-    "brand": "Poco",
-    "model": "X7 Pro",
-    "storage": "512 GB",
-    "price": "26400",
-    "country": "🇪🇺"
-  },
-  {
-    "id": "5223",
-    "category": "Смартфоны",
-    "name": "Samsung A06 4/64 Light Blue",
-    "brand": "Samsung",
-    "model": "A06",
-    "storage": "64 GB",
-    "price": "6400",
-    "country": "🇷🇺"
-  },
-  {
-    "id": "34499",
-    "category": "Смартфоны",
-    "name": "Samsung A07 4/128 Black",
-    "brand": "Samsung",
-    "model": "A07",
-    "storage": "128 GB",
-    "price": "7300",
-    "country": "🇷🇺"
-  },
-  {
-    "id": "34500",
-    "category": "Смартфоны",
-    "name": "Samsung A07 4/128 Green",
-    "brand": "Samsung",
-    "model": "A07",
-    "storage": "128 GB",
-    "price": "7200",
-    "country": "🇦🇪"
-  },
-  {
-    "id": "34501",
-    "category": "Смартфоны",
-    "name": "Samsung A07 4/128 Violet",
-    "brand": "Samsung",
-    "model": "A07",
-    "storage": "128 GB",
-    "price": "7200",
-    "country": "🇦🇪"
+    "price": "24300",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "34502",
@@ -4917,38 +5531,86 @@
     "brand": "Samsung",
     "model": "A07",
     "storage": "128 GB",
-    "price": "8600",
-    "country": "🇦🇪"
+    "price": "9100",
+    "country": "🇷🇺",
+    "hidden": false
   },
   {
-    "id": "34503",
+    "id": "34505",
     "category": "Смартфоны",
-    "name": "Samsung A07 6/128 Green",
+    "name": "Samsung A17 4/128 Black",
     "brand": "Samsung",
-    "model": "A07",
+    "model": "A17",
     "storage": "128 GB",
-    "price": "8600",
-    "country": "🇦🇪"
+    "price": "10600",
+    "country": "🇰🇿",
+    "hidden": false
   },
   {
-    "id": "34504",
+    "id": "34506",
     "category": "Смартфоны",
-    "name": "Samsung A07 6/128 Violet",
+    "name": "Samsung A17 4/128 Blue",
     "brand": "Samsung",
-    "model": "A07",
+    "model": "A17",
     "storage": "128 GB",
-    "price": "8600",
-    "country": "🇦🇪"
+    "price": "10500",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
-    "id": "5237",
+    "id": "34507",
     "category": "Смартфоны",
-    "name": "Samsung A16 8/256 Black",
+    "name": "Samsung A17 4/128 Gray",
     "brand": "Samsung",
-    "model": "A16",
+    "model": "A17",
+    "storage": "128 GB",
+    "price": "10600",
+    "country": "🇰🇿",
+    "hidden": false
+  },
+  {
+    "id": "34508",
+    "category": "Смартфоны",
+    "name": "Samsung A17 6/128 Black",
+    "brand": "Samsung",
+    "model": "A17",
+    "storage": "128 GB",
+    "price": "12300",
+    "country": "🇦🇪",
+    "hidden": false
+  },
+  {
+    "id": "34509",
+    "category": "Смартфоны",
+    "name": "Samsung A17 6/128 Blue",
+    "brand": "Samsung",
+    "model": "A17",
+    "storage": "128 GB",
+    "price": "12300",
+    "country": "🇦🇪",
+    "hidden": false
+  },
+  {
+    "id": "34510",
+    "category": "Смартфоны",
+    "name": "Samsung A17 6/128 Gray",
+    "brand": "Samsung",
+    "model": "A17",
+    "storage": "128 GB",
+    "price": "12300",
+    "country": "🇦🇪",
+    "hidden": false
+  },
+  {
+    "id": "34758",
+    "category": "Смартфоны",
+    "name": "Samsung A17 8/256 Black",
+    "brand": "Samsung",
+    "model": "A17",
     "storage": "256 GB",
-    "price": "13500",
-    "country": "🇷🇺"
+    "price": "14100",
+    "country": "🇲🇾",
+    "hidden": false
   },
   {
     "id": "5240",
@@ -4957,8 +5619,9 @@
     "brand": "Samsung",
     "model": "A26",
     "storage": "128 GB",
-    "price": "13800",
-    "country": "🇦🇪"
+    "price": "14800",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "5241",
@@ -4967,8 +5630,20 @@
     "brand": "Samsung",
     "model": "A26",
     "storage": "128 GB",
-    "price": "13800",
-    "country": "🇦🇪"
+    "price": "14800",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "5242",
+    "category": "Смартфоны",
+    "name": "Samsung A26 6/128 White",
+    "brand": "Samsung",
+    "model": "A26",
+    "storage": "128 GB",
+    "price": "14800",
+    "country": "🇷🇺",
+    "hidden": false
   },
   {
     "id": "5244",
@@ -4977,18 +5652,9 @@
     "brand": "Samsung",
     "model": "A26",
     "storage": "256 GB",
-    "price": "16200",
-    "country": "🇦🇪"
-  },
-  {
-    "id": "5246",
-    "category": "Смартфоны",
-    "name": "Samsung A26 8/256 Peach Pink",
-    "brand": "Samsung",
-    "model": "A26",
-    "storage": "256 GB",
-    "price": "16200",
-    "country": "🇦🇪"
+    "price": "17100",
+    "country": "🇲🇾",
+    "hidden": false
   },
   {
     "id": "5247",
@@ -4997,28 +5663,9 @@
     "brand": "Samsung",
     "model": "A26",
     "storage": "256 GB",
-    "price": "16200",
-    "country": "🇦🇪"
-  },
-  {
-    "id": "5248",
-    "category": "Смартфоны",
-    "name": "Samsung A36 8/128 Black",
-    "brand": "Samsung",
-    "model": "A36",
-    "storage": "128 GB",
     "price": "17800",
-    "country": "🇰🇿"
-  },
-  {
-    "id": "5249",
-    "category": "Смартфоны",
-    "name": "Samsung A36 8/128 Lavender",
-    "brand": "Samsung",
-    "model": "A36",
-    "storage": "128 GB",
-    "price": "17800",
-    "country": "🇰🇿"
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "5250",
@@ -5027,8 +5674,9 @@
     "brand": "Samsung",
     "model": "A36",
     "storage": "128 GB",
-    "price": "17800",
-    "country": "🇦🇪"
+    "price": "18400",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "5251",
@@ -5037,8 +5685,9 @@
     "brand": "Samsung",
     "model": "A36",
     "storage": "128 GB",
-    "price": "17800",
-    "country": "🇰🇿"
+    "price": "18400",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "5252",
@@ -5047,18 +5696,9 @@
     "brand": "Samsung",
     "model": "A36",
     "storage": "256 GB",
-    "price": "19900",
-    "country": "🇦🇪"
-  },
-  {
-    "id": "5253",
-    "category": "Смартфоны",
-    "name": "Samsung A36 8/256 Lavender",
-    "brand": "Samsung",
-    "model": "A36",
-    "storage": "256 GB",
-    "price": "20000",
-    "country": "🇷🇺"
+    "price": "21400",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "5254",
@@ -5067,8 +5707,9 @@
     "brand": "Samsung",
     "model": "A36",
     "storage": "256 GB",
-    "price": "19800",
-    "country": "🇰🇿"
+    "price": "21000",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "5255",
@@ -5077,8 +5718,9 @@
     "brand": "Samsung",
     "model": "A36",
     "storage": "256 GB",
-    "price": "19900",
-    "country": "🇦🇪"
+    "price": "21000",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "5256",
@@ -5087,18 +5729,9 @@
     "brand": "Samsung",
     "model": "A36",
     "storage": "256 GB",
-    "price": "21700",
-    "country": "🇲🇾"
-  },
-  {
-    "id": "5257",
-    "category": "Смартфоны",
-    "name": "Samsung A36 12/256 Lavender",
-    "brand": "Samsung",
-    "model": "A36",
-    "storage": "256 GB",
-    "price": "21800",
-    "country": "🇲🇾"
+    "price": "22600",
+    "country": "🇲🇾",
+    "hidden": false
   },
   {
     "id": "5258",
@@ -5107,8 +5740,9 @@
     "brand": "Samsung",
     "model": "A36",
     "storage": "256 GB",
-    "price": "21600",
-    "country": "🇲🇾"
+    "price": "22600",
+    "country": "🇲🇾",
+    "hidden": false
   },
   {
     "id": "5259",
@@ -5117,8 +5751,9 @@
     "brand": "Samsung",
     "model": "A36",
     "storage": "256 GB",
-    "price": "21600",
-    "country": "🇲🇾"
+    "price": "22600",
+    "country": "🇲🇾",
+    "hidden": false
   },
   {
     "id": "5262",
@@ -5127,8 +5762,9 @@
     "brand": "Samsung",
     "model": "A56",
     "storage": "128 GB",
-    "price": "21800",
-    "country": "🇷🇺"
+    "price": "23400",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "5263",
@@ -5137,8 +5773,42 @@
     "brand": "Samsung",
     "model": "A56",
     "storage": "128 GB",
-    "price": "28800",
-    "country": "🇰🇿"
+    "price": "23400",
+    "country": "🇦🇪",
+    "hidden": false
+  },
+  {
+    "id": "5260",
+    "category": "Смартфоны",
+    "name": "Samsung A56 8/128 Olive",
+    "brand": "Samsung",
+    "model": "A56",
+    "storage": "128 GB",
+    "price": "23800",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "5266",
+    "category": "Смартфоны",
+    "name": "Samsung A56 8/256 Graphite",
+    "brand": "Samsung",
+    "model": "A56",
+    "storage": "256 GB",
+    "price": "26800",
+    "country": "🇵🇾",
+    "hidden": false
+  },
+  {
+    "id": "5267",
+    "category": "Смартфоны",
+    "name": "Samsung A56 8/256 Light Gray",
+    "brand": "Samsung",
+    "model": "A56",
+    "storage": "256 GB",
+    "price": "26900",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "5264",
@@ -5147,17 +5817,31 @@
     "brand": "Samsung",
     "model": "A56",
     "storage": "256 GB",
-    "price": "26000"
+    "price": "26800",
+    "country": "🇵🇾",
+    "hidden": false
   },
   {
-    "id": "5271",
+    "id": "5265",
     "category": "Смартфоны",
-    "name": "Samsung A56 12/256 Light Gray",
+    "name": "Samsung A56 8/256 Pink",
     "brand": "Samsung",
     "model": "A56",
     "storage": "256 GB",
-    "price": "27800",
-    "country": "🇦🇪"
+    "price": "26800",
+    "country": "🇮🇩",
+    "hidden": false
+  },
+  {
+    "id": "5270",
+    "category": "Смартфоны",
+    "name": "Samsung A56 12/256 Graphite",
+    "brand": "Samsung",
+    "model": "A56",
+    "storage": "256 GB",
+    "price": "30300",
+    "country": "🇮🇩",
+    "hidden": false
   },
   {
     "id": "5268",
@@ -5166,28 +5850,20 @@
     "brand": "Samsung",
     "model": "A56",
     "storage": "256 GB",
-    "price": "26800",
-    "country": "🇲🇾"
+    "price": "30300",
+    "country": "🇮🇩",
+    "hidden": false
   },
   {
-    "id": "5282",
+    "id": "5269",
     "category": "Смартфоны",
-    "name": "Samsung S24 8/128 Gray",
+    "name": "Samsung A56 12/256 Pink",
     "brand": "Samsung",
-    "model": "S24",
-    "storage": "128 GB",
-    "price": "33600",
-    "country": "🇮🇳"
-  },
-  {
-    "id": "5288",
-    "category": "Смартфоны",
-    "name": "Samsung S24 8/256 Black",
-    "brand": "Samsung",
-    "model": "S24",
+    "model": "A56",
     "storage": "256 GB",
-    "price": "37100",
-    "country": "🇮🇳"
+    "price": "30800",
+    "country": "🇮🇩",
+    "hidden": false
   },
   {
     "id": "5290",
@@ -5196,18 +5872,9 @@
     "brand": "Samsung",
     "model": "S24",
     "storage": "256 GB",
-    "price": "37100",
-    "country": "🇮🇳"
-  },
-  {
-    "id": "5292",
-    "category": "Смартфоны",
-    "name": "Samsung S24 8/256 Violet",
-    "brand": "Samsung",
-    "model": "S24",
-    "storage": "256 GB",
-    "price": "37100",
-    "country": "🇮🇳"
+    "price": "39300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "5294",
@@ -5216,39 +5883,31 @@
     "brand": "Samsung",
     "model": "S24",
     "storage": "256 GB",
-    "price": "37100",
-    "country": "🇮🇳"
+    "price": "38200",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
-    "id": "5322",
+    "id": "5328",
     "category": "Смартфоны",
-    "name": "Samsung S24+ 12/512 Gray",
+    "name": "Samsung S24 Ultra 12/256 Black",
     "brand": "Samsung",
-    "model": "S24+",
-    "storage": "512 GB",
-    "price": "58200",
-    "country": "🇦🇪"
+    "model": "S24 Ultra",
+    "storage": "256 GB",
+    "price": "71300",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
-    "id": "5346",
+    "id": "5340",
     "category": "Смартфоны",
-    "name": "Samsung S25 12/128 Iceblue",
+    "name": "Samsung S25 12/128 Mint",
     "brand": "Samsung",
     "model": "S25",
     "storage": "128 GB",
-    "price": "44300",
-    "country": "🇨🇱"
-  },
-  {
-    "id": "5359",
-    "category": "Смартфоны",
-    "name": "Samsung S25 12/256 Iceblue",
-    "brand": "Samsung",
-    "model": "S25",
-    "storage": "256 GB",
-    "price": "49100",
-    "country": "🇭🇰",
-    "sim": "Dual SIM"
+    "price": "47300",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "5358",
@@ -5257,8 +5916,9 @@
     "brand": "Samsung",
     "model": "S25",
     "storage": "256 GB",
-    "price": "49800",
-    "country": "🇮🇳"
+    "price": "40300",
+    "country": "🇨🇱",
+    "hidden": false
   },
   {
     "id": "5352",
@@ -5267,8 +5927,9 @@
     "brand": "Samsung",
     "model": "S25",
     "storage": "256 GB",
-    "price": "49800",
-    "country": "🇮🇳"
+    "price": "53300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
     "id": "5354",
@@ -5277,8 +5938,33 @@
     "brand": "Samsung",
     "model": "S25",
     "storage": "256 GB",
-    "price": "53100",
-    "country": "🇮🇳"
+    "price": "54300",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "5355",
+    "category": "Смартфоны",
+    "name": "Samsung S25 12/256 Navy",
+    "brand": "Samsung",
+    "model": "S25",
+    "storage": "256 GB",
+    "price": "53300",
+    "country": "🇭🇰",
+    "sim": "Dual SIM",
+    "hidden": false
+  },
+  {
+    "id": "5357",
+    "category": "Смартфоны",
+    "name": "Samsung S25 12/256 Silver Shadow",
+    "brand": "Samsung",
+    "model": "S25",
+    "storage": "256 GB",
+    "price": "53300",
+    "country": "🇭🇰",
+    "sim": "Dual SIM",
+    "hidden": false
   },
   {
     "id": "5356",
@@ -5287,18 +5973,64 @@
     "brand": "Samsung",
     "model": "S25",
     "storage": "256 GB",
-    "price": "52200",
-    "country": "🇮🇳"
+    "price": "53300",
+    "country": "🇮🇳",
+    "hidden": false
   },
   {
-    "id": "5396",
+    "id": "5374",
     "category": "Смартфоны",
-    "name": "Samsung S25 Edge 12/256 black",
+    "name": "Samsung S25 12/512 Blue Black",
     "brand": "Samsung",
-    "model": "S25 Edge",
-    "storage": "256 GB",
-    "price": "45100",
-    "country": "🇦🇪"
+    "model": "S25",
+    "storage": "512 GB",
+    "price": "64300",
+    "country": "🇮🇳",
+    "hidden": false
+  },
+  {
+    "id": "5370",
+    "category": "Смартфоны",
+    "name": "Samsung S25 12/512 Iceblue",
+    "brand": "Samsung",
+    "model": "S25",
+    "storage": "512 GB",
+    "price": "64800",
+    "country": "🇲🇾",
+    "hidden": false
+  },
+  {
+    "id": "5364",
+    "category": "Смартфоны",
+    "name": "Samsung S25 12/512 Mint",
+    "brand": "Samsung",
+    "model": "S25",
+    "storage": "512 GB",
+    "price": "65300",
+    "country": "🇲🇾",
+    "hidden": false
+  },
+  {
+    "id": "5366",
+    "category": "Смартфоны",
+    "name": "Samsung S25 12/512 Navy",
+    "brand": "Samsung",
+    "model": "S25",
+    "storage": "512 GB",
+    "price": "65200",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "5368",
+    "category": "Смартфоны",
+    "name": "Samsung S25 12/512 Silver Shadow",
+    "brand": "Samsung",
+    "model": "S25",
+    "storage": "512 GB",
+    "price": "64800",
+    "country": "🇲🇾",
+    "hidden": false
   },
   {
     "id": "5392",
@@ -5307,18 +6039,9 @@
     "brand": "Samsung",
     "model": "S25 Edge",
     "storage": "256 GB",
-    "price": "45100",
-    "country": "🇦🇪"
-  },
-  {
-    "id": "5402",
-    "category": "Смартфоны",
-    "name": "Samsung S25 Edge 12/512 black",
-    "brand": "Samsung",
-    "model": "S25 Edge",
-    "storage": "512 GB",
-    "price": "53800",
-    "country": "🇦🇪"
+    "price": "48300",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "5418",
@@ -5327,18 +6050,42 @@
     "brand": "Samsung",
     "model": "S25 Ultra",
     "storage": "1024 GB",
-    "price": "95000",
-    "country": "🇬🇧"
+    "price": "94300",
+    "country": "🇵🇦",
+    "hidden": false
   },
   {
-    "id": "5424",
+    "id": "5419",
     "category": "Смартфоны",
-    "name": "Samsung S25 Ultra 12/1TB JetBlack",
+    "name": "Samsung S25 Ultra 12/1TB Gray",
     "brand": "Samsung",
     "model": "S25 Ultra",
     "storage": "1024 GB",
-    "price": "95000",
-    "country": "🇸🇬"
+    "price": "94800",
+    "country": "🇵🇾",
+    "hidden": false
+  },
+  {
+    "id": "5420",
+    "category": "Смартфоны",
+    "name": "Samsung S25 Ultra 12/1TB Silverblue",
+    "brand": "Samsung",
+    "model": "S25 Ultra",
+    "storage": "1024 GB",
+    "price": "94800",
+    "country": "🇵🇾",
+    "hidden": false
+  },
+  {
+    "id": "5404",
+    "category": "Смартфоны",
+    "name": "Samsung S25 Ultra 12/256 Black",
+    "brand": "Samsung",
+    "model": "S25 Ultra",
+    "storage": "256 GB",
+    "price": "73800",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "5405",
@@ -5347,7 +6094,20 @@
     "brand": "Samsung",
     "model": "S25 Ultra",
     "storage": "256 GB",
-    "price": "69400"
+    "price": "73500",
+    "country": "🇦🇪",
+    "hidden": false
+  },
+  {
+    "id": "5410",
+    "category": "Смартфоны",
+    "name": "Samsung S25 Ultra 12/256 JetBlack",
+    "brand": "Samsung",
+    "model": "S25 Ultra",
+    "storage": "256 GB",
+    "price": "73800",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "5406",
@@ -5356,8 +6116,8 @@
     "brand": "Samsung",
     "model": "S25 Ultra",
     "storage": "256 GB",
-    "price": "69600",
-    "country": "🇦🇪"
+    "price": "73000",
+    "hidden": false
   },
   {
     "id": "5407",
@@ -5366,7 +6126,9 @@
     "brand": "Samsung",
     "model": "S25 Ultra",
     "storage": "256 GB",
-    "price": "69400"
+    "price": "73800",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "5411",
@@ -5375,7 +6137,9 @@
     "brand": "Samsung",
     "model": "S25 Ultra",
     "storage": "512 GB",
-    "price": "79600"
+    "price": "83600",
+    "country": "🇲🇾",
+    "hidden": false
   },
   {
     "id": "5412",
@@ -5384,7 +6148,9 @@
     "brand": "Samsung",
     "model": "S25 Ultra",
     "storage": "512 GB",
-    "price": "79100"
+    "price": "83600",
+    "country": "🇲🇾",
+    "hidden": false
   },
   {
     "id": "5413",
@@ -5393,46 +6159,9 @@
     "brand": "Samsung",
     "model": "S25 Ultra",
     "storage": "512 GB",
-    "price": "79100"
-  },
-  {
-    "id": "5414",
-    "category": "Смартфоны",
-    "name": "Samsung S25 Ultra 12/512 Whitesilver",
-    "brand": "Samsung",
-    "model": "S25 Ultra",
-    "storage": "512 GB",
-    "price": "79300"
-  },
-  {
-    "id": "5378",
-    "category": "Смартфоны",
-    "name": "Samsung S25+ 12/256 Navy",
-    "brand": "Samsung",
-    "model": "S25+",
-    "storage": "256 GB",
-    "price": "52800",
-    "country": "🇮🇳"
-  },
-  {
-    "id": "5380",
-    "category": "Смартфоны",
-    "name": "Samsung S25+ 12/256 Silver Shadow",
-    "brand": "Samsung",
-    "model": "S25+",
-    "storage": "256 GB",
-    "price": "53300",
-    "country": "🇮🇳"
-  },
-  {
-    "id": "5386",
-    "category": "Смартфоны",
-    "name": "Samsung S25+ 12/512 Navy",
-    "brand": "Samsung",
-    "model": "S25+",
-    "storage": "512 GB",
-    "price": "67800",
-    "country": "🇨🇱"
+    "price": "83600",
+    "country": "🇲🇾",
+    "hidden": false
   },
   {
     "id": "5388",
@@ -5441,26 +6170,9 @@
     "brand": "Samsung",
     "model": "S25+",
     "storage": "512 GB",
-    "price": "68100",
-    "country": "🇷🇺"
-  },
-  {
-    "id": "34263",
-    "category": "Часы",
-    "name": "Galaxy Watch 8 40mm Graphite",
-    "brand": "Samsung",
-    "model": "Watch 8",
-    "price": "16300",
-    "country": "🇦🇪"
-  },
-  {
-    "id": "34262",
-    "category": "Часы",
-    "name": "Galaxy Watch 8 40mm Silver",
-    "brand": "Samsung",
-    "model": "Watch 8",
-    "price": "16300",
-    "country": "🇦🇪"
+    "price": "72800",
+    "country": "🇵🇾",
+    "hidden": false
   },
   {
     "id": "34265",
@@ -5468,17 +6180,9 @@
     "name": "Galaxy Watch 8 44mm Graphite",
     "brand": "Samsung",
     "model": "Watch 8",
-    "price": "17000",
-    "country": "🇦🇪"
-  },
-  {
-    "id": "34264",
-    "category": "Часы",
-    "name": "Galaxy Watch 8 44mm Silver",
-    "brand": "Samsung",
-    "model": "Watch 8",
-    "price": "17000",
-    "country": "🇦🇪"
+    "price": "18100",
+    "country": "🇦🇪",
+    "hidden": false
   },
   {
     "id": "34140",
@@ -5486,7 +6190,8 @@
     "name": "Sonos Era 300 White",
     "brand": "Sonos",
     "model": "Era 100",
-    "price": "43300"
+    "price": "43300",
+    "hidden": false
   },
   {
     "id": "34137",
@@ -5494,7 +6199,8 @@
     "name": "Sonos Move 2 Black",
     "brand": "Sonos",
     "model": "Move 2",
-    "price": "30300"
+    "price": "30300",
+    "hidden": false
   },
   {
     "id": "34136",
@@ -5502,7 +6208,8 @@
     "name": "Sonos Move 2 White",
     "brand": "Sonos",
     "model": "Move 2",
-    "price": "30300"
+    "price": "30300",
+    "hidden": false
   },
   {
     "id": "34133",
@@ -5510,7 +6217,8 @@
     "name": "Sonos Ray SoundBar Black",
     "brand": "Sonos",
     "model": "Ray",
-    "price": "16300"
+    "price": "16300",
+    "hidden": false
   },
   {
     "id": "34132",
@@ -5518,7 +6226,8 @@
     "name": "Sonos Ray SoundBar White",
     "brand": "Sonos",
     "model": "Ray",
-    "price": "14300"
+    "price": "14300",
+    "hidden": false
   },
   {
     "id": "34135",
@@ -5526,7 +6235,8 @@
     "name": "Sonos Roam 2 Black",
     "brand": "Sonos",
     "model": "Roam 2",
-    "price": "11300"
+    "price": "11300",
+    "hidden": false
   },
   {
     "id": "34134",
@@ -5534,7 +6244,8 @@
     "name": "Sonos Roam 2 White",
     "brand": "Sonos",
     "model": "Roam 2",
-    "price": "11300"
+    "price": "11300",
+    "hidden": false
   },
   {
     "id": "34141",
@@ -5542,15 +6253,26 @@
     "name": "Sonos Sub 3 Gen Black",
     "brand": "Sonos",
     "model": "Sub 3 Gen",
-    "price": "62300"
+    "price": "62300",
+    "hidden": false
   },
   {
-    "id": "34163",
+    "id": "34167",
     "category": "Аксессуары",
-    "name": "PS5 Дисковод",
+    "name": "PS5 Pulse 3D Camouflage",
     "brand": "Sony",
-    "model": "Дисковод",
-    "price": "9000"
+    "model": "Pulse 3D",
+    "price": "8000",
+    "hidden": true
+  },
+  {
+    "id": "34720",
+    "category": "Аксессуары",
+    "name": "PS5 Vertical Stand",
+    "brand": "Sony",
+    "model": "Подставка",
+    "price": "2300",
+    "hidden": true
   },
   {
     "id": "34162",
@@ -5558,7 +6280,37 @@
     "name": "PS5 VR2",
     "brand": "Sony",
     "model": "VR2",
-    "price": "31800"
+    "price": "31300",
+    "country": "🇪🇺",
+    "hidden": true
+  },
+  {
+    "id": "34161",
+    "category": "Аксессуары",
+    "name": "PS5 VR2 White+Horizon",
+    "brand": "Sony",
+    "model": "VR2",
+    "price": "31800",
+    "country": "🇪🇺",
+    "hidden": true
+  },
+  {
+    "id": "34727",
+    "category": "Джойстики",
+    "name": "PS5 DualSense Alpine Green",
+    "brand": "Sony",
+    "model": "DualSense",
+    "price": "8800",
+    "hidden": true
+  },
+  {
+    "id": "3225",
+    "category": "Джойстики",
+    "name": "PS5 DualSense Chroma Pearl",
+    "brand": "Sony",
+    "model": "DualSense",
+    "price": "5800",
+    "hidden": true
   },
   {
     "id": "3229",
@@ -5566,7 +6318,8 @@
     "name": "PS5 DualSense Cobalt Blue",
     "brand": "Sony",
     "model": "DualSense",
-    "price": "5800"
+    "price": "5200",
+    "hidden": true
   },
   {
     "id": "3232",
@@ -5574,7 +6327,8 @@
     "name": "PS5 DualSense Cosmic Red",
     "brand": "Sony",
     "model": "DualSense",
-    "price": "5700"
+    "price": "5500",
+    "hidden": true
   },
   {
     "id": "3233",
@@ -5582,7 +6336,8 @@
     "name": "PS5 DualSense Edge White",
     "brand": "Sony",
     "model": "DualSense",
-    "price": "14800"
+    "price": "15700",
+    "hidden": true
   },
   {
     "id": "3230",
@@ -5590,7 +6345,26 @@
     "name": "PS5 DualSense Galactic Purple",
     "brand": "Sony",
     "model": "DualSense",
-    "price": "5700"
+    "price": "5200",
+    "hidden": true
+  },
+  {
+    "id": "34728",
+    "category": "Джойстики",
+    "name": "PS5 DualSense Ghost of Yotei",
+    "brand": "Sony",
+    "model": "DualSense",
+    "price": "8600",
+    "hidden": true
+  },
+  {
+    "id": "3222",
+    "category": "Джойстики",
+    "name": "PS5 DualSense Gray Camouflage",
+    "brand": "Sony",
+    "model": "DualSense",
+    "price": "5600",
+    "hidden": true
   },
   {
     "id": "3221",
@@ -5598,7 +6372,8 @@
     "name": "PS5 DualSense Midnight Black",
     "brand": "Sony",
     "model": "DualSense",
-    "price": "5600"
+    "price": "5300",
+    "hidden": true
   },
   {
     "id": "3223",
@@ -5606,7 +6381,8 @@
     "name": "PS5 DualSense Nova Pink",
     "brand": "Sony",
     "model": "DualSense",
-    "price": "5800"
+    "price": "6100",
+    "hidden": true
   },
   {
     "id": "3231",
@@ -5614,7 +6390,8 @@
     "name": "PS5 DualSense Starlight Blue",
     "brand": "Sony",
     "model": "DualSense",
-    "price": "5600"
+    "price": "5500",
+    "hidden": true
   },
   {
     "id": "3227",
@@ -5622,7 +6399,8 @@
     "name": "PS5 DualSense Sterling Silver",
     "brand": "Sony",
     "model": "DualSense",
-    "price": "5700"
+    "price": "5600",
+    "hidden": true
   },
   {
     "id": "3228",
@@ -5630,7 +6408,8 @@
     "name": "PS5 DualSense Volcanic Red",
     "brand": "Sony",
     "model": "DualSense",
-    "price": "5800"
+    "price": "5600",
+    "hidden": true
   },
   {
     "id": "3220",
@@ -5638,36 +6417,129 @@
     "name": "PS5 DualSense White",
     "brand": "Sony",
     "model": "DualSense",
-    "price": "5600"
+    "price": "5200",
+    "hidden": true
   },
   {
-    "id": "3216",
-    "category": "Игровые приставки",
-    "name": "PlayStation 5 Pro Digital Edition 🇪🇺",
+    "id": "34152",
+    "category": "Диски",
+    "name": "📀PS5 God of War (рус)",
     "brand": "Sony",
-    "model": "PlayStation 5 Pro",
-    "storage": "2048 GB",
-    "price": "307534600"
+    "model": "Disk",
+    "price": "2700",
+    "hidden": false
   },
   {
-    "id": "3212",
+    "id": "34153",
+    "category": "Диски",
+    "name": "📀PS5 Ratchet and Clank (рус)",
+    "brand": "Sony",
+    "model": "Disk",
+    "price": "2800",
+    "hidden": false
+  },
+  {
+    "id": "34142",
+    "category": "Диски",
+    "name": "📀PS5 UFC5",
+    "brand": "Sony",
+    "model": "Disk",
+    "price": "2500",
+    "hidden": false
+  },
+  {
+    "id": "34735",
+    "category": "Зарядные устройства",
+    "name": "📀PS5 F1 25",
+    "brand": "Sony",
+    "model": "DualSense",
+    "price": "4700",
+    "hidden": true
+  },
+  {
+    "id": "34732",
+    "category": "Зарядные устройства",
+    "name": "📀PS5 FC26",
+    "brand": "Sony",
+    "model": "DualSense",
+    "price": "4200",
+    "hidden": true
+  },
+  {
+    "id": "34740",
+    "category": "Зарядные устройства",
+    "name": "📀PS5 Mortal Combat 1",
+    "brand": "Sony",
+    "model": "DualSense",
+    "price": "2600",
+    "hidden": true
+  },
+  {
+    "id": "34730",
+    "category": "Зарядные устройства",
+    "name": "📀PS5 NBA25",
+    "brand": "Sony",
+    "model": "DualSense",
+    "price": "2300",
+    "hidden": true
+  },
+  {
+    "id": "34736",
+    "category": "Зарядные устройства",
+    "name": "📀PS5 Sackboy",
+    "brand": "Sony",
+    "model": "DualSense",
+    "price": "2200",
+    "hidden": true
+  },
+  {
+    "id": "34733",
+    "category": "Зарядные устройства",
+    "name": "📀PS5 Spider Man 2 (рус)",
+    "brand": "Sony",
+    "model": "DualSense",
+    "price": "3200",
+    "hidden": true
+  },
+  {
+    "id": "34739",
+    "category": "Зарядные устройства",
+    "name": "📀PS5 The Witcher 3",
+    "brand": "Sony",
+    "model": "DualSense",
+    "price": "2000",
+    "hidden": true
+  },
+  {
+    "id": "34776",
     "category": "Игровые приставки",
     "name": "PlayStation 5 Slim Digital Edition",
     "brand": "Sony",
     "model": "PlayStation 5 Slim",
+    "storage": "825 GB",
+    "price": "37300",
+    "country": "🇭🇰",
+    "hidden": false
+  },
+  {
+    "id": "3212",
+    "category": "Игровые приставки",
+    "name": "PlayStation 5 Slim Digital Edition 🇪🇺",
+    "brand": "Sony",
+    "model": "PlayStation 5 Slim",
     "storage": "1024 GB",
-    "price": "41300",
-    "country": "🇯🇵"
+    "price": "38600",
+    "hidden": false
   },
   {
     "id": "3208",
     "category": "Игровые приставки",
-    "name": "PlayStation 5 Slim Disc Edition",
+    "name": "PlayStation 5 Slim Disc Edition 🇪🇺",
     "brand": "Sony",
     "model": "PlayStation 5 Slim",
     "storage": "1024 GB",
-    "price": "43300",
-    "country": "🇺🇸"
+    "price": "43800",
+    "hidden": false
   },
   {
     "id": "3242",
@@ -5675,7 +6547,8 @@
     "name": "PS5 Portal Black",
     "brand": "Sony",
     "model": "Portal",
-    "price": "16800"
+    "price": "19800",
+    "hidden": false
   },
   {
     "id": "3241",
@@ -5683,7 +6556,8 @@
     "name": "PS5 Portal White",
     "brand": "Sony",
     "model": "Portal",
-    "price": "16800"
+    "price": "19800",
+    "hidden": false
   },
   {
     "id": "3237",
@@ -5691,7 +6565,17 @@
     "name": "PS5 Pulse Elite Black",
     "brand": "Sony",
     "model": "Pulse Elite",
-    "price": "11800"
+    "price": "11800",
+    "hidden": false
+  },
+  {
+    "id": "3238",
+    "category": "Наушники",
+    "name": "PS5 Pulse Elite White",
+    "brand": "Sony",
+    "model": "Pulse Elite",
+    "price": "12300",
+    "hidden": false
   },
   {
     "id": "27572",
@@ -5699,7 +6583,8 @@
     "name": "Sony ULT900",
     "brand": "Sony",
     "model": "ULT900",
-    "price": "12800"
+    "price": "12300",
+    "hidden": false
   },
   {
     "id": "27573",
@@ -5707,7 +6592,8 @@
     "name": "Sony WF 1000-XM5 Black",
     "brand": "Sony",
     "model": "WF 1000-XM5",
-    "price": "15300"
+    "price": "14800",
+    "hidden": false
   },
   {
     "id": "27575",
@@ -5715,15 +6601,8 @@
     "name": "Sony WF 1000-XM5 Pink",
     "brand": "Sony",
     "model": "WF 1000-XM5",
-    "price": "17300"
-  },
-  {
-    "id": "27577",
-    "category": "Наушники",
-    "name": "Sony WF-C510",
-    "brand": "Sony",
-    "model": "WF- C510",
-    "price": "5600"
+    "price": "14800",
+    "hidden": false
   },
   {
     "id": "27582",
@@ -5731,15 +6610,8 @@
     "name": "Sony WH 1000-XM5 Silver",
     "brand": "Sony",
     "model": "WH-1000-XM5",
-    "price": "20800"
-  },
-  {
-    "id": "27580",
-    "category": "Наушники",
-    "name": "Sony WH 1000-XM6 Silver",
-    "brand": "Sony",
-    "model": "WH-1000-XM6",
-    "price": "26800"
+    "price": "20300",
+    "hidden": false
   },
   {
     "id": "27587",
@@ -5747,7 +6619,8 @@
     "name": "Sony WH-1000-XM4 Blue",
     "brand": "Sony",
     "model": "WH-1000-XM4",
-    "price": "19800"
+    "price": "18800",
+    "hidden": false
   },
   {
     "id": "27586",
@@ -5755,7 +6628,8 @@
     "name": "Sony WH-1000-XM4 Silver",
     "brand": "Sony",
     "model": "WH-1000-XM4",
-    "price": "18800"
+    "price": "18800",
+    "hidden": false
   },
   {
     "id": "27583",
@@ -5763,15 +6637,8 @@
     "name": "Sony WH-1000-XM5 Blue",
     "brand": "Sony",
     "model": "WH-1000-XM5",
-    "price": "22300"
-  },
-  {
-    "id": "27584",
-    "category": "Наушники",
-    "name": "Sony WH-1000-XM5 Pink",
-    "brand": "Sony",
-    "model": "WH-1000-XM5",
-    "price": "23300"
+    "price": "18800",
+    "hidden": false
   },
   {
     "id": "27570",
@@ -5779,7 +6646,8 @@
     "name": "Sony WH-CH520 Beige",
     "brand": "Sony",
     "model": "WH-CH520",
-    "price": "4300"
+    "price": "4800",
+    "hidden": false
   },
   {
     "id": "27567",
@@ -5787,7 +6655,8 @@
     "name": "Sony WH-CH520 Black",
     "brand": "Sony",
     "model": "WH-CH520",
-    "price": "4300"
+    "price": "4800",
+    "hidden": false
   },
   {
     "id": "27569",
@@ -5795,7 +6664,8 @@
     "name": "Sony WH-CH520 Blue",
     "brand": "Sony",
     "model": "WH-CH520",
-    "price": "4300"
+    "price": "4300",
+    "hidden": false
   },
   {
     "id": "27568",
@@ -5803,15 +6673,8 @@
     "name": "Sony WH-CH520 White",
     "brand": "Sony",
     "model": "WH-CH520",
-    "price": "4300"
-  },
-  {
-    "id": "27571",
-    "category": "Наушники",
-    "name": "Sony WH-CH520 Yellow",
-    "brand": "Sony",
-    "model": "WH-CH520",
-    "price": "4300"
+    "price": "4300",
+    "hidden": false
   },
   {
     "id": "27564",
@@ -5819,7 +6682,8 @@
     "name": "Sony WH-CH720 Black",
     "brand": "Sony",
     "model": "WH-CH720",
-    "price": "8300"
+    "price": "8800",
+    "hidden": false
   },
   {
     "id": "27565",
@@ -5827,7 +6691,8 @@
     "name": "Sony WH-CH720 Blue",
     "brand": "Sony",
     "model": "WH-CH720",
-    "price": "8300"
+    "price": "8800",
+    "hidden": false
   },
   {
     "id": "27566",
@@ -5835,27 +6700,8 @@
     "name": "Sony WH-CH720 White",
     "brand": "Sony",
     "model": "WH-CH720",
-    "price": "8300"
-  },
-  {
-    "id": "7635",
-    "category": "Смартфоны",
-    "name": "Note 14 4G 6/128 NFC Black",
-    "brand": "Xiaomi",
-    "model": "Note 14",
-    "storage": "128 GB",
-    "price": "10300",
-    "country": "🇷🇺"
-  },
-  {
-    "id": "7636",
-    "category": "Смартфоны",
-    "name": "Note 14 4G 6/128 NFC Blue",
-    "brand": "Xiaomi",
-    "model": "Note 14",
-    "storage": "128 GB",
-    "price": "11200",
-    "country": "🇷🇺"
+    "price": "8800",
+    "hidden": false
   },
   {
     "id": "7637",
@@ -5864,8 +6710,9 @@
     "brand": "Xiaomi",
     "model": "Note 14",
     "storage": "128 GB",
-    "price": "10900",
-    "country": "🇷🇺"
+    "price": "11200",
+    "country": "🇷🇺",
+    "hidden": false
   },
   {
     "id": "7639",
@@ -5874,8 +6721,9 @@
     "brand": "Xiaomi",
     "model": "Note 14",
     "storage": "256 GB",
-    "price": "13600",
-    "country": "🇰🇿"
+    "price": "13800",
+    "country": "🇷🇺",
+    "hidden": false
   },
   {
     "id": "7640",
@@ -5884,8 +6732,20 @@
     "brand": "Xiaomi",
     "model": "Note 14",
     "storage": "256 GB",
-    "price": "13600",
-    "country": "🇰🇿"
+    "price": "13700",
+    "country": "🇪🇺",
+    "hidden": false
+  },
+  {
+    "id": "7641",
+    "category": "Смартфоны",
+    "name": "Note 14 4G 8/256 NFC Green",
+    "brand": "Xiaomi",
+    "model": "Note 14",
+    "storage": "256 GB",
+    "price": "13700",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "7642",
@@ -5894,38 +6754,53 @@
     "brand": "Xiaomi",
     "model": "Note 14",
     "storage": "256 GB",
-    "price": "14000",
-    "country": "🇮🇩"
+    "price": "13700",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
-    "id": "7650",
+    "id": "7649",
     "category": "Смартфоны",
-    "name": "Note 14 Pro 4G 8/256 NFC Black",
+    "name": "Note 14 Pro 4G 8/256 NFC Blue",
     "brand": "Xiaomi",
     "model": "Note 14 Pro",
     "storage": "256 GB",
-    "price": "18300",
-    "country": "🇪🇺"
+    "price": "17900",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
-    "id": "7663",
+    "id": "7652",
     "category": "Смартфоны",
-    "name": "Note 14 Pro+ 5G 8/256 Black",
+    "name": "Note 14 Pro 4G 8/256 NFC Purple",
     "brand": "Xiaomi",
-    "model": "Note 14 Pro+",
+    "model": "Note 14 Pro",
     "storage": "256 GB",
-    "price": "23500",
-    "country": "🇷🇺"
+    "price": "17900",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
-    "id": "7664",
+    "id": "7657",
     "category": "Смартфоны",
-    "name": "Note 14 Pro+ 5G 8/256 Blue",
+    "name": "Note 14 Pro 5G 8/256 NFC Black",
     "brand": "Xiaomi",
-    "model": "Note 14 Pro+",
+    "model": "Note 14 Pro",
     "storage": "256 GB",
-    "price": "23500",
-    "country": "🇷🇺"
+    "price": "21200",
+    "country": "🇪🇺",
+    "hidden": false
+  },
+  {
+    "id": "7658",
+    "category": "Смартфоны",
+    "name": "Note 14 Pro 5G 8/256 NFC Green",
+    "brand": "Xiaomi",
+    "model": "Note 14 Pro",
+    "storage": "256 GB",
+    "price": "21200",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "7643",
@@ -5934,8 +6809,9 @@
     "brand": "Xiaomi",
     "model": "Note 14S",
     "storage": "256 GB",
-    "price": "14900",
-    "country": "🇪🇺"
+    "price": "15100",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "7644",
@@ -5945,7 +6821,8 @@
     "model": "Note 14S",
     "storage": "256 GB",
     "price": "14800",
-    "country": "🇪🇺"
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "7645",
@@ -5954,28 +6831,9 @@
     "brand": "Xiaomi",
     "model": "Note 14S",
     "storage": "256 GB",
-    "price": "14800",
-    "country": "🇪🇺"
-  },
-  {
-    "id": "34525",
-    "category": "Смартфоны",
-    "name": "Redmi 15 8/256 NFC Black",
-    "brand": "Xiaomi",
-    "model": "Redmi 15",
-    "storage": "256 GB",
-    "price": "12200",
-    "country": "🇪🇺"
-  },
-  {
-    "id": "34517",
-    "category": "Смартфоны",
-    "name": "Redmi 15C 4/256 NFC Black",
-    "brand": "Xiaomi",
-    "model": "Redmi 15C",
-    "storage": "256 GB",
-    "price": "8900",
-    "country": "🇷🇺"
+    "price": "15100",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "34518",
@@ -5984,38 +6842,86 @@
     "brand": "Xiaomi",
     "model": "Redmi 15C",
     "storage": "256 GB",
-    "price": "8900",
-    "country": "🇷🇺"
+    "price": "8700",
+    "country": "🇷🇺",
+    "hidden": false
   },
   {
-    "id": "34521",
+    "id": "7600",
     "category": "Смартфоны",
-    "name": "Redmi 15C 8/256 NFC Black",
+    "name": "Redmi A5 3/64 Black",
     "brand": "Xiaomi",
-    "model": "Redmi 15C",
-    "storage": "256 GB",
-    "price": "10100",
-    "country": "🇷🇺"
+    "model": "A5",
+    "storage": "64 GB",
+    "price": "5500",
+    "country": "🇷🇺",
+    "hidden": false
   },
   {
-    "id": "7670",
+    "id": "7601",
     "category": "Смартфоны",
-    "name": "Xiaomi 12 5G 8/256 Purple",
+    "name": "Redmi A5 3/64 Blue",
     "brand": "Xiaomi",
-    "model": "Xiaomi 12",
-    "storage": "256 GB",
-    "price": "19800",
-    "country": "🇪🇺"
+    "model": "A5",
+    "storage": "64 GB",
+    "price": "5500",
+    "country": "🇷🇺",
+    "hidden": false
   },
   {
-    "id": "34528",
+    "id": "7604",
     "category": "Смартфоны",
-    "name": "Xiaomi 15T 5G 12/256 Gray",
+    "name": "Redmi A5 4/128 Black",
+    "brand": "Xiaomi",
+    "model": "A5",
+    "storage": "128 GB",
+    "price": "6600",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "7605",
+    "category": "Смартфоны",
+    "name": "Redmi A5 4/128 Blue",
+    "brand": "Xiaomi",
+    "model": "A5",
+    "storage": "128 GB",
+    "price": "6600",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "7607",
+    "category": "Смартфоны",
+    "name": "Redmi A5 4/128 Gold",
+    "brand": "Xiaomi",
+    "model": "A5",
+    "storage": "128 GB",
+    "price": "6600",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "7606",
+    "category": "Смартфоны",
+    "name": "Redmi A5 4/128 Green",
+    "brand": "Xiaomi",
+    "model": "A5",
+    "storage": "128 GB",
+    "price": "6600",
+    "country": "🇷🇺",
+    "hidden": false
+  },
+  {
+    "id": "34527",
+    "category": "Смартфоны",
+    "name": "Xiaomi 15T 5G 12/256 Black",
     "brand": "Xiaomi",
     "model": "Xiaomi 15T",
     "storage": "256 GB",
-    "price": "33000",
-    "country": "🇰🇿"
+    "price": "35900",
+    "country": "🇪🇺",
+    "hidden": false
   },
   {
     "id": "34529",
@@ -6024,27 +6930,8 @@
     "brand": "Xiaomi",
     "model": "Xiaomi 15T",
     "storage": "512 GB",
-    "price": "36200",
-    "country": "🇪🇺"
-  },
-  {
-    "id": "34531",
-    "category": "Смартфоны",
-    "name": "Xiaomi 15T Pro 5G 12/512 Black",
-    "brand": "Xiaomi",
-    "model": "Xiaomi 15T Pro",
-    "storage": "512 GB",
-    "price": "54300",
-    "country": "🇪🇺"
-  },
-  {
-    "id": "34532",
-    "category": "Смартфоны",
-    "name": "Xiaomi 15T Pro 5G 12/512 Gray",
-    "brand": "Xiaomi",
-    "model": "Xiaomi 15T Pro",
-    "storage": "512 GB",
-    "price": "54300",
-    "country": "🇪🇺"
+    "price": "38300",
+    "country": "🇪🇺",
+    "hidden": false
   }
 ]

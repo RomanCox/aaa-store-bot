@@ -4,7 +4,7 @@ export const PRICE_TEXTS = {
 	ENTER_RETAIL_MULT: "Введи множитель для розничной наценки, текущий множитель: ",
 	ENTER_WHOLESALE_MULT: "Введи множитель для оптовой наценки, текущий множитель: ",
 	ENTER_RUB_TO_BYN_EDIT_SUCCESSFUL: "✅ Курс RUB к BYN успешно изменен на: ",
-	ENTER_RUB_TO_USD_EDIT_SUCCESSFUL: "✅ Курс RUB к BYN успешно изменен на: ",
+	ENTER_RUB_TO_USD_EDIT_SUCCESSFUL: "✅ Курс RUB к USD успешно изменен на: ",
 	ENTER_RETAIL_MULT_EDIT_SUCCESSFUL: "✅ Розничная наценка успешно изменена на: ",
 	ENTER_WHOLESALE_MULT_EDIT_SUCCESSFUL: "✅ Оптовая наценка успешно изменена на: ",
 };

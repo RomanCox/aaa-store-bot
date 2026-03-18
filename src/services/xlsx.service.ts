@@ -1,36 +1,17 @@
 import * as XLSX from "xlsx";
 import fs from "fs";
 import path from "path";
-import { Product, PRODUCT_XLSX_HEADERS, SECTION } from "../types";
+import { Product, PRODUCT_XLSX_HEADERS, ProductForCatalog, SECTION } from "../types";
 import { resolveBrandFromName } from "./brand-resolver.service";
 import { CATALOG_TEXTS } from "../texts";
 import TelegramBot from "node-telegram-bot-api";
 import { getChatState, getSectionState } from "../state/chat.state";
 import { renderScreen } from "../render/renderScreen";
+import { compareSpecs, extractMemorySubstring, findPriceRule } from "../utils";
+import { getPriceFormation, getRates } from "./price.service";
+import { MAX_PRICE } from "../constants";
 
-function sortProducts(products: Product[]): Product[] {
-	return [...products].sort((a, b) => {
-		// 1. Бренд
-		const brandCompare = (a.brand ?? "").localeCompare(b.brand ?? "", "ru", {
-			sensitivity: "base",
-		});
-		if (brandCompare !== 0) return brandCompare;
-
-		// 2. Категория
-		const categoryCompare = (a.category ?? "").localeCompare(b.category ?? "", "ru", {
-			sensitivity: "base",
-		});
-		if (categoryCompare !== 0) return categoryCompare;
-
-		// 3. Название (с поддержкой чисел)
-		return (a.name ?? "").localeCompare(b.name ?? "", "ru", {
-			numeric: true,
-			sensitivity: "base",
-		});
-	});
-}
-
-export function parseXlsxToProducts(buffer: Buffer): Product[] {
+export function parseXlsxToProducts(buffer: Buffer): ProductForCatalog[] {
 	const workbook = XLSX.read(buffer, {type: "buffer"});
 	const sheetName = workbook.SheetNames[0];
 	const sheet = workbook.Sheets[sheetName];
@@ -47,7 +28,9 @@ export function parseXlsxToProducts(buffer: Buffer): Product[] {
 		.map(mapRowToProduct)
 		.filter(isValidProduct);
 
-	return sortProducts(products);
+  const productsForCatalog = addProductMarkup(products);
+
+	return sortProducts(productsForCatalog);
 }
 
 function hasRequiredColumns(row: Record<string, unknown>): boolean {
@@ -79,6 +62,76 @@ function isValidProduct(p: Product): boolean {
 		p.model &&
 		p.price
 	);
+}
+
+function addProductMarkup(products: Product[]): ProductForCatalog[] {
+  const rates = getRates();
+  const priceFormation = getPriceFormation();
+
+  return products.map((product) => {
+    const numberPrice = Number(product.price);
+
+    if (Number.isNaN(numberPrice)) {
+      return { ...product, hidden: true };
+    }
+
+    const priceUSD = numberPrice / rates.rub_to_usd;
+
+    if (priceUSD >= MAX_PRICE) {
+      return { ...product, hidden: true };
+    }
+
+    const wholesalePercent = findPriceRule(
+      priceUSD,
+      product.category,
+      product.brand,
+      "wholesale",
+      priceFormation
+    );
+
+    const retailPercent = findPriceRule(
+      priceUSD,
+      product.category,
+      product.brand,
+      "retail",
+      priceFormation
+    );
+
+    const hidden =
+      !wholesalePercent &&
+      !retailPercent;
+
+    return { ...product, hidden };
+  });
+}
+
+function sortProducts(products: ProductForCatalog[]): ProductForCatalog[] {
+  return [...products].sort((a, b) => {
+    // 1. Бренд
+    const brandCompare = (a.brand ?? "").localeCompare(b.brand ?? "", "ru", {
+      sensitivity: "base",
+    });
+    if (brandCompare !== 0) return brandCompare;
+
+    // 2. Категория
+    const categoryCompare = (a.category ?? "").localeCompare(b.category ?? "", "ru", {
+      sensitivity: "base",
+    });
+    if (categoryCompare !== 0) return categoryCompare;
+
+    // 3. Название (с поддержкой чисел)
+    const nameCompare = (a.name ?? "").localeCompare(b.name ?? "", "ru", {
+      numeric: true,
+      sensitivity: "base",
+    });
+    if (nameCompare !== 0) return nameCompare;
+
+    // 4. Память (если есть)
+    const memA = extractMemorySubstring(a.name ?? null);
+    const memB = extractMemorySubstring(b.name ?? null);
+
+    return compareSpecs(memA, memB);
+  });
 }
 
 function productsToXlsxData(products: Product[]) {

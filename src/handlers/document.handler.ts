@@ -4,10 +4,13 @@ import path from "path";
 import { parseXlsxToProducts } from "../services/xlsx.service";
 import { saveProducts } from "../services/products.service";
 import { isAdmin } from "../services/users.service";
-import { getChatState, setChatState } from "../state/chat.state";
-import { ADMIN_TEXTS } from "../texts";
+import { getChatState, setChatState, updateSectionState } from "../state/chat.state";
+import { ADMIN_TEXTS, START_TEXTS } from "../texts";
 import { renderScreen } from "../render/renderScreen";
 import { SECTION } from "../types";
+import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
+import { adminKeyboard } from "../keyboards";
+import { safeDelete } from "../utils";
 
 export function registerDocumentHandler(bot: TelegramBot) {
 	bot.on("document", async (query) => {
@@ -31,7 +34,7 @@ export function registerDocumentHandler(bot: TelegramBot) {
 		}
 
 		try {
-			const tmpDir = path.resolve("tmp");
+      const tmpDir = path.resolve("tmp");
 			if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);
 
 			const filePath = await bot.downloadFile(document.file_id, tmpDir);
@@ -40,19 +43,59 @@ export function registerDocumentHandler(bot: TelegramBot) {
 			const products = parseXlsxToProducts(buffer);
 
 			if (!products.length) {
-        await renderScreen(bot, chatId, { section: SECTION.ADMIN_PANEL, text: ADMIN_TEXTS.ERROR_ITEMS });
+        await bot.sendMessage(chatId, ADMIN_TEXTS.ERROR_ITEMS);
 				return;
 			}
 
 			saveProducts(products);
 
+      const state = getChatState(userId);
+      const adminState = state.sections[SECTION.ADMIN_PANEL];
+      if (adminState?.messageId) {
+        await safeDelete(bot, adminState.messageId);
+      }
+
+      updateSectionState(userId, SECTION.ADMIN_PANEL, (prev) => ({
+        ...prev,
+        messageId: undefined,
+      }));
+
+      await bot.sendMessage(chatId, ADMIN_TEXTS.PRICE_UPLOAD_SUCCESS + products.length);
+
+      const hiddenProducts = products.filter(p => p.hidden);
+      if (hiddenProducts.length) {
+        const header = ADMIN_TEXTS.ITEMS_WITHOUT_MARKUP + hiddenProducts.length + "\n\n";
+        const lines = hiddenProducts.map(p => `• ${p.category} | ${p.name} — ${p.price} RUB`);
+
+        let message = header;
+        for (const line of lines) {
+          if ((message + line + "\n").length > TELEGRAM_MESSAGE_LIMIT) {
+            await bot.sendMessage(chatId, message);
+            message = "";
+          }
+          message += line + "\n";
+        }
+
+        if (message) await bot.sendMessage(chatId, message);
+      }
+
       await renderScreen(bot, chatId, {
-        section: SECTION.ADMIN_PANEL, text: ADMIN_TEXTS.PRICE_UPLOAD_SUCCESS + products.length
+        section: SECTION.ADMIN_PANEL,
+        text: START_TEXTS.ADMIN_PANEL,
+        inlineKeyboard: adminKeyboard(),
+        parse_mode: "HTML",
       });
 
 			setChatState(userId, { mode: "idle" });
 		} catch (error) {
-			await renderScreen(bot, chatId, { section: SECTION.ADMIN_PANEL, text: ADMIN_TEXTS.FILE_ERROR });
+      await bot.sendMessage(chatId, ADMIN_TEXTS.FILE_ERROR);
+
+      await renderScreen(bot, chatId, {
+        section: SECTION.ADMIN_PANEL,
+        text: START_TEXTS.ADMIN_PANEL,
+        inlineKeyboard: adminKeyboard(),
+        parse_mode: "HTML",
+      });
 		}
 	});
 }

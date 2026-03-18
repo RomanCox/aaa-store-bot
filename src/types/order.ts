@@ -1,6 +1,6 @@
 import { ProductForCart } from "./product";
 
-export interface IOrder {
+export interface Order {
   id: string;
   userId: number;
   username?: string;

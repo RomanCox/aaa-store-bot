@@ -7,5 +7,6 @@ function requireEnv(name: string): string {
 }
 
 export const ENV = {
-	MANAGER_URL: requireEnv("MANAGER_URL"),
+  RETAIL_MANAGER_URL: requireEnv("RETAIL_MANAGER_URL"),
+  WHOLESALE_MANAGER_URL: requireEnv("WHOLESALE_MANAGER_URL"),
 };

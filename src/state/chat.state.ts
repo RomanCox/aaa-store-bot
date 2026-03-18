@@ -1,6 +1,6 @@
-import { IChatState, SECTION, SectionStateMap } from "../types";
+import { ChatState, SECTION, SectionStateMap } from "../types";
 
-const DEFAULT_CHAT_STATE: IChatState = {
+const DEFAULT_CHAT_STATE: ChatState = {
   section: SECTION.HOME,
   mode: "idle",
   activeMessageId: undefined,
@@ -38,9 +38,9 @@ const DEFAULT_CHAT_STATE: IChatState = {
   },
 };
 
-const chatState = new Map<number, IChatState>();
+const chatState = new Map<number, ChatState>();
 
-export function getChatState(chatId: number): IChatState {
+export function getChatState(chatId: number): ChatState {
 	if (!chatState.has(chatId)) {
 		chatState.set(chatId, structuredClone(DEFAULT_CHAT_STATE));
 	}
@@ -48,13 +48,13 @@ export function getChatState(chatId: number): IChatState {
 }
 
 export function getSectionState<T extends SECTION>(
-  state: IChatState,
+  state: ChatState,
   section: T
-): IChatState["sections"][T] | undefined {
+): ChatState["sections"][T] | undefined {
   return state.sections?.[section];
 }
 
-export function setChatState(chatId: number, patch: Partial<IChatState>) {
+export function setChatState(chatId: number, patch: Partial<ChatState>) {
 	const current = getChatState(chatId);
 	chatState.set(chatId, { ...current, ...patch });
 }

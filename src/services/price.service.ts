@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import TelegramBot from "node-telegram-bot-api";
-import { ChatMode, IRates, PriceFormat, PriceFormationUpdate, SECTION } from "../types";
+import { ChatMode, Rates, PriceFormat, PriceFormationUpdate, SECTION } from "../types";
 import { setChatState } from "../state/chat.state";
 import { PRICE_TEXTS } from "../texts";
 import { getUserRole } from "./users.service";
@@ -9,13 +9,13 @@ import { renderScreen } from "../render/renderScreen";
 
 const RATES_PATH = path.resolve(__dirname, "../data/rates.json");
 const PRICE_FORMATION_PATH = path.resolve(__dirname, "../data/price_formation.json");
-const DEFAULT_RATES: IRates = {
+const DEFAULT_RATES: Rates = {
   rub_to_byn: 0,
   rub_to_usd: 0,
 };
 const DEFAULT_PRICE_FORMATION: PriceFormat[] = [];
 
-let rates: IRates = DEFAULT_RATES;
+let rates: Rates = DEFAULT_RATES;
 let priceFormation: PriceFormat[] = DEFAULT_PRICE_FORMATION;
 
 export function loadRates() {
@@ -39,7 +39,7 @@ export function loadRates() {
   }
 }
 
-export function getRates(): IRates {
+export function getRates(): Rates {
   return rates;
 }
 
@@ -57,7 +57,7 @@ export async function saveRates(update: PriceFormationUpdate) {
   }
 
   fs.writeFileSync(
-    PRICE_FORMATION_PATH,
+    RATES_PATH,
     JSON.stringify(newRates, null, 2),
     "utf-8"
   );

@@ -1,15 +1,21 @@
-import { IRates, PriceFormat, UserRole } from "../types";
+import { Rates, PriceFormat, UserRole } from "../types";
 
-function findPriceRule(
+export function findPriceRule(
   priceUSD: number,
   category: string | undefined,
   brand: string | undefined,
   type: UserRole,
   formats: PriceFormat[]
 ) {
+  let normalizedBrand = brand;
+
+  if (category === "Смартфоны" && brand !== "Apple") {
+    normalizedBrand = "Android";
+  }
+
   const candidates = formats.filter((f) => {
     if (f.category && f.category !== category) return false;
-    return !(f.brand && f.brand !== brand);
+    return !(f.brand && f.brand !== normalizedBrand);
   });
 
   for (const format of candidates) {
@@ -29,7 +35,7 @@ function findPriceRule(
 
 export function priceFormat(
   price: string,
-  rates: IRates,
+  rates: Rates,
   priceFormation: PriceFormat[],
   category?: string,
   brand?: string,
@@ -54,6 +60,7 @@ export function priceFormat(
     priceFormation
   );
 
+  // WHOLESALE
   if (clientType === "wholesale") {
     const resultUSD = priceUSD * (1 + percent / 100);
 

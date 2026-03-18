@@ -1,15 +1,14 @@
 import { InlineKeyboardButton } from "node-telegram-bot-api";
 import { CALLBACK_TYPE } from "../types";
 import { buildCallbackData } from "../utils";
-
-const BUTTONS_IN_RAW = 2;
+import { BUTTONS_IN_RAW_FOR_STORAGE_VALUES_KEYBOARD } from "../constants";
 
 export function storageValuesKeyboard(storageValues: string[]): InlineKeyboardButton[][] {
 	const keyboard: InlineKeyboardButton[][] = [];
 
-	for (let i = 0; i < storageValues.length; i += BUTTONS_IN_RAW) {
+	for (let i = 0; i < storageValues.length; i += BUTTONS_IN_RAW_FOR_STORAGE_VALUES_KEYBOARD) {
 		keyboard.push(
-			storageValues.slice(i, i + BUTTONS_IN_RAW).map(storageValue => ({
+			storageValues.slice(i, i + BUTTONS_IN_RAW_FOR_STORAGE_VALUES_KEYBOARD).map(storageValue => ({
 				text: storageValue,
 				callback_data: buildCallbackData(CALLBACK_TYPE.STORAGE, storageValue),
 			}))

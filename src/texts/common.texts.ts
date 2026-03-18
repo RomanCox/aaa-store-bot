@@ -7,4 +7,5 @@ export const COMMON_TEXTS = {
   ORDER_SENT: "✅ Заказ отправлен администратору!",
   CURRENT_ORDER_ERROR: "Нет екуўего заказа или выбранный продукта",
   NOT_ITEMS_FOR_EXPORT: "Товары для экспорта не найдены.",
+  BOT_UI_UPDATED: "🔄 Интерфейс бота обновлён",
 };

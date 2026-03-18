@@ -3,8 +3,7 @@ import { CALLBACK_TYPE, CATALOG_VALUE, SECTION } from "../types";
 import { CATALOG_TEXTS } from "../texts";
 import { buildCallbackData } from "../utils";
 import { COMMON_TEXTS } from "../texts";
-
-const BUTTONS_IN_RAW = 2;
+import { BUTTONS_IN_RAW_FOR_BRANDS_KEYBOARD } from "../constants";
 
 export function brandsKeyboard(
   brands: string[],
@@ -18,9 +17,9 @@ export function brandsKeyboard(
 		]);
 	}
 
-	for (let i = 0; i < brands.length; i += BUTTONS_IN_RAW) {
+	for (let i = 0; i < brands.length; i += BUTTONS_IN_RAW_FOR_BRANDS_KEYBOARD) {
 		keyboard.push(
-			brands.slice(i, i + BUTTONS_IN_RAW).map(brand => ({
+			brands.slice(i, i + BUTTONS_IN_RAW_FOR_BRANDS_KEYBOARD).map(brand => ({
 				text: brand,
 				callback_data: buildCallbackData(CALLBACK_TYPE.BRAND, brand),
 			}))

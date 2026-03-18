@@ -5,8 +5,7 @@ import { getChatState, setChatState } from "../../state/chat.state";
 import { CALLBACK_TYPE, SECTION } from "../../types";
 import { renderScreen } from "../../render/renderScreen";
 import { ADMIN_TEXTS, USERS_TEXTS } from "../../texts";
-
-const USERS_PER_PAGE = 5;
+import { USERS_PER_PAGE } from "../../constants";
 
 export async function showUsersList(
   bot: TelegramBot,

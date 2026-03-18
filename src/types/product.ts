@@ -10,6 +10,10 @@ export interface Product {
 	sim?: string;
 }
 
+export interface ProductForCatalog extends Product {
+  hidden: boolean;
+}
+
 export interface ProductForCart extends Product {
 	amount: number;
 }

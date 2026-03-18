@@ -49,7 +49,7 @@ export async function editPriceInputHandler(
 
     await renderScreen(bot, chatId, {
       section: SECTION.ADMIN_PANEL,
-      text: successTexts[state.mode as typeof allowedModes[number]],
+      text: successTexts[state.mode as typeof allowedModes[number]] + numberValue,
       withBackButton: true,
     });
   } catch (error) {

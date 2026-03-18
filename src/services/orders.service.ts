@@ -1,10 +1,10 @@
 import TelegramBot from "node-telegram-bot-api";
-import { IOrder, ProductForCart } from "../types";
+import { Order, ProductForCart } from "../types";
 import fs from "fs";
 import path from "path";
 
 const ORDERS_PATH = path.resolve(__dirname, "../data/orders.json");
-export let orders: IOrder[] = [];
+export let orders: Order[] = [];
 
 export function loadOrdersFromFile() {
   if (!fs.existsSync(ORDERS_PATH)) {
@@ -31,7 +31,7 @@ export function getOrdersByUserId(userId: number) {
   return orders.filter(order => order.userId === userId);
 }
 
-export function addOrder(order: IOrder) {
+export function addOrder(order: Order) {
   orders.push(order);
   persist();
 }
@@ -48,7 +48,7 @@ export function generateOrderId(): string {
 export function createOrder(
   user: TelegramBot.User,
   currentOrder: ProductForCart[]
-): IOrder {
+): Order {
   const total = currentOrder.reduce(
     (sum, product) => sum + Number(product.price) * product.amount,
     0
@@ -70,7 +70,7 @@ export function createOrder(
   };
 }
 
-export function buildOrderMessage(order: IOrder, userId: number): string {
+export function buildOrderMessage(order: Order, userId: number): string {
 	const total = order.items.reduce(
 		(sum, product) => sum + Number(product.price) * product.amount,
 		0

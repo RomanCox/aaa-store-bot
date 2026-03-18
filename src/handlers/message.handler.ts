@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
-import { CART_TEXTS, MENU_TEXTS, START_TEXTS } from "../texts";
+import { CART_TEXTS, COMMON_TEXTS, MENU_TEXTS, START_TEXTS } from "../texts";
 import { getChatState, setChatState } from "../state/chat.state";
 import { CatalogFlowStep, ProductForCart, SECTION } from "../types";
 import { deleteUserInputHandler } from "./users/deleteUser.handler";
@@ -9,18 +9,35 @@ import { editPriceInputHandler } from "./price.handler";
 import { getProductById } from "../services/products.service";
 import { renderFlow } from "../render/renderFlow";
 import { ordersHandler, ordersPageInputHandler } from "./orders.handler";
-import { usersPageInputHandler } from "../services/users.service";
+import { getUser, usersPageInputHandler } from "../services/users.service";
 import { renderScreen } from "../render/renderScreen";
 import { safeDelete } from "../utils";
-import { adminKeyboard } from "../keyboards";
+import { adminKeyboard, mainKeyboard } from "../keyboards";
+import { UI_VERSION } from "../constants";
+import { ENV } from "../config/env";
 
 export function registerMessages(bot: TelegramBot) {
   bot.on("message", async (msg) => {
     const chatId = msg.chat.id;
     const text = msg.text;
-    if (!text) return;
+    const user = getUser(chatId);
+    if (!text || !user) return;
 
     const state = getChatState(chatId);
+
+    //TODO add checking state.uiVersion !== undefined after testing (new users should not see the warning - their state.uiVersion will change anyway)
+    if (state.uiVersion !== UI_VERSION) {
+      await bot.sendMessage(chatId,
+        COMMON_TEXTS.BOT_UI_UPDATED,
+        {
+          reply_markup: mainKeyboard(chatId),
+        }
+      );
+
+      setChatState(chatId, {
+        uiVersion: UI_VERSION
+      });
+    }
 
     const resetCatalogIfLeaving = () => {
       if (state.section === SECTION.CATALOG) {
@@ -106,13 +123,28 @@ export function registerMessages(bot: TelegramBot) {
               }
             }
           }
-        })
+        });
 
         await renderScreen(bot, chatId, {
           section: SECTION.ADMIN_PANEL,
           text: START_TEXTS.ADMIN_PANEL,
           inlineKeyboard: adminKeyboard(),
           parse_mode: "HTML",
+        });
+      },
+
+      [MENU_TEXTS.MANAGER]: async () => {
+        const managerUrl =
+          user.role === "retail"
+            ? ENV.RETAIL_MANAGER_URL
+            : ENV.WHOLESALE_MANAGER_URL;
+
+        await bot.sendMessage(chatId, "Открыть чат с менеджером:", {
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: "💬 Написать менеджеру", url: managerUrl }],
+            ],
+          },
         });
       },
     };

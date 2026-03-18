@@ -1,6 +1,6 @@
 import { ChatMode } from "./chat";
 
-export interface IRates {
+export interface Rates {
   rub_to_byn: number;
   rub_to_usd: number;
 }

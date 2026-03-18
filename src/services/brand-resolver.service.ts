@@ -11,8 +11,7 @@ export type Brand =
 	| "Harman Kardon"
 	| "Dyson"
 	| "Crest"
-	| "Sonos"
-	| "CD";
+	| "Sonos";
 
 const BRAND_PREFIXES: Record<Brand, string[]> = {
 	Samsung: ["Samsung", "Galaxy"],
@@ -27,13 +26,18 @@ const BRAND_PREFIXES: Record<Brand, string[]> = {
 		"Ultra2",
 		"Apple",
 		"Magic Mouse",
+		"Magic Keyboard",
+		"Magic Trackpad",
 		"iPad",
+		"iMac",
+		"Mac",
+		"Mac",
 		"Display",
 	],
 	Honor: ["HONOR"],
 	Xiaomi: ["Xiaomi", "Redmi", "Note"],
 	Poco: ["Poco"],
-	Sony: ["Sony", "PS5", "PlayStation"],
+	Sony: ["Sony", "PS5", "PlayStation", "📀"],
 	Beats: ["Beats"],
 	Marshall: ["Marshall"],
 	Bose: ["Bose"],
@@ -51,19 +55,20 @@ const BRAND_PREFIXES: Record<Brand, string[]> = {
 		"V12",
 		"V8",
 		"Pencilvac",
+    "Paddle Brush",
+    "v15",
 	],
 	Crest: ["Crest"],
 	Sonos: ["Sonos"],
-	CD: ["📀"],
 };
 
 export function resolveBrandFromName(name: string): Brand | undefined {
-	const trimmedName = name.trim();
+	const trimmedName = name.trim().toLowerCase();
 
 	for (const [brand, prefixes] of Object.entries(BRAND_PREFIXES)) {
 		if (
 			prefixes.some(prefix =>
-				trimmedName.startsWith(prefix)
+				trimmedName.startsWith(prefix.toLowerCase())
 			)
 		) {
 			return brand as Brand;

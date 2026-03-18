@@ -76,7 +76,8 @@ export interface SectionStateMap {
   [SECTION.ADMIN_PANEL]: AdminPanelSectionState;
 }
 
-export interface IChatState {
+export interface ChatState {
+  uiVersion?: number;
   section: SECTION;
   mode: ChatMode;
   activeMessageId?: number;

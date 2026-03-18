@@ -2,12 +2,11 @@ import TelegramBot from "node-telegram-bot-api";
 import { ORDER_TEXTS, PAGINATION_TEXTS } from "../texts";
 import { getChatState, setChatState } from "../state/chat.state";
 import { getOrdersByUserId } from "../services/orders.service";
-import { CALLBACK_TYPE, IOrder, SECTION } from "../types";
+import { CALLBACK_TYPE, Order, SECTION } from "../types";
 import { addPaginationButtons, buildCallbackData } from "../utils";
 import { isAdmin } from "../services/users.service";
 import { renderScreen } from "../render/renderScreen";
-
-const ORDERS_PER_PAGE = 5;
+import { ORDERS_PER_PAGE } from "../constants";
 
 export async function ordersHandler(
   bot: TelegramBot,
@@ -96,7 +95,7 @@ export async function ordersHandler(
     }
   }
 
-  function buttonText(order: IOrder) {
+  function buttonText(order: Order) {
     const date = new Date(order.createdAt);
     const formattedDate = date.toLocaleDateString("ru-RU");
 
