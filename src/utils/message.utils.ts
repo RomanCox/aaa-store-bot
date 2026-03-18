@@ -122,7 +122,7 @@ export function buildMessagesWithProducts(products: Product[]): ProductMessage[]
 
     const line = formatProductLine(product);
 
-    if ((currentMessage + line + "\n").length > TELEGRAM_MESSAGE_LIMIT) {
+    if ((currentMessage + line + " \n").length > TELEGRAM_MESSAGE_LIMIT) {
       messages.push({ text: currentMessage, products: currentProducts });
       currentMessage = "";
       currentProducts = [];
@@ -131,7 +131,7 @@ export function buildMessagesWithProducts(products: Product[]): ProductMessage[]
       prevGroupKey = null;
     }
 
-    currentMessage += line + "\n";
+    currentMessage += line + " \n";
     currentProducts.push(product);
 
     const currentGroupKey = getProductGroupKey(product);
