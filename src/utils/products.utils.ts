@@ -1,4 +1,4 @@
-import { Product } from "../types";
+import { Product, ProductForCatalog } from "../types";
 import { compareSpecs, extractMemorySubstring, extractModelKey } from "./catalog.utils";
 
 const BRAND_ORDER = [
@@ -70,7 +70,7 @@ function compare(a?: string, b?: string): number {
 		});
 }
 
-export function sortProducts(products: Product[]): Product[] {
+export function sortProducts(products: ProductForCatalog[]): ProductForCatalog[] {
   return [...products].sort((a, b) =>
     compare(a.brand, b.brand) ||
     compare(a.category, b.category) ||

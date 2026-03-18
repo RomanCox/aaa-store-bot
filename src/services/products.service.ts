@@ -1,13 +1,13 @@
 import fs from "fs";
 import path from "path";
-import { Product, ProductFilters } from "../types";
+import { Product, ProductFilters, ProductForCatalog } from "../types";
 import { priceFormat } from "../utils";
 import { getUser } from "./users.service";
 import { getPriceFormation, getRates } from "./price.service";
 import { sortProducts } from "../utils";
 
 const PRODUCTS_PATH = path.resolve(__dirname, "../data/products.json");
-let products = new Map<string, Product>();
+let products = new Map<string, ProductForCatalog>();
 
 export const tempExports = new Map<string, string[]>();
 
@@ -15,7 +15,7 @@ export function loadProducts() {
 	if (!fs.existsSync(PRODUCTS_PATH)) return;
 
 	const raw = fs.readFileSync(PRODUCTS_PATH, "utf8");
-	const list: Product[] = sortProducts(JSON.parse(raw));
+	const list: ProductForCatalog[] = sortProducts(JSON.parse(raw));
 
 	products.clear();
 
@@ -24,7 +24,7 @@ export function loadProducts() {
 	}
 }
 
-export function saveProducts(list: Product[]) {
+export function saveProducts(list: ProductForCatalog[]) {
 	fs.writeFileSync(
 		PRODUCTS_PATH,
 		JSON.stringify(list, null, 2),
@@ -40,7 +40,7 @@ export function saveProducts(list: Product[]) {
 export function getProducts(
 	chatId: number,
 	filters: ProductFilters = {},
-): Product[] {
+): ProductForCatalog[] {
 	const userRole = getUser(chatId)?.role;
 	const rates = getRates();
 	const priceFormation = getPriceFormation();

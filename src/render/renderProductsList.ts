@@ -11,13 +11,15 @@ export async function renderProductsList(
   chatId: number,
 ) {
   const state = getChatState(chatId);
-  const catalogState = getSectionState(state, SECTION.CATALOG);
+  const catalogState =
+    getSectionState(state, SECTION.CATALOG);
   if (!catalogState) return;
 
   const products = getProducts(chatId, {
     brand: catalogState.selectedBrand,
     category: catalogState.selectedCategory,
-  });
+  })
+    .filter(product => !product.hidden);
 
   if (!products.length) {
     await renderScreen(bot, chatId, {
