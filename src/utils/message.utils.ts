@@ -19,24 +19,6 @@ export function splitMessage(lines: string[], limit = TELEGRAM_MESSAGE_LIMIT): s
 	return messages;
 }
 
-function buildLinesWithWordSplit(products: Product[]): string[] {
-	const lines: string[] = [];
-	let prevFirstWord: string | null = null;
-
-	for (const product of products) {
-		const firstWord = product.name.split(" ")[0];
-
-		if (prevFirstWord && prevFirstWord !== firstWord) {
-			lines.push(""); // пустая строка
-		}
-
-		lines.push(formatProductLine(product));
-		prevFirstWord = firstWord;
-	}
-
-	return lines;
-}
-
 function formatProductLine(product: Product): string {
 	const name = product.name
 	const price = product.price
@@ -44,20 +26,6 @@ function formatProductLine(product: Product): string {
 
 	return `${name} - ${price} ${country}`.trim()
 }
-
-// function extractStorage(product: Product): string {
-// 	let rest = product.name;
-//
-// 	if (product.brand) {
-// 		rest = rest.replace(product.brand, "").trim();
-// 	}
-//
-// 	if (product.model) {
-// 		rest = rest.replace(product.model, "").trim();
-// 	}
-//
-// 	return rest.split(" ")[0] ?? "";
-// }
 
 function getProductGroupKey(product: Product): string | null {
 	const brand = product.brand?.toLowerCase() ?? "";
