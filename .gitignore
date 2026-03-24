@@ -4,3 +4,5 @@ dist
 google-service-account.json
 .idea
 .DS_Store
+/data/*.json
+/data
