@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
-import { CART_TEXTS, COMMON_TEXTS, MENU_TEXTS, START_TEXTS } from "../texts";
+import { CART_TEXTS, COMMON_TEXTS, MENU_TEXTS, START_TEXTS, USERS_ERRORS } from "../texts";
 import { getChatState, setChatState } from "../state/chat.state";
 import { CatalogFlowStep, ProductForCart, SECTION } from "../types";
 import { deleteUserInputHandler } from "./users/deleteUser.handler";
@@ -11,7 +11,7 @@ import { renderFlow } from "../render/renderFlow";
 import { ordersHandler, ordersPageInputHandler } from "./orders.handler";
 import { getUser, usersPageInputHandler } from "../services/users.service";
 import { renderScreen } from "../render/renderScreen";
-import { safeDelete } from "../utils";
+import { guardWorkingHours, safeDelete } from "../utils";
 import { adminKeyboard, mainKeyboard } from "../keyboards";
 import { UI_VERSION } from "../constants";
 import { ENV } from "../config/env";
@@ -60,30 +60,34 @@ export function registerMessages(bot: TelegramBot) {
     // ------------------------
     const menuHandlers: Record<string, () => Promise<void>> = {
       [MENU_TEXTS.CATALOG]: async () => {
-        setChatState(chatId, {
-          section: SECTION.CATALOG,
-          mode: "idle",
-          sections: {
-            ...state.sections,
-            [SECTION.CATALOG]: {
-              ...state.sections?.[SECTION.CATALOG],
-              flowStep: "brands",
-              selectedBrand: undefined,
-              selectedCategory: undefined,
-              lastProductGroups: [],
+        return guardWorkingHours(bot, chatId, async () => {
+          setChatState(chatId, {
+            section: SECTION.CATALOG,
+            mode: "idle",
+            sections: {
+              ...state.sections,
+              [SECTION.CATALOG]: {
+                ...state.sections?.[SECTION.CATALOG],
+                flowStep: "brands",
+                selectedBrand: undefined,
+                selectedCategory: undefined,
+                lastProductGroups: [],
+              },
             },
-          },
-        });
-        await renderFlow(bot, chatId);
+          });
+          await renderFlow(bot, chatId);
+        })
       },
 
       [MENU_TEXTS.CART]: async () => {
-        setChatState(chatId, {
-          section: SECTION.CART,
-          mode: "idle",
-          sections: resetCatalogIfLeaving(),
-        });
-        await renderFlow(bot, chatId);
+        return guardWorkingHours(bot, chatId, async () => {
+          setChatState(chatId, {
+            section: SECTION.CART,
+            mode: "idle",
+            sections: resetCatalogIfLeaving(),
+          });
+          await renderFlow(bot, chatId);
+        })
       },
 
       [MENU_TEXTS.ORDERS]: async () => {
@@ -178,7 +182,18 @@ export function registerMessages(bot: TelegramBot) {
       },
 
       choose_userId_for_orders: async (t) => {
-        await ordersHandler(bot, chatId, t);
+        const userId = Number(t);
+
+        if (Number.isNaN(userId)) {
+          await renderScreen(bot, chatId, {
+            section: SECTION.ORDERS,
+            text: USERS_ERRORS.ID_NUMBER,
+            withBackButton: true,
+          });
+          return;
+        }
+
+        await ordersHandler(bot, chatId, userId);
         setChatState(chatId, { mode: "idle" });
       },
 
@@ -245,7 +260,7 @@ export function registerMessages(bot: TelegramBot) {
       await handler(text);
 
       // Удаляем сообщение пользователя после обработки
-      await safeDelete(bot, msg.message_id);
+      await safeDelete(bot, chatId, msg.message_id);
       return;
     }
   });

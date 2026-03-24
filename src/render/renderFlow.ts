@@ -316,7 +316,6 @@ async function renderChoosingProduct(bot: TelegramBot, chatId: number) {
 		!sectionState.selectedBrand ||
 		!sectionState.selectedCategory ||
 		!sectionState.selectedModel ||
-		!sectionState.selectedStorage ||
 		!products.length
 	) {
     await renderScreen(bot, chatId, {

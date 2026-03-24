@@ -1,7 +1,7 @@
 import TelegramBot from "node-telegram-bot-api";
 import { ORDER_TEXTS, PAGINATION_TEXTS } from "../texts";
 import { getChatState, setChatState } from "../state/chat.state";
-import { getOrdersByUserId } from "../services/orders.service";
+import { buildOrderMessage, getOrdersByUserId, getOrdersForAdmin } from "../services/orders.service";
 import { CALLBACK_TYPE, Order, SECTION } from "../types";
 import { addPaginationButtons, buildCallbackData } from "../utils";
 import { isAdmin } from "../services/users.service";
@@ -11,7 +11,7 @@ import { ORDERS_PER_PAGE } from "../constants";
 export async function ordersHandler(
   bot: TelegramBot,
   chatId: number,
-  userId?: string
+  userId?: number
 ) {
   const state = getChatState(chatId);
   const ordersState = state.sections?.[SECTION.ORDERS];
@@ -21,6 +21,20 @@ export async function ordersHandler(
 
   // --- ADMIN ---
   if (isAdmin(chatId)) {
+    setChatState(chatId, {
+      mode: "idle",
+      sections: {
+        ...state.sections,
+        [SECTION.ORDERS]: {
+          ...state.sections?.[SECTION.ORDERS],
+          selectedUserId: userId,
+          page: 1,
+          totalPages: state.sections?.[SECTION.ORDERS]?.totalPages ?? 1,
+          flowStep: state.sections?.[SECTION.ORDERS]?.flowStep ?? "main",
+        },
+      },
+    });
+
     if (userId) {
       const orders = getOrdersByUserId(Number(userId));
 
@@ -42,17 +56,8 @@ export async function ordersHandler(
       }
     } else {
       setChatState(chatId, {
+        mode: "choose_userId_for_orders",
         section: SECTION.ORDERS,
-        sections: {
-          ...state.sections,
-          [SECTION.ORDERS]: {
-            ...ordersState,
-            flowStep: "choose_userId_for_orders",
-            page: ordersState?.page ?? 1,
-            totalPages: ordersState?.totalPages ?? 1,
-            selectedUserId: ordersState?.selectedUserId,
-          },
-        },
       });
     }
   }
@@ -151,7 +156,7 @@ export async function ordersPageInputHandler(
         ...ordersState,
         page,
         totalPages,
-        flowStep: ordersState?.flowStep ?? "main", // обязательно передаём строку
+        flowStep: "main",
       },
     },
   });
@@ -162,12 +167,13 @@ export async function ordersPageInputHandler(
 export async function orderHandler(bot: TelegramBot, chatId: number, orderId: string) {
   const state = getChatState(chatId);
   const ordersState = state.sections?.[SECTION.ORDERS];
+  const userId = isAdmin(chatId) ? Number(ordersState?.selectedUserId) : chatId;
 
-  const userIdNum = ordersState?.selectedUserId ? Number(ordersState.selectedUserId) : undefined;
-  const ordersList = userIdNum ? getOrdersByUserId(userIdNum) : [];
-  const order = ordersList.find(o => o.id === orderId);
+  const order = isAdmin(chatId)
+    ? getOrdersForAdmin().find(o => o.id === orderId)
+    : getOrdersByUserId(chatId).find(o => o.id === orderId);
 
-  if (!order) {
+  if (!order || !userId) {
     await renderScreen(bot, chatId, {
       section: SECTION.ORDERS,
       text: ORDER_TEXTS.ORDER_NOT_FOUND,
@@ -175,27 +181,12 @@ export async function orderHandler(bot: TelegramBot, chatId: number, orderId: st
     return;
   }
 
-  const formattedDate = new Date(order.createdAt).toLocaleDateString("ru-RU");
-
-  const itemsText = order.items
-    .map(
-      (item, index) =>
-        `${index + 1}. ${item.name}\n` +
-        ORDER_TEXTS.AMOUNT + item.amount + "\n" +
-        ORDER_TEXTS.PRICE + item.price + "\n" +
-        ORDER_TEXTS.SUM + Number(item.price) * item.amount
-    )
-    .join("\n\n");
-
-  const message =
-    ORDER_TEXTS.ORDER_ID + order.id + "\n" +
-    ORDER_TEXTS.ORDER_DATE + formattedDate + "\n\n" +
-    `${itemsText}\n\n` +
-    ORDER_TEXTS.FULL_SUM + order.total;
+  const message = buildOrderMessage(order, userId, true, isAdmin(chatId));
 
   await renderScreen(bot, chatId, {
     section: SECTION.ORDERS,
     text: message,
-    withBackButton: isAdmin(chatId),
+    parse_mode: "HTML",
+    withBackButton: true,
   });
 }

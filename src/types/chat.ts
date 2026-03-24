@@ -1,4 +1,4 @@
-import { SECTION, CatalogFlowStep, CartFlowStep, AdminPanelFlowStep } from "./navigation";
+import { SECTION, CatalogFlowStep, CartFlowStep, AdminPanelFlowStep, orderFlowStep } from "./navigation";
 import { Product, ProductForCart } from "./product";
 
 export type ChatMode = "idle"
@@ -44,12 +44,12 @@ export interface CatalogSectionState {
 
 export interface OrdersSectionState {
   messageId?: number;
-  flowStep: string;
+  flowStep: orderFlowStep;
 
   page: number;
   totalPages: number;
 
-  selectedUserId?: string;
+  selectedUserId?: number;
 }
 
 export interface CartSectionState {

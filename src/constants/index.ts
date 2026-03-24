@@ -1,3 +1,6 @@
+import path from "path";
+import fs from "fs";
+
 export const MAX_PRICE = 20000;
 export const TELEGRAM_MESSAGE_LIMIT = 3900;
 export const USERS_PER_PAGE = 5;
@@ -11,3 +14,14 @@ export const BUTTONS_IN_RAW_FOR_MODELS_KEYBOARD = 2;
 export const BUTTONS_IN_RAW_FOR_STORAGE_VALUES_KEYBOARD = 2;
 export const BUTTONS_IN_RAW_FOR_EDIT_CART_KEYBOARD = 5;
 export const UI_VERSION = 1;
+
+const envDataPath = process.env.DATA_PATH;
+export const DATA_PATH = envDataPath
+  ? path.resolve(envDataPath)
+  : path.resolve(__dirname, "../../data");
+
+export const ORDERS_PATH = path.join(DATA_PATH, "orders.json");
+export const PRODUCTS_PATH = path.join(DATA_PATH, "products.json");
+export const USERS_PATH = path.join(DATA_PATH, "users.json");
+export const RATES_PATH = path.join(DATA_PATH, "rates.json");
+export const PRICE_FORMATION_PATH = path.join(DATA_PATH, "price_formation.json");

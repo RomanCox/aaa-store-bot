@@ -44,7 +44,6 @@ export function priceFormat(
 	const numberPrice = Number(price);
 
 	if (Number.isNaN(numberPrice)) {
-		console.log("price format must be a number: " + price);
 		return price;
 	}
 

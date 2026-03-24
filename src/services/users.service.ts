@@ -1,13 +1,11 @@
 import fs from "fs";
-import path from "path";
 import { SECTION, User, UserRole } from "../types";
 import { PAGINATION_TEXTS, USERS_ERRORS } from "../texts";
 import TelegramBot from "node-telegram-bot-api";
 import { getChatState, setChatState } from "../state/chat.state";
 import { showUsersList } from "../handlers/users/users.handler";
 import { renderScreen } from "../render/renderScreen";
-
-const USERS_PATH = path.resolve(__dirname, "../data/users.json");
+import { USERS_PATH } from "../constants";
 
 let users = new Map<number, User>();
 

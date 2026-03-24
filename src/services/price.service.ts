@@ -1,14 +1,12 @@
 import fs from "fs";
-import path from "path";
 import TelegramBot from "node-telegram-bot-api";
 import { ChatMode, Rates, PriceFormat, PriceFormationUpdate, SECTION } from "../types";
 import { setChatState } from "../state/chat.state";
 import { PRICE_TEXTS } from "../texts";
 import { getUserRole } from "./users.service";
 import { renderScreen } from "../render/renderScreen";
+import { PRICE_FORMATION_PATH, RATES_PATH } from "../constants";
 
-const RATES_PATH = path.resolve(__dirname, "../data/rates.json");
-const PRICE_FORMATION_PATH = path.resolve(__dirname, "../data/price_formation.json");
 const DEFAULT_RATES: Rates = {
   rub_to_byn: 0,
   rub_to_usd: 0,
@@ -20,7 +18,6 @@ let priceFormation: PriceFormat[] = DEFAULT_PRICE_FORMATION;
 
 export function loadRates() {
   if (!fs.existsSync(RATES_PATH)) {
-    console.log("No rates.json found.");
     rates = DEFAULT_RATES;
     return;
   }

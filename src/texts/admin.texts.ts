@@ -19,6 +19,7 @@ export const ADMIN_TEXTS = {
 	DONT_WAITING_FILE: "⛔ Сейчас я не жду файл",
 	CANT_FIND_FILE: "❌ Файл не найден",
 	ERROR_ITEMS: "❌ Файл не содержит валидных товаров",
+  ERROR_CATALOG: "❌ Неконсистентные данные: у модели часть товаров с памятью, часть без",
 	ERROR_XLSX: "❌ XLSX upload error: ",
 	FILE_ERROR: "❌ Ошибка при обработке файла",
   RENEW_PRICE_SUCCESS: "💸 Цены успешно обновились",

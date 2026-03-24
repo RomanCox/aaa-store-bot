@@ -1,9 +1,9 @@
 import TelegramBot from "node-telegram-bot-api";
 import { Order, ProductForCart } from "../types";
 import fs from "fs";
-import path from "path";
+import { ORDERS_PATH } from "../constants";
+import { ORDER_TEXTS } from "../texts";
 
-const ORDERS_PATH = path.resolve(__dirname, "../data/orders.json");
 export let orders: Order[] = [];
 
 export function loadOrdersFromFile() {
@@ -70,23 +70,27 @@ export function createOrder(
   };
 }
 
-export function buildOrderMessage(order: Order, userId: number): string {
-	const total = order.items.reduce(
+export function buildOrderMessage(order: Order, userId: number, isForOrdersList?: boolean, isAdmin?: boolean): string {
+  const firstLine = isForOrdersList ? "" : "🆕 <b>Поступил заказ!</b>/n"
+  const formattedDate = new Date(order.createdAt).toLocaleDateString("ru-RU");
+  const dateString = ORDER_TEXTS.ORDER_DATE + formattedDate + "\n"
+
+  const userLine = isAdmin ? `👤 <a href="tg://user?id=${userId}">Клиент</a>\n` : "";
+
+  const items = order.items.map((product) =>
+    `🔹 ${product.name}
+		📦 ${product.amount}шт × ${product.price} = ${Number(product.price) * product.amount}`
+  ).join("\n\n");
+
+  const total = order.items.reduce(
 		(sum, product) => sum + Number(product.price) * product.amount,
 		0
 	);
 
-	const items = order.items.map((product) =>
-		`🔷 ${product.name}
-		📦 ${product.amount}шт × ${product.price} = ${Number(product.price) * product.amount}`
-	).join("\n\n");
-
 	return `
-🆕 <b>Поступил заказ!</b>
-🆔 заказа: ${order.id}
-👤 <a href="tg://user?id=${userId}">Клиент</a>
-📦 Статус: ${order.status}
-
+${firstLine}🆔 заказа: ${order.id}
+${dateString}
+${userLine}
 ${items}
 
 💰 <b>Итого:</b> ${total}

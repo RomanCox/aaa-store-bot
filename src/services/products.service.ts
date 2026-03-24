@@ -1,12 +1,11 @@
 import fs from "fs";
-import path from "path";
 import { Product, ProductFilters, ProductForCatalog } from "../types";
 import { priceFormat } from "../utils";
 import { getUser } from "./users.service";
 import { getPriceFormation, getRates } from "./price.service";
 import { sortProducts } from "../utils";
+import { PRODUCTS_PATH } from "../constants";
 
-const PRODUCTS_PATH = path.resolve(__dirname, "../data/products.json");
 let products = new Map<string, ProductForCatalog>();
 
 export const tempExports = new Map<string, string[]>();
@@ -25,14 +24,16 @@ export function loadProducts() {
 }
 
 export function saveProducts(list: ProductForCatalog[]) {
-	fs.writeFileSync(
+  const sorted = sortProducts(list);
+
+  fs.writeFileSync(
 		PRODUCTS_PATH,
-		JSON.stringify(list, null, 2),
+		JSON.stringify(sorted, null, 2),
 		"utf-8"
 	);
 
 	products.clear();
-	for (const product of list) {
+	for (const product of sorted) {
 		products.set(product.id, product);
 	}
 }

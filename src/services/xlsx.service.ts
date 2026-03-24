@@ -120,22 +120,19 @@ function sortProducts(products: ProductForCatalog[]): ProductForCatalog[] {
     });
     if (categoryCompare !== 0) return categoryCompare;
 
-    // 3. Название (с поддержкой чисел)
-    // const nameCompare = (a.name ?? "").localeCompare(b.name ?? "", "ru", {
-    //   numeric: true,
-    //   sensitivity: "base",
-    // });
-    // if (nameCompare !== 0) return nameCompare;
+    // 3. Модель (с поддержкой чисел)
+    const nameCompare = (a.model ?? "").localeCompare(b.model ?? "", "ru", {
+      numeric: true,
+      sensitivity: "base",
+    });
+    if (nameCompare !== 0) return nameCompare;
 
-    // 3. Память (если есть)
+    // 4. Память (если есть)
     const memA = extractMemorySubstring(a.name ?? null);
     const memB = extractMemorySubstring(b.name ?? null);
     const memCompare = compareSpecs(memA, memB);
     if (memCompare !== 0) return memCompare;
 
-    // return compareSpecs(memA, memB);
-
-    // 4. Название (с поддержкой чисел)
     return (a.name ?? "").localeCompare(b.name ?? "", "ru", {
       numeric: true,
       sensitivity: "base",

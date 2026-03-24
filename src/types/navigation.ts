@@ -23,3 +23,5 @@ export type CartFlowStep =
 	"amount" |
 	"edit_cart" |
 	"edit_product_in_cart";
+
+export type orderFlowStep = "main" | "order";

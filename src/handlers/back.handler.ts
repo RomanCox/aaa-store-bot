@@ -176,7 +176,7 @@ export async function handleBack(bot: TelegramBot, chatId: number) {
             ...state.sections,
             [SECTION.CART]: {
               ...cartState,
-              flowStep: "storage",
+              flowStep: cartState.selectedStorage ? "storage" : "models",
               selectedStorage: undefined,
             },
           },
