@@ -1,5 +1,4 @@
 import path from "path";
-import fs from "fs";
 
 export const MAX_PRICE = 20000;
 export const TELEGRAM_MESSAGE_LIMIT = 3900;
