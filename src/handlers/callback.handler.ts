@@ -2,10 +2,10 @@ import TelegramBot from "node-telegram-bot-api";
 import { CALLBACK_TYPE, CATALOG_VALUE, Product, ProductForCart, SECTION, UserRole } from "../types";
 import { getChatState, setChatState } from "../state/chat.state";
 import { renderFlow } from "../render/renderFlow";
-import { guardWorkingHours, parseCallbackData, safeAnswerCallback } from "../utils";
+import { guardWorkingHours, parseCallbackData, safeAnswerCallback, sortProducts } from "../utils";
 import { handleBack } from "./back.handler";
 import { addUser, deleteUser, editUser, startUserManagement, startXlsxUpload } from "../services/admin.service";
-import { getProductById, getProducts, tempExports } from "../services/products.service";
+import { getProductById, getProducts, refreshProductsMarkup, tempExports } from "../services/products.service";
 import { renderProductsList } from "../render/renderProductsList";
 import { showUsersList } from "./users/users.handler";
 import {
@@ -17,13 +17,14 @@ import {
   USERS_TEXTS
 } from "../texts";
 import { createUser, isAdmin, updateUserRole } from "../services/users.service";
-import { sendPriceList } from "../services/xlsx.service";
+import { addProductMarkup, exportToCsv, saveCsvToFile, sendPriceList } from "../services/xlsx.service";
 import { addOrder, buildOrderMessage, createOrder } from "../services/orders.service";
 import { orderHandler, ordersHandler } from "./orders.handler";
 import { renderScreen } from "../render/renderScreen";
 import { editRates } from "../services/price.service";
 import { loadPricesFormats } from "../services/sheets.service";
 import { renderSection } from "../render/renderSection";
+import { sendHiddenProductsReport } from "../render/reports";
 
 const ADMIN_CHAT_ID = Number(process.env.ADMIN_CHAT_ID);
 
@@ -212,6 +213,13 @@ export function registerCallbacks(bot: TelegramBot) {
       case CALLBACK_TYPE.RENEW_PRICE: {
         try {
           await loadPricesFormats();
+
+          const updatedProducts = refreshProductsMarkup();
+          const csv = exportToCsv(updatedProducts.filter(p => !p.hidden));
+          saveCsvToFile(csv);
+
+          await sendHiddenProductsReport(bot, chatId, updatedProducts);
+
           await bot.sendMessage(chatId, ADMIN_TEXTS.RENEW_PRICE_SUCCESS, {
             parse_mode: "HTML",
           });

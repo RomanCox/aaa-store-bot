@@ -5,6 +5,7 @@ import { getUser } from "./users.service";
 import { getPriceFormation, getRates } from "./price.service";
 import { sortProducts } from "../utils";
 import { PRODUCTS_PATH } from "../constants";
+import { addProductMarkup } from "./xlsx.service";
 
 let products = new Map<string, ProductForCatalog>();
 
@@ -94,4 +95,18 @@ export function getProductById(chatId: number, id?: string): Product | undefined
       userRole
     ),
   };
+}
+
+export function refreshProductsMarkup() {
+  const list = Array.from(products.values());
+
+  const updated = addProductMarkup(list);
+
+  products.clear();
+
+  for (const product of updated) {
+    products.set(product.id, product);
+  }
+
+  return updated;
 }

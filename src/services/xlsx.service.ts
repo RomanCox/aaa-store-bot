@@ -1,5 +1,6 @@
 import * as XLSX from "xlsx";
 import fs from "fs";
+import os from "os";
 import path from "path";
 import { Product, PRODUCT_XLSX_HEADERS, ProductForCatalog, SECTION } from "../types";
 import { resolveBrandFromName } from "./brand-resolver.service";
@@ -10,6 +11,13 @@ import { renderScreen } from "../render/renderScreen";
 import { compareSpecs, extractMemorySubstring, findPriceRule } from "../utils";
 import { getPriceFormation, getRates } from "./price.service";
 import { MAX_PRICE } from "../constants";
+
+function resolvePath(p: string) {
+  if (p.startsWith("~")) {
+    return path.join(os.homedir(), p.slice(1));
+  }
+  return path.resolve(p);
+}
 
 export function parseXlsxToProducts(buffer: Buffer): ProductForCatalog[] {
 	const workbook = XLSX.read(buffer, {type: "buffer"});
@@ -30,7 +38,12 @@ export function parseXlsxToProducts(buffer: Buffer): ProductForCatalog[] {
 
   const productsForCatalog = addProductMarkup(products);
 
-	return sortProducts(productsForCatalog);
+  const sorted = sortProducts(productsForCatalog);
+
+  const csv = exportToCsv(sorted.filter(p => !p.hidden));
+  saveCsvToFile(csv);
+
+	return sorted;
 }
 
 function hasRequiredColumns(row: Record<string, unknown>): boolean {
@@ -49,7 +62,6 @@ function mapRowToProduct(row: Record<string, unknown>): Product {
 		model: String(row["Модель"] ?? "").trim(),
 		storage: row["Хранилище"] ? String(row["Хранилище"]).trim() : undefined,
 		price: String(row["Цена"] ?? "").trim(),
-		// country: row["Страна"] ? String(row["Страна"]).trim() : undefined,
 		country: row["Страна"] ? String(row["Страна"]) : undefined,
 		sim: row["Тип SIM"] ? String(row["Тип SIM"]).trim() : undefined,
 	};
@@ -65,7 +77,7 @@ function isValidProduct(p: Product): boolean {
 	);
 }
 
-function addProductMarkup(products: Product[]): ProductForCatalog[] {
+export function addProductMarkup(products: Product[]): ProductForCatalog[] {
   const rates = getRates();
   const priceFormation = getPriceFormation();
 
@@ -138,6 +150,39 @@ function sortProducts(products: ProductForCatalog[]): ProductForCatalog[] {
       sensitivity: "base",
     });
   });
+}
+
+export function exportToCsv(products: ProductForCatalog[]) {
+  const escape = (v: any) =>
+    `"${String(v ?? "").replace(/"/g, '""')}"`;
+
+  const keys = Object.keys(PRODUCT_XLSX_HEADERS) as (keyof Product)[];
+
+  const header = keys.map(k => PRODUCT_XLSX_HEADERS[k]);
+
+  const rows = products.map(p =>
+    keys.map(k => escape(p[k]))
+  );
+
+  const csv = [
+    header.join(","),
+    ...rows.map(r => r.join(","))
+  ].join("\n");
+
+  return "\uFEFF" + csv;
+}
+
+export function saveCsvToFile(csv: string) {
+  const dir = resolvePath(process.env.EXPORT_CSV_PATH || "/var/data/exports");
+
+  // 👉 создаем папку если нет
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  const filePath = path.join(dir, "products.csv");
+
+  fs.writeFileSync(filePath, csv, "utf-8");
 }
 
 function productsToXlsxData(products: Product[]) {

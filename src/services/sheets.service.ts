@@ -1,6 +1,7 @@
 import { google } from "googleapis";
 import { PriceFormat, PriceType } from "../types";
 import { savePriceFormation } from "./price.service";
+import { getProducts } from "./products.service";
 
 const auth = new google.auth.GoogleAuth({
 	keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS!,
@@ -66,7 +67,7 @@ export async function loadPricesFormats() {
   const result = Array.from(map.values());
 
   try {
-    await savePriceFormation(result)
+    await savePriceFormation(result);
   } catch (error) {
     console.error(error);
   }

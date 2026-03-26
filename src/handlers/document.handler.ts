@@ -11,6 +11,7 @@ import { SECTION } from "../types";
 import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
 import { adminKeyboard } from "../keyboards";
 import { safeDelete } from "../utils";
+import { sendHiddenProductsReport } from "../render/reports";
 
 export function registerDocumentHandler(bot: TelegramBot) {
 	bot.on("document", async (query) => {
@@ -62,22 +63,7 @@ export function registerDocumentHandler(bot: TelegramBot) {
 
       await bot.sendMessage(chatId, ADMIN_TEXTS.PRICE_UPLOAD_SUCCESS + products.length);
 
-      const hiddenProducts = products.filter(p => p.hidden);
-      if (hiddenProducts.length) {
-        const header = ADMIN_TEXTS.ITEMS_WITHOUT_MARKUP + hiddenProducts.length + "\n\n";
-        const lines = hiddenProducts.map(p => `• ${p.category} | ${p.name} — ${p.price} RUB`);
-
-        let message = header;
-        for (const line of lines) {
-          if ((message + line + "\n").length > TELEGRAM_MESSAGE_LIMIT) {
-            await bot.sendMessage(chatId, message);
-            message = "";
-          }
-          message += line + "\n";
-        }
-
-        if (message) await bot.sendMessage(chatId, message);
-      }
+      await sendHiddenProductsReport(bot, chatId, products);
 
       await renderScreen(bot, chatId, {
         section: SECTION.ADMIN_PANEL,
