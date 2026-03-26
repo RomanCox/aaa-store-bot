@@ -39,9 +39,7 @@ export function parseXlsxToProducts(buffer: Buffer): ProductForCatalog[] {
 
   const productsForCatalog = addProductMarkup(products);
 
-  const sorted = sortProducts(productsForCatalog);
-
-	return sorted;
+	return sortProducts(productsForCatalog);
 }
 
 function hasRequiredColumns(row: Record<string, unknown>): boolean {
