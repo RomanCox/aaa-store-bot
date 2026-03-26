@@ -1,7 +1,6 @@
 import { google } from "googleapis";
 import { PriceFormat, PriceType } from "../types";
 import { savePriceFormation } from "./price.service";
-import { getProducts } from "./products.service";
 
 const auth = new google.auth.GoogleAuth({
 	keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS!,

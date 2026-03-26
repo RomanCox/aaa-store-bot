@@ -8,7 +8,6 @@ import { getChatState, setChatState, updateSectionState } from "../state/chat.st
 import { ADMIN_TEXTS, START_TEXTS } from "../texts";
 import { renderScreen } from "../render/renderScreen";
 import { SECTION } from "../types";
-import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
 import { adminKeyboard } from "../keyboards";
 import { safeDelete } from "../utils";
 import { sendHiddenProductsReport } from "../render/reports";

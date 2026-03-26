@@ -2,7 +2,7 @@ import TelegramBot from "node-telegram-bot-api";
 import { CALLBACK_TYPE, CATALOG_VALUE, Product, ProductForCart, SECTION, UserRole } from "../types";
 import { getChatState, setChatState } from "../state/chat.state";
 import { renderFlow } from "../render/renderFlow";
-import { guardWorkingHours, parseCallbackData, safeAnswerCallback, sortProducts } from "../utils";
+import { guardWorkingHours, parseCallbackData, safeAnswerCallback } from "../utils";
 import { handleBack } from "./back.handler";
 import { addUser, deleteUser, editUser, startUserManagement, startXlsxUpload } from "../services/admin.service";
 import { getProductById, getProducts, refreshProductsMarkup, tempExports } from "../services/products.service";
@@ -17,7 +17,7 @@ import {
   USERS_TEXTS
 } from "../texts";
 import { createUser, isAdmin, updateUserRole } from "../services/users.service";
-import { addProductMarkup, exportToCsv, saveCsvToFile, sendPriceList } from "../services/xlsx.service";
+import { exportToCsv, saveCsvToFile, sendPriceList } from "../services/xlsx.service";
 import { addOrder, buildOrderMessage, createOrder } from "../services/orders.service";
 import { orderHandler, ordersHandler } from "./orders.handler";
 import { renderScreen } from "../render/renderScreen";
