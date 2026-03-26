@@ -1,7 +1,7 @@
 import TelegramBot from "node-telegram-bot-api";
 import fs from "fs";
 import path from "path";
-import { parseXlsxToProducts } from "../services/xlsx.service";
+import { generateRetailCsv, parseXlsxToProducts } from "../services/xlsx.service";
 import { saveProducts } from "../services/products.service";
 import { isAdmin } from "../services/users.service";
 import { getChatState, setChatState, updateSectionState } from "../state/chat.state";
@@ -41,6 +41,7 @@ export function registerDocumentHandler(bot: TelegramBot) {
 			const buffer = fs.readFileSync(filePath);
 
 			const products = parseXlsxToProducts(buffer);
+      generateRetailCsv();
 
 			if (!products.length) {
         await bot.sendMessage(chatId, ADMIN_TEXTS.ERROR_ITEMS);

@@ -1,5 +1,5 @@
 import fs from "fs";
-import { Product, ProductFilters, ProductForCatalog } from "../types";
+import { Product, ProductFilters, ProductForCatalog, UserRole } from "../types";
 import { priceFormat } from "../utils";
 import { getUser } from "./users.service";
 import { getPriceFormation, getRates } from "./price.service";
@@ -39,40 +39,83 @@ export function saveProducts(list: ProductForCatalog[]) {
 	}
 }
 
-export function getProducts(
-	chatId: number,
-	filters: ProductFilters = {},
+function buildProducts(
+  role: UserRole | undefined,
+  filters: ProductFilters = {},
 ): ProductForCatalog[] {
-	const userRole = getUser(chatId)?.role;
-	const rates = getRates();
-	const priceFormation = getPriceFormation();
+  const rates = getRates();
+  const priceFormation = getPriceFormation();
 
-	return Array.from(products.values())
-		.filter(p => {
-			if (filters.brand && p.brand !== filters.brand) return false;
+  return Array.from(products.values())
+    .filter(p => {
+      if (filters.brand && p.brand !== filters.brand) return false;
+      if (filters.category && p.category !== filters.category) return false;
+      if (filters.model && p.model !== filters.model) return false;
 
-			if (filters.category && p.category !== filters.category) return false;
+      if (filters.storage) {
+        if (!p.storage) return false;
+        if (p.storage !== filters.storage) return false;
+      }
 
-			if (filters.model && p.model !== filters.model) return false;
-
-			if (filters.storage) {
-				if (!p.storage) return false;
-				if (p.storage !== filters.storage) return false;
-			}
-
-			return true;
-		})
-		.map(product => ({
-			...product,
-			price: priceFormat(
+      return true;
+    })
+    .map(product => ({
+      ...product,
+      price: priceFormat(
         product.price,
         rates,
         priceFormation,
         product.category,
         product.brand,
-        userRole
+        role
       ),
-		}))
+    }));
+}
+
+export function getProducts(
+	chatId: number,
+	filters: ProductFilters = {},
+): ProductForCatalog[] {
+	const userRole = getUser(chatId)?.role;
+
+  return buildProducts(userRole, filters);
+	// const rates = getRates();
+	// const priceFormation = getPriceFormation();
+  //
+	// return Array.from(products.values())
+	// 	.filter(p => {
+	// 		if (filters.brand && p.brand !== filters.brand) return false;
+  //
+	// 		if (filters.category && p.category !== filters.category) return false;
+  //
+	// 		if (filters.model && p.model !== filters.model) return false;
+  //
+	// 		if (filters.storage) {
+	// 			if (!p.storage) return false;
+	// 			if (p.storage !== filters.storage) return false;
+	// 		}
+  //
+	// 		return true;
+	// 	})
+	// 	.map(product => ({
+	// 		...product,
+	// 		price: priceFormat(
+  //       product.price,
+  //       rates,
+  //       priceFormation,
+  //       product.category,
+  //       product.brand,
+  //       userRole
+  //     ),
+	// 	}))
+}
+
+export function getRetailProducts(
+  filters: ProductFilters = {},
+): ProductForCatalog[] {
+  const retailRole = 'retail';
+
+  return buildProducts(retailRole, filters);
 }
 
 export function getProductById(chatId: number, id?: string): Product | undefined {

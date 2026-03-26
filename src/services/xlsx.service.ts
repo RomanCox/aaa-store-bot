@@ -11,6 +11,7 @@ import { renderScreen } from "../render/renderScreen";
 import { compareSpecs, extractMemorySubstring, findPriceRule } from "../utils";
 import { getPriceFormation, getRates } from "./price.service";
 import { MAX_PRICE } from "../constants";
+import { getRetailProducts } from "./products.service";
 
 function resolvePath(p: string) {
   if (p.startsWith("~")) {
@@ -39,9 +40,6 @@ export function parseXlsxToProducts(buffer: Buffer): ProductForCatalog[] {
   const productsForCatalog = addProductMarkup(products);
 
   const sorted = sortProducts(productsForCatalog);
-
-  const csv = exportToCsv(sorted.filter(p => !p.hidden));
-  saveCsvToFile(csv);
 
 	return sorted;
 }
@@ -250,4 +248,14 @@ export async function sendPriceList(
 				"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 		}
 	);
+}
+
+export function generateRetailCsv(): void {
+  const products = getRetailProducts();
+
+  const visibleProducts = products.filter(p => !p.hidden);
+
+  const csv = exportToCsv(visibleProducts);
+
+  saveCsvToFile(csv);
 }
