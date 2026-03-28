@@ -1,5 +1,5 @@
 import { google } from "googleapis";
-import { PriceFormat, PriceType } from "../types";
+import { PriceFormat } from "../types";
 import { savePriceFormation } from "./price.service";
 import { saveBrands } from "./brands.service";
 

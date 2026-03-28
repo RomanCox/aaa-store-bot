@@ -52,7 +52,3 @@ export function resolveBrandFromName(name: string): string | undefined {
 export function brandsFromConfig() {
   return Array.from(brands.keys());
 }
-
-export function keyWordsFromConfig() {
-  return Array.from(brands.values());
-}

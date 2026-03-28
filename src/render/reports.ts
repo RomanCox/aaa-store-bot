@@ -2,7 +2,7 @@ import TelegramBot from "node-telegram-bot-api";
 import { ProductForCatalog } from "../types";
 import { ADMIN_TEXTS } from "../texts";
 import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
-import { keyWordsFromConfig, resolveBrandFromName } from "../services/brands.service";
+import { resolveBrandFromName } from "../services/brands.service";
 
 export async function sendHiddenProductsReport(
   bot: TelegramBot,
