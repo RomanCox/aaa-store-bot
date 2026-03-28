@@ -36,7 +36,7 @@ export async function sendHiddenProductsReport(
     await bot.sendMessage(chatId, message);
   }
 
-  const unresolvedBrandProducts = hiddenProducts.filter(
+  const unresolvedBrandProducts = products.filter(
     p => !resolveBrandFromName(p.name)
   );
 
