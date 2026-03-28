@@ -1,19 +1,6 @@
 import { Product, ProductForCatalog } from "../types";
 import { compareSpecs, extractMemorySubstring, extractModelKey } from "./catalog.utils";
-
-const BRAND_ORDER = [
-	"Apple",
-	"Samsung",
-	"Dyson",
-	"Sony",
-	"Xiaomi",
-	"Honor",
-	"Marshall",
-	"Harman Kardon",
-	"Bose",
-	"Beats",
-	"Sonos",
-] as const;
+import { brandsFromConfig } from "../services/brands.service";
 
 const CATEGORY_ORDER = [
 	"Смартфоны",
@@ -85,15 +72,21 @@ export function sortProducts(products: ProductForCatalog[]): ProductForCatalog[]
 }
 
 export function getBrands(products: Product[]): string[] {
-	const brands = Array.from(
+  const brandsFromState = brandsFromConfig();
+  const brands = Array.from(
 		new Set(
 			products
 				.map(p => p.brand)
 				.filter((brand): brand is string => Boolean(brand))
+				.filter(brand => brandsFromState.includes(brand))
 		)
-	);
+	);``
 
-	return sortByPriority(brands, BRAND_ORDER);
+  return brands.sort((a, b) => {
+    const indexA = brandsFromState.indexOf(a);
+    const indexB = brandsFromState.indexOf(b);
+    return indexA - indexB;
+  });
 }
 
 export function getCategories(

@@ -74,6 +74,7 @@ export function registerDocumentHandler(bot: TelegramBot) {
 
 			setChatState(userId, { mode: "idle" });
 		} catch (error) {
+      console.log(error)
       await bot.sendMessage(chatId, ADMIN_TEXTS.FILE_ERROR);
 
       await renderScreen(bot, chatId, {

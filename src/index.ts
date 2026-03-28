@@ -9,6 +9,7 @@ import { registerDocumentHandler } from "./handlers/document.handler";
 import { loadProducts } from "./services/products.service";
 import { loadPriceFormation, loadRates } from "./services/price.service";
 import { loadOrdersFromFile } from "./services/orders.service";
+import { loadBrandsFromFile } from "./services/brands.service";
 
 async function bootstrap() {
 	const bot = await createBot();
@@ -18,6 +19,7 @@ async function bootstrap() {
   loadRates();
 	loadPriceFormation();
   loadOrdersFromFile();
+  loadBrandsFromFile();
 
 	registerStart(bot);
 	registerMessages(bot);

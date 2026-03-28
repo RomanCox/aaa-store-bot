@@ -24,3 +24,4 @@ export const PRODUCTS_PATH = path.join(DATA_PATH, "products.json");
 export const USERS_PATH = path.join(DATA_PATH, "users.json");
 export const RATES_PATH = path.join(DATA_PATH, "rates.json");
 export const PRICE_FORMATION_PATH = path.join(DATA_PATH, "price_formation.json");
+export const BRANDS_PATH = path.join(DATA_PATH, "brands.json");

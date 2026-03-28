@@ -1,6 +1,7 @@
 import { google } from "googleapis";
 import { PriceFormat, PriceType } from "../types";
 import { savePriceFormation } from "./price.service";
+import { saveBrands } from "./brands.service";
 
 const auth = new google.auth.GoogleAuth({
 	keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS!,
@@ -32,21 +33,15 @@ export async function loadPricesFormats() {
       categoryRaw,
       brandRaw,
       maxRaw,
-      typeRaw,
-      percentRaw
+      wholesalePercentRaw,
+      retailPercentRaw
     ] = row;
 
     const category = categoryRaw?.trim() || undefined;
     const brand = brandRaw?.trim() || undefined;
+    const max = maxRaw ? Number(maxRaw) : undefined;
 
     const key = [category, brand].filter(Boolean).join("_");
-
-    const max = maxRaw ? Number(maxRaw) : undefined;
-    const percent = Number(percentRaw);
-
-    if (!typeRaw || Number.isNaN(percent)) continue;
-
-    const type = typeRaw.trim().toLowerCase() as PriceType;
 
     if (!map.has(key)) {
       map.set(key, {
@@ -56,11 +51,25 @@ export async function loadPricesFormats() {
       });
     }
 
-    map.get(key)!.prices.push({
-      max,
-      type,
-      percent
-    });
+    const priceFormat = map.get(key)!;
+
+    const wholesalePercent = Number(wholesalePercentRaw);
+    if (!Number.isNaN(wholesalePercent) && wholesalePercent !== 0) {
+      priceFormat.prices.push({
+        max,
+        type: 'wholesale',
+        percent: wholesalePercent
+      });
+    }
+
+    const retailPercent = Number(retailPercentRaw);
+    if (!Number.isNaN(retailPercent) && retailPercent !== 0) {
+      priceFormat.prices.push({
+        max,
+        type: 'retail',
+        percent: retailPercent
+      });
+    }
   }
 
   const result = Array.from(map.values());
@@ -70,4 +79,30 @@ export async function loadPricesFormats() {
   } catch (error) {
     console.error(error);
   }
+}
+
+export async function loadBrandsFromConfig() {
+  const rows = await getSheet("'Брендообразование'!A:B");
+
+  if (rows.length < 2) return;
+
+  const [, ...data] = rows;
+
+  const result: Record<string, string[]>[] = [];
+
+  for (const row of data) {
+    const [
+      brandRaw,
+      keyWordsRaw
+    ] = row;
+
+    const brand = brandRaw?.trim() || undefined;
+    if (!brand) continue;
+
+    const keyWords = keyWordsRaw?.trim().split('\n').filter((k: string) => k.trim() !== '') || [];
+
+    result.push({ [brand]: keyWords });
+  }
+
+  await saveBrands(result);
 }

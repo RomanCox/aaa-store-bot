@@ -22,7 +22,7 @@ import { addOrder, buildOrderMessage, createOrder } from "../services/orders.ser
 import { orderHandler, ordersHandler } from "./orders.handler";
 import { renderScreen } from "../render/renderScreen";
 import { editRates } from "../services/price.service";
-import { loadPricesFormats } from "../services/sheets.service";
+import { loadBrandsFromConfig, loadPricesFormats } from "../services/sheets.service";
 import { renderSection } from "../render/renderSection";
 import { sendHiddenProductsReport } from "../render/reports";
 
@@ -213,6 +213,7 @@ export function registerCallbacks(bot: TelegramBot) {
       case CALLBACK_TYPE.RENEW_PRICE: {
         try {
           await loadPricesFormats();
+          await loadBrandsFromConfig();
 
           const updatedProducts = refreshProductsMarkup();
           generateRetailCsv();

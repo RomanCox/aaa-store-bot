@@ -3,7 +3,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { Product, PRODUCT_XLSX_HEADERS, ProductForCatalog, SECTION } from "../types";
-import { resolveBrandFromName } from "./brand-resolver.service";
+import { resolveBrandFromName } from "./brands.service";
 import { CATALOG_TEXTS } from "../texts";
 import TelegramBot from "node-telegram-bot-api";
 import { getChatState, getSectionState } from "../state/chat.state";
