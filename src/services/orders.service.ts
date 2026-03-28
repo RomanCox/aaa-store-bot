@@ -3,6 +3,7 @@ import { Order, ProductForCart } from "../types";
 import fs from "fs";
 import { ORDERS_PATH } from "../constants";
 import { ORDER_TEXTS } from "../texts";
+import { getUser } from "./users.service";
 
 export let orders: Order[] = [];
 
@@ -70,12 +71,26 @@ export function createOrder(
   };
 }
 
-export function buildOrderMessage(order: Order, userId: number, isForOrdersList?: boolean, isAdmin?: boolean): string {
-  const firstLine = isForOrdersList ? "" : "🆕 <b>Поступил заказ!</b>/n"
+export function buildOrderMessage(
+  order: Order,
+  userId: number,
+  isForOrdersList?: boolean,
+  isAdmin?: boolean
+): string {
+  const firstLine = isForOrdersList ? "" : "🆕 <b>Поступил заказ!</b>\n"
   const formattedDate = new Date(order.createdAt).toLocaleDateString("ru-RU");
   const dateString = ORDER_TEXTS.ORDER_DATE + formattedDate + "\n"
 
-  const userLine = isAdmin ? `👤 <a href="tg://user?id=${userId}">Клиент</a>\n` : "";
+  const user = getUser(userId);
+  const roleMap: Record<string, string> = {
+    retail: "Розница",
+    wholesale: "Опт",
+  };
+
+  const userLine = ( !isForOrdersList || isAdmin )
+    ? `👤 Клиент (<code>${userId}</code>)\n`
+    : "";
+  const userRole = (!isForOrdersList && user?.role) ? `${roleMap[user.role]}\n` : "";
 
   const items = order.items.map((product) =>
     `🔹 ${product.name}
@@ -91,6 +106,7 @@ export function buildOrderMessage(order: Order, userId: number, isForOrdersList?
 ${firstLine}🆔 заказа: ${order.id}
 ${dateString}
 ${userLine}
+${userRole}
 ${items}
 
 💰 <b>Итого:</b> ${total}

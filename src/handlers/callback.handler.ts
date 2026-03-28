@@ -676,11 +676,7 @@ export function registerCallbacks(bot: TelegramBot) {
 
           const message = buildOrderMessage(order, chatId);
 
-          // отправляем администратору
-          await renderScreen(bot, ADMIN_CHAT_ID, {
-            section: SECTION.CART,
-            text: message,
-            inlineKeyboard: [],
+          await bot.sendMessage(ADMIN_CHAT_ID, message, {
             parse_mode: "HTML",
           });
 
