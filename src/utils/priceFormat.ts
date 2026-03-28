@@ -25,7 +25,7 @@ export function findPriceRule(
 
     for (const rule of rules) {
       if (!rule.max || priceUSD <= rule.max) {
-        return rule.percent;
+        return rule.value;
       }
     }
   }
@@ -51,7 +51,7 @@ export function priceFormat(
 
   const priceUSD = numberPrice / rates.rub_to_usd;
 
-  const percent = findPriceRule(
+  const value = findPriceRule(
     priceUSD,
     category,
     brand,
@@ -59,18 +59,18 @@ export function priceFormat(
     priceFormation
   );
 
+  const valueInRub = value * rates.rub_to_usd;
+
   // WHOLESALE
   if (clientType === "wholesale") {
-    const resultUSD = priceUSD * (1 + percent / 100);
+    const resultUSD = (numberPrice + valueInRub) / rates.rub_to_usd;
 
     return String(Math.round(resultUSD));
   }
 
   // RETAIL
   if (clientType === "retail") {
-    const priceBYN = (numberPrice / 100) * rates.rub_to_byn;
-
-    const resultBYN = priceBYN * (1 + percent / 100);
+    const resultBYN = (numberPrice + valueInRub) / 100 * rates.rub_to_byn;
 
     return String(Math.round(resultBYN / 10) * 10);
   }

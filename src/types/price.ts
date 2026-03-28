@@ -10,7 +10,7 @@ export type PriceType = "wholesale" | "retail";
 export interface PriceRule {
   max?: number;
   type: PriceType;
-  percent: number;
+  value: number;
 }
 
 export interface PriceFormat {

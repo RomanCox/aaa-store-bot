@@ -58,7 +58,7 @@ export async function loadPricesFormats() {
       priceFormat.prices.push({
         max,
         type: 'wholesale',
-        percent: wholesalePercent
+        value: wholesalePercent
       });
     }
 
@@ -67,7 +67,7 @@ export async function loadPricesFormats() {
       priceFormat.prices.push({
         max,
         type: 'retail',
-        percent: retailPercent
+        value: retailPercent
       });
     }
   }
