@@ -7,7 +7,7 @@ import { BUTTONS_IN_RAW_FOR_CATEGORIES_KEYBOARD } from "../constants";
 
 export function categoriesKeyboard(
   categories: string[],
-  options?: { withAllBtn?: boolean, withDownloadBtn?: boolean }
+  options?: { withAllBtn?: boolean, withDownloadBtn?: boolean, downloadKey?: string }
 ): InlineKeyboardButton[][] {
 	const keyboard: InlineKeyboardButton[][] = [];
 
@@ -30,11 +30,14 @@ export function categoriesKeyboard(
 		 [{text: COMMON_TEXTS.BACK_BUTTON, callback_data: buildCallbackData(CALLBACK_TYPE.BACK, SECTION.CATALOG)}]
 	);
 
-	if (options?.withDownloadBtn) {
-		keyboard.push(
-			[{text: CATALOG_TEXTS.DOWNLOAD_CATALOG, callback_data: buildCallbackData(SECTION.CATALOG, CALLBACK_TYPE.DOWNLOAD_XLSX)}]
-		);
-	}
+  if (options?.withDownloadBtn) {
+    keyboard.push(
+      [{
+        text: CATALOG_TEXTS.DOWNLOAD_CATALOG,
+        callback_data: buildCallbackData(CALLBACK_TYPE.DOWNLOAD_XLSX, options.downloadKey)
+      }]
+    );
+  }
 
 	return keyboard;
 }

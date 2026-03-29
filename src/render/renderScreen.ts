@@ -32,8 +32,14 @@ export async function renderScreen<K extends SECTION>(
   const sectionMessageId = sectionState?.messageId;
   const activeMessageId = state.activeMessageId;
 
-  // 🟢 1. Первый вход в раздел
-  if (!sectionMessageId) {
+  // 🟢 Если в каталоге есть файл ниже
+  if (currentSection === SECTION.CATALOG && catalogState?.hasFileBelow) {
+    // Не удаляем сообщение с последним блоком продуктов
+    if (catalogState.messageId && catalogState.messageId !== catalogState.lastProductsMessageId) {
+      await safeDelete(bot, catalogState.messageId);
+    }
+
+    // создаем новое сообщение каталога
     const newMessage = await bot.sendMessage(chatId, options.text, {
       parse_mode: options.parse_mode,
       reply_markup: { inline_keyboard: keyboard },
@@ -41,94 +47,111 @@ export async function renderScreen<K extends SECTION>(
 
     newMessageId = newMessage.message_id;
 
-    // 🔹 первый вход в каталог
-    if (currentSection === SECTION.CATALOG && activeMessageId) {
-      try {
-        const isProductsMessage =
-          activeMessageId === catalogState?.lastProductsMessageId;
-
-        if (!isProductsMessage) {
-          await safeDelete(bot, activeMessageId);
-        }
-      } catch (e) {
-        console.error("Error deleting message:", e);
-      }
-    }
-  }
-  // 🟡 2. Мы уже в этом разделе → редактируем
-  else if (sectionMessageId === activeMessageId) {
-    // 🔹 действие НЕ в каталоге ИЛИ последнее сообщение не с товарами
-    if (currentSection !== SECTION.CATALOG || !catalogState?.lastProductsMessageId) {
-      try {
-        await bot.editMessageText(options.text, {
-          chat_id: chatId,
-          message_id: sectionMessageId,
-          parse_mode: options.parse_mode,
-          reply_markup: { inline_keyboard: keyboard },
-        });
-      } catch (e: any) {
-        if (!e.response?.body?.description?.includes("message is not modified")) {
-          throw e;
-        }
-      }
-
-      newMessageId = sectionMessageId;
-
-      if (currentSection === SECTION.CATALOG && catalogState?.flowStep === "products") {
-        updateSectionState(chatId, SECTION.CATALOG, (prev) => ({
-          ...prev,
-          flowStep: prev.flowStep || "brands",
-          lastProductsMessageId: newMessageId,
-        }));
-      }
-    }
-    // 🔹 действие в каталоге И последнее сообщение с товарами
-    else {
+    // сбрасываем флаг
+    updateSectionState(chatId, SECTION.CATALOG, (prev) => ({
+      ...prev,
+      messageId: newMessageId,
+      hasFileBelow: false,
+    }));
+  } else {
+    // 🟢 1. Первый вход в раздел
+    if (!sectionMessageId) {
       const newMessage = await bot.sendMessage(chatId, options.text, {
         parse_mode: options.parse_mode,
-        reply_markup: { inline_keyboard: keyboard },
+        reply_markup: {inline_keyboard: keyboard},
       });
 
       newMessageId = newMessage.message_id;
 
-      updateSectionState(chatId, SECTION.CATALOG, (prev) => ({
-        ...prev,
-        flowStep: prev.flowStep || "brands",
-        lastProductsMessageId:
-          prev.flowStep === "products"
-            ? newMessageId
-            : undefined,
-      }));
-    }
-  }
-  // 🔵 3. Возврат в раздел (сообщение старое)
-  else {
-    const newMessage = await bot.sendMessage(chatId, options.text, {
-      parse_mode: options.parse_mode,
-      reply_markup: { inline_keyboard: keyboard },
-    });
+      // 🔹 первый вход в каталог
+      if (currentSection === SECTION.CATALOG && activeMessageId) {
+        try {
+          const isProductsMessage =
+            activeMessageId === catalogState?.lastProductsMessageId;
 
-    newMessageId = newMessage.message_id;
-
-    if (currentSection !== SECTION.CATALOG || !catalogState?.lastProductsMessageId) {
-      try {
-        await safeDelete(bot, sectionMessageId);
-      } catch (e: any) {
-        console.error("Error deleting message:", e);
+          if (!isProductsMessage) {
+            await safeDelete(bot, activeMessageId);
+          }
+        } catch (e) {
+          console.error("Error deleting message:", e);
+        }
       }
     }
+    // 🟡 2. Мы уже в этом разделе → редактируем
+    else if (sectionMessageId === activeMessageId) {
+      // 🔹 действие НЕ в каталоге ИЛИ последнее сообщение не с товарами
+      if (currentSection !== SECTION.CATALOG || !catalogState?.lastProductsMessageId) {
+        try {
+          await bot.editMessageText(options.text, {
+            chat_id: chatId,
+            message_id: sectionMessageId,
+            parse_mode: options.parse_mode,
+            reply_markup: {inline_keyboard: keyboard},
+          });
+        } catch (e: any) {
+          if (!e.response?.body?.description?.includes("message is not modified")) {
+            throw e;
+          }
+        }
 
-    if (currentSection === SECTION.CATALOG) {
-      setChatState(chatId, {
-        activeMessageId: newMessageId,
+        newMessageId = sectionMessageId;
+
+        if (currentSection === SECTION.CATALOG && catalogState?.flowStep === "products") {
+          updateSectionState(chatId, SECTION.CATALOG, (prev) => ({
+            ...prev,
+            flowStep: prev.flowStep || "brands",
+            lastProductsMessageId: newMessageId,
+          }));
+        }
+      }
+      // 🔹 действие в каталоге И последнее сообщение с товарами
+      else {
+        const newMessage = await bot.sendMessage(chatId, options.text, {
+          parse_mode: options.parse_mode,
+          reply_markup: {inline_keyboard: keyboard},
+        });
+
+        newMessageId = newMessage.message_id;
+
+        updateSectionState(chatId, SECTION.CATALOG, (prev) => ({
+          ...prev,
+          flowStep: prev.flowStep || "brands",
+          lastProductsMessageId:
+            prev.flowStep === "products"
+              ? newMessageId
+              : undefined,
+        }));
+      }
+    }
+    // 🔵 3. Возврат в раздел (сообщение старое)
+    else {
+      const newMessage = await bot.sendMessage(chatId, options.text, {
+        parse_mode: options.parse_mode,
+        reply_markup: {inline_keyboard: keyboard},
       });
 
-      updateSectionState(chatId, SECTION.CATALOG, (prev) => ({
-        ...prev,
-        messageId: newMessageId,
-        lastProductsMessageId: undefined,
-        flowStep: prev.flowStep || "brands",
-      }));
+      newMessageId = newMessage.message_id;
+
+      if (currentSection !== SECTION.CATALOG || !catalogState?.lastProductsMessageId) {
+        try {
+          await safeDelete(bot, sectionMessageId);
+        } catch (e: any) {
+          console.error("Error deleting message:", e);
+        }
+      }
+
+      if (currentSection === SECTION.CATALOG) {
+        setChatState(chatId, {
+          activeMessageId: newMessageId,
+        });
+
+        updateSectionState(chatId, SECTION.CATALOG, (prev) => ({
+          ...prev,
+          messageId: newMessageId,
+          lastProductsMessageId: undefined,
+          flowStep: prev.flowStep || "brands",
+        }));
+      }
     }
   }
 

@@ -1,11 +1,14 @@
-import { Product } from "../types";
+import { Product, UserRole } from "../types";
 import { compareSpecs, extractMemorySubstring } from "./catalog.utils";
 import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
 
-function formatProductLine(product: Product): string {
+function formatProductLine(product: Product, userRole?: UserRole): string {
 	const name = product.name
 	const price = product.price
 	const country = product.country ?? ""
+
+  if (userRole === "wholesale") return `${name} - $${price} ${country}`
+  if (userRole === "retail") return `${name} - ${price} BYN ${country}`
 
 	return `${name} - ${price} ${country}`
 }
@@ -72,7 +75,7 @@ type ProductMessage = {
   products: Product[];
 };
 
-export function buildMessagesWithProducts(products: Product[]): ProductMessage[] {
+export function buildMessagesWithProducts(products: Product[], userRole?: UserRole): ProductMessage[] {
   const messages: ProductMessage[] = [];
 
   let currentMessage = "";
@@ -120,7 +123,7 @@ export function buildMessagesWithProducts(products: Product[]): ProductMessage[]
       }
     }
 
-    const line = formatProductLine(product);
+    const line = formatProductLine(product, userRole);
 
     if ((currentMessage + line + " \n").length > TELEGRAM_MESSAGE_LIMIT) {
       messages.push({ text: currentMessage, products: currentProducts });

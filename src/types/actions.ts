@@ -46,3 +46,10 @@ export enum START_ACTIONS {
 export enum CATALOG_VALUE {
 	ALL = "all",
 }
+
+export type ProductFilters = {
+  brand?: string;
+  category?: string;
+  model?: string;
+  storage?: string;
+};

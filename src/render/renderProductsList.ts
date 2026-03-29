@@ -1,10 +1,11 @@
 import TelegramBot from "node-telegram-bot-api";
-import { buildCallbackData, buildMessagesWithProducts } from "../utils";
-import { CALLBACK_TYPE, SECTION } from "../types";
+import { buildCallbackData, buildDownloadCallback, buildMessagesWithProducts } from "../utils";
+import { CALLBACK_TYPE, CatalogSectionState, ProductFilters, SECTION } from "../types";
 import { CATALOG_TEXTS } from "../texts";
-import { getProducts, tempExports } from "../services/products.service";
+import { getProducts } from "../services/products.service";
 import { getChatState, getSectionState, setChatState } from "../state/chat.state";
 import { renderScreen } from "./renderScreen";
+import { getUser } from "../services/users.service";
 
 export async function renderProductsList(
   bot: TelegramBot,
@@ -15,9 +16,11 @@ export async function renderProductsList(
     getSectionState(state, SECTION.CATALOG);
   if (!catalogState) return;
 
+  const { selectedBrand, selectedCategory } = catalogState as CatalogSectionState;
+
   const products = getProducts(chatId, {
-    brand: catalogState.selectedBrand,
-    category: catalogState.selectedCategory,
+    brand: selectedBrand,
+    category: selectedCategory,
   })
     .filter(product => !product.hidden);
 
@@ -29,7 +32,8 @@ export async function renderProductsList(
     return;
   }
 
-  const parts = buildMessagesWithProducts(products);
+  const user = getUser(chatId);
+  const parts = buildMessagesWithProducts(products, user?.role);
 
   // сохраняем lastProductGroups в sections
   setChatState(chatId, {
@@ -44,8 +48,11 @@ export async function renderProductsList(
   });
 
   for (const part of parts) {
-    const exportKey = `${chatId}_${Date.now()}`;
-    tempExports.set(exportKey, part.products.map(p => p.id));
+    const filters: ProductFilters = {
+      brand: selectedBrand,
+      category: selectedCategory,
+    };
+    const downloadKey = buildDownloadCallback(filters);
 
     // создаём новое сообщение для каждого блока продуктов (keepOldMessage)
     await renderScreen(bot, chatId, {
@@ -53,7 +60,7 @@ export async function renderProductsList(
       text: part.text,
       inlineKeyboard: [[{
         text: CATALOG_TEXTS.DOWNLOAD_CATALOG,
-        callback_data: buildCallbackData(CALLBACK_TYPE.DOWNLOAD_XLSX, exportKey),
+        callback_data: buildCallbackData(CALLBACK_TYPE.DOWNLOAD_XLSX, downloadKey),
       }]],
     });
   }

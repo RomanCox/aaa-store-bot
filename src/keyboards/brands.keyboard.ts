@@ -7,7 +7,7 @@ import { BUTTONS_IN_RAW_FOR_BRANDS_KEYBOARD } from "../constants";
 
 export function brandsKeyboard(
   brands: string[],
-  options?: { withAllBtn?: boolean, withDownloadBtn?: boolean, showBack?: boolean }
+  options?: { withAllBtn?: boolean, withDownloadBtn?: boolean, showBack?: boolean, downloadKey?: string }
 ): InlineKeyboardButton[][] {
 	const keyboard: InlineKeyboardButton[][] = [];
 
@@ -39,11 +39,10 @@ export function brandsKeyboard(
 		keyboard.push(
 			[{
 				text: CATALOG_TEXTS.DOWNLOAD_CATALOG,
-				callback_data: buildCallbackData(SECTION.CATALOG, CALLBACK_TYPE.DOWNLOAD_XLSX)
+				callback_data: buildCallbackData(CALLBACK_TYPE.DOWNLOAD_XLSX, options.downloadKey)
 			}]
 		);
 	}
-
 
 	return keyboard;
 }

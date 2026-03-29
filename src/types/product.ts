@@ -29,10 +29,3 @@ export const PRODUCT_XLSX_HEADERS: Record<keyof Product, string> = {
 	country: "Страна",
 	sim: "Тип SIM",
 };
-
-export interface ProductFilters {
-	brand?: string;
-	category?: string;
-	model?: string;
-	storage?: string;
-}

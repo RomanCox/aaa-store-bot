@@ -9,8 +9,6 @@ import { addProductMarkup } from "./xlsx.service";
 
 let products = new Map<string, ProductForCatalog>();
 
-export const tempExports = new Map<string, string[]>();
-
 export function loadProducts() {
 	if (!fs.existsSync(PRODUCTS_PATH)) return;
 

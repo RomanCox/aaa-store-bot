@@ -1,6 +1,7 @@
 export * from "./answer.callback.query";
 export * from "./callbackBuilder";
 export * from "./catalog.utils";
+export * from "./downloadCatalogHelpers";
 export * from "./message.utils";
 export * from "./pagination";
 export * from "./parseCallbackData";

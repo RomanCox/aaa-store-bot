@@ -1,21 +1,14 @@
 import TelegramBot from "node-telegram-bot-api";
-import { CALLBACK_TYPE, CATALOG_VALUE, Product, ProductForCart, SECTION, UserRole } from "../types";
+import { CALLBACK_TYPE, CATALOG_VALUE, SECTION, UserRole } from "../types";
 import { getChatState, setChatState } from "../state/chat.state";
 import { renderFlow } from "../render/renderFlow";
-import { guardWorkingHours, parseCallbackData, safeAnswerCallback } from "../utils";
+import { downloadCatalogHelpers, guardWorkingHours, parseCallbackData, safeAnswerCallback } from "../utils";
 import { handleBack } from "./back.handler";
 import { addUser, deleteUser, editUser, startUserManagement, startXlsxUpload } from "../services/admin.service";
-import { getProductById, getProducts, refreshProductsMarkup, tempExports } from "../services/products.service";
+import { getProductById, getProducts, refreshProductsMarkup } from "../services/products.service";
 import { renderProductsList } from "../render/renderProductsList";
 import { showUsersList } from "./users/users.handler";
-import {
-  ADMIN_TEXTS,
-  CART_TEXTS,
-  COMMON_TEXTS,
-  PAGINATION_TEXTS,
-  USERS_ERRORS,
-  USERS_TEXTS
-} from "../texts";
+import { ADMIN_TEXTS, CART_TEXTS, COMMON_TEXTS, PAGINATION_TEXTS, USERS_ERRORS, USERS_TEXTS } from "../texts";
 import { createUser, isAdmin, updateUserRole } from "../services/users.service";
 import { generateRetailCsv, sendPriceList } from "../services/xlsx.service";
 import { addOrder, buildOrderMessage, createOrder } from "../services/orders.service";
@@ -42,7 +35,7 @@ export function registerCallbacks(bot: TelegramBot) {
 		switch (action) {
       case CALLBACK_TYPE.BACK: {
         return guardWorkingHours(bot, chatId, async () => {
-          await handleBack(bot, chatId);
+          await handleBack(chatId);
 
           await renderSection(bot, chatId);
 
@@ -369,10 +362,28 @@ export function registerCallbacks(bot: TelegramBot) {
 
       case CALLBACK_TYPE.DOWNLOAD_XLSX: {
         return guardWorkingHours(bot, chatId, async () => {
-          const productIds = tempExports.get(params[0]) || [];
-          const productsToExport = productIds
-            .map(id => getProductById(chatId, id))
-            .filter(Boolean) as Product[];
+          // const exportKey = params[0];
+          // const productIds = tempExports.get(exportKey) || [];
+          // tempExports.delete(exportKey);
+          //
+          // const productsToExport = productIds
+          //   .map(id => getProductById(chatId, id))
+          //   .filter(Boolean) as Product[];
+          //
+          // if (!productsToExport.length) {
+          //   await renderScreen(bot, chatId, {
+          //     section: SECTION.CATALOG,
+          //     text: COMMON_TEXTS.NOT_ITEMS_FOR_EXPORT,
+          //   });
+          //   return;
+          // }
+          //
+          // await sendPriceList(bot, chatId, productsToExport);
+          // return;
+
+          const filters = downloadCatalogHelpers(params);
+
+          const productsToExport = getProducts(chatId, filters);
 
           if (!productsToExport.length) {
             await renderScreen(bot, chatId, {
@@ -382,8 +393,20 @@ export function registerCallbacks(bot: TelegramBot) {
             return;
           }
 
+          const state = getChatState(chatId);
+          setChatState(chatId, {
+            section: SECTION.CATALOG,
+            sections: {
+              ...state.sections,
+              [SECTION.CATALOG]: {
+                ...state.sections?.[SECTION.CATALOG],
+                flowStep: state.sections?.[SECTION.CATALOG]?.flowStep ?? "brands",
+                hasFileBelow: true,
+              }
+            },
+          })
+
           await sendPriceList(bot, chatId, productsToExport);
-          return;
         });
       }
 
@@ -436,8 +459,9 @@ export function registerCallbacks(bot: TelegramBot) {
         return guardWorkingHours(bot, chatId, async () => {
           const state = getChatState(chatId);
           const [amount] = params;
+          const productAmount = Number(amount);
 
-          if (Number.isNaN(Number(amount))) {
+          if (Number.isNaN(productAmount)) {
             await renderScreen(bot, chatId, {
               section: SECTION.CART,
               text: CART_TEXTS.AMOUNT_WILL_BE_NUMBER,
@@ -445,9 +469,9 @@ export function registerCallbacks(bot: TelegramBot) {
             return;
           }
 
-          const choseProduct = getProductById(chatId, state.sections?.[SECTION.CART]?.selectedProductId);
+          const chosenProduct = getProductById(chatId, state.sections?.[SECTION.CART]?.selectedProductId);
 
-          if (!choseProduct) {
+          if (!chosenProduct) {
             await renderScreen(bot, chatId, {
               section: SECTION.CART,
               text: CART_TEXTS.PRODUCT_UNAVAILABLE,
@@ -455,12 +479,22 @@ export function registerCallbacks(bot: TelegramBot) {
             return;
           }
 
-          const productForOrder: ProductForCart = {
-            ...choseProduct,
-            amount: Number(amount),
-          };
+          const currentOrder = [...(state.sections?.[SECTION.CART]?.currentOrder || [])];
+          const existingProductIndex = currentOrder.findIndex(
+            item => item.id === chosenProduct.id
+          );
 
-          const currentOrder = [...(state.sections?.[SECTION.CART]?.currentOrder || []), productForOrder];
+          if (existingProductIndex !== -1) {
+            currentOrder[existingProductIndex] = {
+              ...currentOrder[existingProductIndex],
+              amount: currentOrder[existingProductIndex].amount + productAmount,
+            };
+          } else {
+            currentOrder.push({
+              ...chosenProduct,
+              amount: productAmount,
+            });
+          }
 
           setChatState(chatId, {
             mode: "idle",

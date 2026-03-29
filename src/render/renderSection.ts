@@ -5,7 +5,8 @@ import { startUserManagement } from "../services/admin.service";
 import { START_TEXTS } from "../texts";
 import { adminKeyboard } from "../keyboards";
 import { renderScreen } from "./renderScreen";
-import { getChatState } from "../state/chat.state";
+import { getChatState, setChatState } from "../state/chat.state";
+import { ordersHandler } from "../handlers/orders.handler";
 
 export async function renderSection(bot: TelegramBot, chatId: number) {
   const state = getChatState(chatId);
@@ -36,6 +37,19 @@ export async function renderSection(bot: TelegramBot, chatId: number) {
 
   if (state.section === SECTION.CART) {
     await renderFlow(bot, chatId);
+    return;
+  }
+
+  if (state.section === SECTION.ORDERS) {
+    const ordersState = state.sections?.[SECTION.ORDERS];
+
+    await ordersHandler(
+      bot,
+      chatId,
+      ordersState?.flowStep !== "main"
+        ? ordersState?.selectedUserId
+        : undefined
+    );
     return;
   }
 }

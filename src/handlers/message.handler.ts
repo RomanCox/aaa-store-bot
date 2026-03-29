@@ -9,7 +9,7 @@ import { editPriceInputHandler } from "./price.handler";
 import { getProductById } from "../services/products.service";
 import { renderFlow } from "../render/renderFlow";
 import { ordersHandler, ordersPageInputHandler } from "./orders.handler";
-import { getUser, usersPageInputHandler } from "../services/users.service";
+import { getUser, isAdmin, usersPageInputHandler } from "../services/users.service";
 import { renderScreen } from "../render/renderScreen";
 import { guardWorkingHours, safeDelete } from "../utils";
 import { adminKeyboard, mainKeyboard } from "../keyboards";
@@ -91,6 +91,8 @@ export function registerMessages(bot: TelegramBot) {
       },
 
       [MENU_TEXTS.ORDERS]: async () => {
+        const defaultFlowStep = isAdmin(chatId) ? "main" : "orders";
+
         setChatState(chatId, {
           section: SECTION.ORDERS,
           mode: "idle",
@@ -101,7 +103,7 @@ export function registerMessages(bot: TelegramBot) {
               page: 1,
               totalPages: 1,
               selectedUserId: undefined,
-              flowStep: state.sections?.[SECTION.ORDERS]?.flowStep ?? "main", // <-- обязательно
+              flowStep: state.sections?.[SECTION.ORDERS]?.flowStep ?? defaultFlowStep,
             },
           },
         });

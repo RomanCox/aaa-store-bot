@@ -40,6 +40,8 @@ export interface CatalogSectionState {
   selectedCategory?: string;
 
   lastProductGroups?: Product[][];
+
+  hasFileBelow?: boolean;
 }
 
 export interface OrdersSectionState {

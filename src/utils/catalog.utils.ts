@@ -1,3 +1,6 @@
+import { getChatState, getSectionState, setChatState } from "../state/chat.state";
+import { SECTION } from "../types";
+
 export function extractMemorySubstring(name: string): string | null {
   const text = name.trim();
 
@@ -70,4 +73,23 @@ export function extractModelKey(name: string): string {
   if (numberMatch) return numberMatch[1];
 
   return "";
+}
+
+export function resetCatalogHasFileBelow(chatId: number) {
+  const state = getChatState(chatId);
+  const catalogState = getSectionState(state, SECTION.CATALOG);
+
+  if (!catalogState) return;
+
+  setChatState(chatId, {
+    section: SECTION.CATALOG,
+    sections: {
+      ...state.sections,
+      [SECTION.CATALOG]: {
+        ...state.sections.catalog,
+        flowStep: state.sections.catalog?.flowStep ?? "brands",
+        hasFileBelow: false,
+      }
+    },
+  });
 }

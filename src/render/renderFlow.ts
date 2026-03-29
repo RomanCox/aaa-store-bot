@@ -1,6 +1,6 @@
 import TelegramBot from "node-telegram-bot-api";
 import { getProductById, getProducts } from "../services/products.service";
-import { getBrands, getCategories, getModels, getStorageValues } from "../utils";
+import { buildDownloadCallback, getBrands, getCategories, getModels, getStorageValues } from "../utils";
 import { getChatState, getSectionState } from "../state/chat.state";
 import {
   brandsKeyboard,
@@ -15,7 +15,7 @@ import { CART_TEXTS, CATALOG_TEXTS } from "../texts";
 import {
   CartSectionState,
   CatalogSectionState,
-  Product,
+  Product, ProductFilters,
   ProductForCart,
   SECTION
 } from "../types";
@@ -148,6 +148,8 @@ export async function renderBrands(
   const products = getProducts(chatId);
   const brands = getBrands(products);
 
+  const filters: ProductFilters = {};
+
   if (!brands.length) {
     await renderScreen(bot, chatId, {
       section: section,
@@ -162,7 +164,9 @@ export async function renderBrands(
     inlineKeyboard: brandsKeyboard(brands, {
       withAllBtn: section === SECTION.CATALOG,
       withDownloadBtn: section === SECTION.CATALOG,
+      downloadKey: buildDownloadCallback(filters),
     }),
+    withBackButton: section === SECTION.CART && !!state.sections.cart?.currentOrder?.length
   });
 }
 
@@ -192,6 +196,9 @@ export async function renderCategories(
   const products = getProducts(chatId, { brand: selectedBrand });
   const categories = getCategories(products, selectedBrand);
 
+  const filters: ProductFilters = { brand: selectedBrand };
+  const downloadKey = buildDownloadCallback(filters);
+
   if (!categories.length) {
     await renderScreen(bot, chatId, {
       section: section,
@@ -211,6 +218,7 @@ export async function renderCategories(
     inlineKeyboard: categoriesKeyboard(categories, {
       withAllBtn: section === SECTION.CATALOG,
       withDownloadBtn: section === SECTION.CATALOG,
+      downloadKey
     }),
     parse_mode: "HTML",
   });

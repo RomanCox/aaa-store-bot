@@ -38,10 +38,34 @@ export async function ordersHandler(
     if (userId) {
       const orders = getOrdersByUserId(Number(userId));
 
-      text =
-        orders.length > 0
-          ? ORDER_TEXTS.CHOOSE_ORDER
-          : ORDER_TEXTS.NO_ORDERS;
+      if (!orders.length) {
+        text = ORDER_TEXTS.NO_ORDERS_FOR_ADMIN;
+
+        setChatState(chatId, {
+          mode: "idle",
+          sections: {
+            ...state.sections,
+            [SECTION.ORDERS]: {
+              ...state.sections?.[SECTION.ORDERS],
+              selectedUserId: userId,
+              page: 1,
+              totalPages: state.sections?.[SECTION.ORDERS]?.totalPages ?? 1,
+              flowStep: "orders",
+            },
+          },
+        });
+
+        await renderScreen(bot, chatId, {
+          section: SECTION.ORDERS,
+          text,
+          parse_mode: "HTML",
+          withBackButton: true,
+        });
+
+        return;
+      }
+
+      text = ORDER_TEXTS.CHOOSE_ORDER;
 
       for (const order of orders) {
         buttons.push([
@@ -112,11 +136,13 @@ export async function ordersHandler(
     );
   }
 
+
   await renderScreen(bot, chatId, {
     section: SECTION.ORDERS,
     text,
     inlineKeyboard: buttons,
     parse_mode: "HTML",
+    withBackButton: (isAdmin(chatId) && !!userId),
   });
 }
 
@@ -156,7 +182,7 @@ export async function ordersPageInputHandler(
         ...ordersState,
         page,
         totalPages,
-        flowStep: "main",
+        flowStep: "orders",
       },
     },
   });

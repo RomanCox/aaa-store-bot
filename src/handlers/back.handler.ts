@@ -1,8 +1,7 @@
-import TelegramBot from "node-telegram-bot-api";
 import { getChatState, setChatState } from "../state/chat.state";
 import { SECTION } from "../types";
 
-export async function handleBack(bot: TelegramBot, chatId: number) {
+export async function handleBack(chatId: number) {
   const state = getChatState(chatId);
   const adminState = state.sections?.[SECTION.ADMIN_PANEL];
 
@@ -225,5 +224,37 @@ export async function handleBack(bot: TelegramBot, chatId: number) {
         return;
     }
 	}
+
+  if (state.section === SECTION.ORDERS) {
+    const ordersState = state.sections?.[SECTION.ORDERS];
+
+    if (!ordersState) return;
+
+    if (ordersState.flowStep === "order") {
+      setChatState(chatId, {
+        sections: {
+          ...state.sections,
+          [SECTION.ORDERS]: {
+            ...ordersState,
+            flowStep: "orders",
+          },
+        },
+      });
+      return;
+    } else {
+      setChatState(chatId, {
+        mode: "choose_userId_for_orders",
+        sections: {
+          ...state.sections,
+          [SECTION.ORDERS]: {
+            ...ordersState,
+            flowStep: "main",
+          },
+        },
+      });
+      return;
+    }
+  }
+
   return;
 }
