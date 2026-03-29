@@ -34,7 +34,7 @@ export function categoriesKeyboard(
     keyboard.push(
       [{
         text: CATALOG_TEXTS.DOWNLOAD_CATALOG,
-        callback_data: buildCallbackData(CALLBACK_TYPE.DOWNLOAD_XLSX, options.downloadKey)
+        callback_data: options.downloadKey
       }]
     );
   }

@@ -19,10 +19,10 @@ export function downloadCatalogHelpers(parts: string[]): ProductFilters {
 export function serializeFilters(filters: ProductFilters): string[] {
   const parts: string[] = [];
 
-  if (filters.brand) parts.push(`brand=${filters.brand}`);
-  if (filters.category) parts.push(`category=${filters.category}`);
-  if (filters.model) parts.push(`model=${filters.model}`);
-  if (filters.storage) parts.push(`storage=${filters.storage}`);
+  if (filters.brand) parts.push(`b=${filters.brand}`);
+  if (filters.category) parts.push(`c=${filters.category}`);
+  if (filters.model) parts.push(`m=${filters.model}`);
+  if (filters.storage) parts.push(`s=${filters.storage}`);
 
   if (!parts.length) {
     parts.push('all=true');
