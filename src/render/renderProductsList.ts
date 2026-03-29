@@ -32,8 +32,7 @@ export async function renderProductsList(
     return;
   }
 
-  const user = getUser(chatId);
-  const parts = buildMessagesWithProducts(products, user?.role);
+  const parts = buildMessagesWithProducts(products);
 
   // сохраняем lastProductGroups в sections
   setChatState(chatId, {
