@@ -7,8 +7,8 @@ function formatProductLine(product: Product, userRole?: UserRole): string {
 	const price = product.price
 	const country = product.country ?? ""
 
-  if (userRole === "wholesale") return `${name} - $${price} ${country}`
-  if (userRole === "retail") return `${name} - ${price} BYN ${country}`
+  // if (userRole === "wholesale") return `${name} - $${price} ${country}`
+  // if (userRole === "retail") return `${name} - ${price} BYN ${country}`
 
 	return `${name} - ${price} ${country}`
 }
