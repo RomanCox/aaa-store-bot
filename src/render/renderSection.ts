@@ -5,7 +5,7 @@ import { startUserManagement } from "../services/admin.service";
 import { START_TEXTS } from "../texts";
 import { adminKeyboard } from "../keyboards";
 import { renderScreen } from "./renderScreen";
-import { getChatState, setChatState } from "../state/chat.state";
+import { getChatState } from "../state/chat.state";
 import { ordersHandler } from "../handlers/orders.handler";
 
 export async function renderSection(bot: TelegramBot, chatId: number) {
