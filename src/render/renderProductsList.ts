@@ -5,7 +5,6 @@ import { CATALOG_TEXTS } from "../texts";
 import { getProducts } from "../services/products.service";
 import { getChatState, getSectionState, setChatState } from "../state/chat.state";
 import { renderScreen } from "./renderScreen";
-import { getUser } from "../services/users.service";
 
 export async function renderProductsList(
   bot: TelegramBot,
