@@ -712,6 +712,14 @@ export function registerCallbacks(bot: TelegramBot) {
 
           await bot.sendMessage(ADMIN_CHAT_ID, message, {
             parse_mode: "HTML",
+            reply_markup: {
+              inline_keyboard: [[
+                {
+                  text: "✉️ Написать клиенту",
+                  url: `tg://user?id=${chatId}`
+                }
+              ]]
+            }
           });
 
           // очищаем корзину пользователя

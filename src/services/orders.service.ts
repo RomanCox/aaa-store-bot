@@ -87,9 +87,12 @@ export function buildOrderMessage(
     wholesale: "Опт",
   };
 
-  const userLine = ( !isForOrdersList || isAdmin )
-    ? `👤 Клиент (<code>${userId}</code>)\n`
+  const userLine = (!isForOrdersList || isAdmin)
+    ? user?.username
+      ? `👤 Клиент: @${user.username}\n`
+      : `👤 Клиент: <code>${userId}</code>\n`
     : "";
+
   const userRole = (!isForOrdersList && user?.role) ? `${roleMap[user.role]}\n` : "";
 
   const items = order.items.map((product) =>
