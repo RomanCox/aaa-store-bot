@@ -36,7 +36,7 @@ export async function renderScreen<K extends SECTION>(
   if (currentSection === SECTION.CATALOG && catalogState?.hasFileBelow) {
     // Не удаляем сообщение с последним блоком продуктов
     if (catalogState.messageId && catalogState.messageId !== catalogState.lastProductsMessageId) {
-      await safeDelete(bot, catalogState.messageId);
+      await safeDelete(bot, chatId, catalogState.messageId);
     }
 
     // создаем новое сообщение каталога

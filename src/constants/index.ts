@@ -1,5 +1,7 @@
 import path from "path";
 
+export const TIME_LIMIT_DELETING_OLD_FILES = 60 * 60 * 1000;
+
 export const MAX_PRICE = 20000;
 export const TELEGRAM_MESSAGE_LIMIT = 3900;
 export const USERS_PER_PAGE = 5;

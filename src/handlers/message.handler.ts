@@ -76,6 +76,7 @@ export function registerMessages(bot: TelegramBot) {
             },
           });
           await renderFlow(bot, chatId);
+          if (state.section === SECTION.CATALOG) await safeDelete(bot, chatId, msg.message_id);
         })
       },
 
@@ -87,6 +88,7 @@ export function registerMessages(bot: TelegramBot) {
             sections: resetCatalogIfLeaving(),
           });
           await renderFlow(bot, chatId);
+          if (state.section === SECTION.CART) await safeDelete(bot, chatId, msg.message_id);
         })
       },
 
@@ -109,6 +111,7 @@ export function registerMessages(bot: TelegramBot) {
         });
 
         await ordersHandler(bot, chatId);
+        if (state.section === SECTION.ORDERS) await safeDelete(bot, chatId, msg.message_id);
       },
 
       [MENU_TEXTS.ADMIN_PANEL]: async () => {
@@ -136,6 +139,8 @@ export function registerMessages(bot: TelegramBot) {
           inlineKeyboard: adminKeyboard(),
           parse_mode: "HTML",
         });
+
+        if (state.section === SECTION.ADMIN_PANEL) await safeDelete(bot, chatId, msg.message_id);
       },
 
       [MENU_TEXTS.MANAGER]: async () => {
