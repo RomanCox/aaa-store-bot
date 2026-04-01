@@ -11,6 +11,6 @@ export const PRICE_TEXTS = {
 
 export const PRICE_ERRORS = {
 	ERROR_STATE: "❌ state.mode неправильный: ",
-	PRICE_FORMAT_ERROR: "❌ Значение должно быть числом",
+	PRICE_FORMAT_ERROR: "❌ Значение должно быть числом, введите заново:",
 	ERROR_PRICE_FORMATION_EDIT: "❌ Не удалось изменить цену",
 }

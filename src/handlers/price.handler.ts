@@ -16,6 +16,7 @@ export async function editPriceInputHandler(
     await renderScreen(bot, chatId, {
       section: SECTION.ADMIN_PANEL,
       text: PRICE_ERRORS.PRICE_FORMAT_ERROR,
+      withBackButton: true,
     });
     return;
   }
