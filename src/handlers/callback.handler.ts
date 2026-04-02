@@ -367,25 +367,6 @@ export function registerCallbacks(bot: TelegramBot) {
 
       case CALLBACK_TYPE.DOWNLOAD_XLSX: {
         return guardWorkingHours(bot, chatId, async () => {
-          // const exportKey = params[0];
-          // const productIds = tempExports.get(exportKey) || [];
-          // tempExports.delete(exportKey);
-          //
-          // const productsToExport = productIds
-          //   .map(id => getProductById(chatId, id))
-          //   .filter(Boolean) as Product[];
-          //
-          // if (!productsToExport.length) {
-          //   await renderScreen(bot, chatId, {
-          //     section: SECTION.CATALOG,
-          //     text: COMMON_TEXTS.NOT_ITEMS_FOR_EXPORT,
-          //   });
-          //   return;
-          // }
-          //
-          // await sendPriceList(bot, chatId, productsToExport);
-          // return;
-
           const filters = downloadCatalogHelpers(params);
 
           const productsToExport = getProducts(chatId, filters);

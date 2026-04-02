@@ -7,9 +7,10 @@ interface ParsedCallback {
 
 export function parseCallbackData(data: string): ParsedCallback | null {
 	const original = getCallbackOriginal(data);
-	if (!original) return null;
 
-	const [action, ...params] = original.split("::");
+	const source = original ?? data;
+
+	const [action, ...params] = source.split("::");
 
 	return {
 		action,
