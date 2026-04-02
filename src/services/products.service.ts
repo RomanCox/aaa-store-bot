@@ -77,35 +77,6 @@ export function getProducts(
 	const userRole = getUser(chatId)?.role;
 
   return buildProducts(userRole, filters);
-	// const rates = getRates();
-	// const priceFormation = getPriceFormation();
-  //
-	// return Array.from(products.values())
-	// 	.filter(p => {
-	// 		if (filters.brand && p.brand !== filters.brand) return false;
-  //
-	// 		if (filters.category && p.category !== filters.category) return false;
-  //
-	// 		if (filters.model && p.model !== filters.model) return false;
-  //
-	// 		if (filters.storage) {
-	// 			if (!p.storage) return false;
-	// 			if (p.storage !== filters.storage) return false;
-	// 		}
-  //
-	// 		return true;
-	// 	})
-	// 	.map(product => ({
-	// 		...product,
-	// 		price: priceFormat(
-  //       product.price,
-  //       rates,
-  //       priceFormation,
-  //       product.category,
-  //       product.brand,
-  //       userRole
-  //     ),
-	// 	}))
 }
 
 export function getRetailProducts(

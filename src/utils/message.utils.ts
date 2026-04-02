@@ -120,9 +120,11 @@ export function buildMessagesWithProducts(products: Product[]): ProductMessage[]
       }
     }
 
-    const line = formatProductLine(product);
+    const rawLine = formatProductLine(product);
+    let line = fixFlags(rawLine);
+    line = line.replace(/\s+$/g, '');
 
-    if ((currentMessage + line + " \n").length > TELEGRAM_MESSAGE_LIMIT) {
+    if ((currentMessage + line + "\n").length > TELEGRAM_MESSAGE_LIMIT) {
       messages.push({ text: currentMessage, products: currentProducts });
       currentMessage = "";
       currentProducts = [];
@@ -131,7 +133,7 @@ export function buildMessagesWithProducts(products: Product[]): ProductMessage[]
       prevGroupKey = null;
     }
 
-    currentMessage += line + " \n";
+    currentMessage += line + "\n";
     currentProducts.push(product);
 
     const currentGroupKey = getProductGroupKey(product);
@@ -146,4 +148,8 @@ export function buildMessagesWithProducts(products: Product[]): ProductMessage[]
   }
 
   return messages;
+}
+
+function fixFlags(str: string) {
+  return str.replace(/([\u{1F1E6}-\u{1F1FF}]{2})/gu, '$1\u200A');
 }
