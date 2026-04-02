@@ -5,7 +5,7 @@ interface ParsedCallback {
 	params: string[];
 }
 
-export function parseCallbackData(data: string): ParsedCallback | null {
+export function parseCallbackData(data: string): ParsedCallback {
 	const original = getCallbackOriginal(data);
 
 	const source = original ?? data;

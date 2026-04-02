@@ -31,10 +31,6 @@ export function registerCallbacks(bot: TelegramBot) {
 		await bot.answerCallbackQuery(query.id);
 
 		const parsed = parseCallbackData(data);
-    if (!parsed) {
-      console.log('Invalid or expired button');
-      return;
-    }
 		const {action, params} = parsed;
 
 		switch (action) {
