@@ -1,10 +1,22 @@
-type CallbackPart = string | number | undefined | null;
+import crypto from 'crypto';
+import { setCallbackHash } from "../services/callbackHashMap";
 
-//Params: action, params
+// type CallbackPart = string | number | undefined | null;
 
-export function buildCallbackData(...parts: CallbackPart[]): string {
-	return parts
-		.filter((p): p is string | number => p !== undefined && p !== null)
-		.map(String)
-		.join("::");
+function hashString(str: string) {
+	return crypto.createHash('md5').update(str).digest('hex');
 }
+
+export function buildCallbackData(...parts: string[]): string {
+	const raw = parts.filter(Boolean).join('::');
+	const hash = hashString(raw);
+	setCallbackHash(hash, raw);
+	return hash;
+}
+
+// export function buildCallbackData(...parts: CallbackPart[]): string {
+// 	return parts
+// 		.filter((p): p is string | number => p !== undefined && p !== null)
+// 		.map(String)
+// 		.join("::");
+// }
