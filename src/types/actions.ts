@@ -39,10 +39,6 @@ export enum PAGINATION {
   GOTO = "goto",
 }
 
-export enum START_ACTIONS {
-	 CHECK_ACCESS = "check_access",
-}
-
 export enum CATALOG_VALUE {
 	ALL = "all",
 }

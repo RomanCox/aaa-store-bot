@@ -1,10 +1,9 @@
 import TelegramBot from "node-telegram-bot-api";
 
-import { ENV } from "../config/env";
 import { mainKeyboard } from "../keyboards";
 import { getUser, isAdmin } from "../services/users.service";
-import { AUTH_TEXTS, getWelcomeText, START_TEXTS } from "../texts";
-import { SECTION, START_ACTIONS } from "../types";
+import { getWelcomeText, START_TEXTS } from "../texts";
+import { SECTION } from "../types";
 import { setChatState } from "../state/chat.state";
 import { renderScreen } from "../render/renderScreen";
 
@@ -26,15 +25,6 @@ export function registerStart(bot: TelegramBot) {
     const user = getUser(chatId);
 
     if (!user) {
-      await renderScreen(bot, chatId, {
-        section: SECTION.HOME,
-        text: AUTH_TEXTS.notActivated(chatId),
-        inlineKeyboard: [
-          [{ text: START_TEXTS.CHECK_ACCESS, callback_data: START_ACTIONS.CHECK_ACCESS }],
-          [{ text: START_TEXTS.WRITE_MANAGER, url: ENV.RETAIL_MANAGER_URL }],
-        ],
-        parse_mode: "HTML",
-      });
       return;
     }
 

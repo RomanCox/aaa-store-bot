@@ -1,5 +1,4 @@
 export * from "./admin.texts";
-export * from "./auth.texts";
 export * from "./cart.texts";
 export * from "./catalog.texts";
 export * from "./common.texts";
