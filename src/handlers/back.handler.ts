@@ -1,4 +1,4 @@
-import { getChatState, setChatState, updateSectionState } from "../state/chat.state";
+import { getChatState, setChatState } from "../state/chat.state";
 import { SECTION } from "../types";
 import { isAdmin } from "../services/users.service";
 
