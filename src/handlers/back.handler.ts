@@ -1,8 +1,91 @@
-import { getChatState, setChatState } from "../state/chat.state";
+import { getChatState, setChatState, updateSectionState } from "../state/chat.state";
 import { SECTION } from "../types";
+import { isAdmin } from "../services/users.service";
 
 export async function handleBack(chatId: number) {
   const state = getChatState(chatId);
+
+  if (state.mode === "error") {
+    const section = state.section;
+
+    // 🔹 ADMIN
+    if (section === SECTION.ADMIN_PANEL) {
+      const adminState = state.sections?.[SECTION.ADMIN_PANEL];
+
+      setChatState(chatId, {
+        mode: "idle",
+        sections: {
+          ...state.sections,
+          [SECTION.ADMIN_PANEL]: {
+            ...adminState,
+            flowStep: "main",
+            users: adminState?.users ?? {
+              page: 1,
+              totalPages: 1,
+              editingUserId: undefined,
+              newUserId: undefined,
+            },
+          },
+        },
+      });
+      return;
+    }
+
+    // 🔹 CATALOG
+    if (section === SECTION.CATALOG) {
+      setChatState(chatId, {
+        mode: "idle",
+        sections: {
+          ...state.sections,
+          [SECTION.CATALOG]: {
+            flowStep: "brands",
+            selectedBrand: undefined,
+            selectedCategory: undefined,
+            lastProductGroups: [],
+          },
+        },
+      });
+      return;
+    }
+
+    // 🔹 CART
+    if (section === SECTION.CART) {
+      setChatState(chatId, {
+        mode: "idle",
+        sections: {
+          ...state.sections,
+          [SECTION.CART]: {
+            flowStep: "main",
+            selectedBrand: undefined,
+            selectedCategory: undefined,
+            selectedModel: undefined,
+            selectedStorage: undefined,
+            selectedProductId: undefined,
+            selectedProductIdForCart: undefined,
+          },
+        },
+      });
+      return;
+    }
+
+    // 🔹 ORDERS
+    if (section === SECTION.ORDERS) {
+      setChatState(chatId, {
+        mode: isAdmin(chatId) ? "choose_userId_for_orders" : "idle",
+        sections: {
+          ...state.sections,
+          [SECTION.ORDERS]: {
+            flowStep: "main",
+            selectedUserId: undefined,
+            page: 1,
+            totalPages: 1,
+          },
+        },
+      });
+      return;
+    }
+  }
+
   const adminState = state.sections?.[SECTION.ADMIN_PANEL];
 
   if (!adminState) return;

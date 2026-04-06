@@ -457,6 +457,7 @@ export function registerCallbacks(bot: TelegramBot) {
             await renderScreen(bot, chatId, {
               section: SECTION.CART,
               text: CART_TEXTS.PRODUCT_UNAVAILABLE,
+              withBackButton: true,
             });
             return;
           }

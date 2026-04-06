@@ -2,6 +2,7 @@ import { SECTION, CatalogFlowStep, CartFlowStep, AdminPanelFlowStep, orderFlowSt
 import { Product, ProductForCart } from "./product";
 
 export type ChatMode = "idle"
+	| "error"
 	| "upload_xlsx"
 	| "add_user"
 	| "delete_user"

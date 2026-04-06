@@ -1,7 +1,7 @@
 import TelegramBot from "node-telegram-bot-api";
 import { getProductById, getProducts } from "../services/products.service";
 import { buildDownloadCallback, getBrands, getCategories, getModels, getStorageValues } from "../utils";
-import { getChatState, getSectionState } from "../state/chat.state";
+import { getChatState, getSectionState, setChatState } from "../state/chat.state";
 import {
   brandsKeyboard,
   cartRootKeyboard,
@@ -151,9 +151,14 @@ export async function renderBrands(
   const filters: ProductFilters = {};
 
   if (!brands.length) {
+		setChatState(chatId, {
+			mode: "error",
+		})
+
     await renderScreen(bot, chatId, {
       section: section,
       text: CATALOG_TEXTS.UNAVAILABLE,
+			withBackButton: true,
     });
     return;
   }
@@ -186,9 +191,14 @@ export async function renderCategories(
     selectedBrand = (sectionState as CartSectionState).selectedBrand;
   }
   if (!selectedBrand) {
+		setChatState(chatId, {
+			mode: "error",
+		})
+
     await renderScreen(bot, chatId, {
       section: section,
       text: CATALOG_TEXTS.UNAVAILABLE,
+			withBackButton: true,
     });
     return;
   }
@@ -200,9 +210,14 @@ export async function renderCategories(
   const downloadKey = buildDownloadCallback(filters);
 
   if (!categories.length) {
+		setChatState(chatId, {
+			mode: "error",
+		})
+
     await renderScreen(bot, chatId, {
       section: section,
       text: CATALOG_TEXTS.UNAVAILABLE,
+			withBackButton: true,
     });
     return;
   }
@@ -237,9 +252,14 @@ async function renderModels(bot: TelegramBot, chatId: number) {
 	const models = getModels(products, sectionState.selectedBrand, sectionState.selectedCategory);
 
 	if (!sectionState.selectedBrand || !sectionState.selectedCategory || !models.length) {
+		setChatState(chatId, {
+			mode: "error",
+		})
+
     await renderScreen(bot, chatId, {
       section: SECTION.CART,
       text: CATALOG_TEXTS.UNAVAILABLE,
+			withBackButton: true,
     });
 		return;
 	}
@@ -282,9 +302,14 @@ async function renderStorage(bot: TelegramBot, chatId: number) {
 		!sectionState.selectedModel ||
 		!storageValues.length
 	) {
+		setChatState(chatId, {
+			mode: "error",
+		})
+
     await renderScreen(bot, chatId, {
       section: SECTION.CART,
       text: CATALOG_TEXTS.UNAVAILABLE,
+			withBackButton: true,
     });
 		return;
 	}
@@ -326,9 +351,14 @@ async function renderChoosingProduct(bot: TelegramBot, chatId: number) {
 		!sectionState.selectedModel ||
 		!products.length
 	) {
+		setChatState(chatId, {
+			mode: "error",
+		})
+
     await renderScreen(bot, chatId, {
       section: SECTION.CART,
       text: CATALOG_TEXTS.UNAVAILABLE,
+			withBackButton: true,
     });
 		return;
 	}
@@ -405,7 +435,15 @@ export async function renderFlow(bot: TelegramBot, chatId: number) {
 	});
 
 	if (!products || products.length === 0) {
-    await renderScreen(bot, chatId, { section: SECTION.CART, text: CATALOG_TEXTS.UNAVAILABLE });
+		setChatState(chatId, {
+			mode: "error",
+		})
+
+    await renderScreen(bot, chatId, {
+			section: SECTION.CART,
+			text: CATALOG_TEXTS.UNAVAILABLE,
+			withBackButton: true,
+		});
 		return;
 	}
 

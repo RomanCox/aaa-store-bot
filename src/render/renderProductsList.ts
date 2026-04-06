@@ -24,9 +24,14 @@ export async function renderProductsList(
     .filter(product => !product.hidden);
 
   if (!products.length) {
+    setChatState(chatId, {
+      mode: "error",
+    })
+
     await renderScreen(bot, chatId, {
       section: SECTION.CATALOG,
       text: CATALOG_TEXTS.UNAVAILABLE,
+      withBackButton: true,
     });
     return;
   }
