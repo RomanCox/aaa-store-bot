@@ -120,9 +120,7 @@ export function buildMessagesWithProducts(products: Product[]): ProductMessage[]
       }
     }
 
-    const rawLine = formatProductLine(product);
-    let line = fixFlags(rawLine);
-    line = line.replace(/\s+$/g, '');
+		const line = formatProductLine(product);
 
     if ((currentMessage + line + "\n").length > TELEGRAM_MESSAGE_LIMIT) {
       messages.push({ text: currentMessage, products: currentProducts });
@@ -134,6 +132,7 @@ export function buildMessagesWithProducts(products: Product[]): ProductMessage[]
     }
 
     currentMessage += line + "\n";
+
     currentProducts.push(product);
 
     const currentGroupKey = getProductGroupKey(product);
@@ -150,6 +149,13 @@ export function buildMessagesWithProducts(products: Product[]): ProductMessage[]
   return messages;
 }
 
-function fixFlags(str: string) {
-  return str.replace(/([\u{1F1E6}-\u{1F1FF}]{2})/gu, '$1\u200A');
+export function sanitizeTelegramText(text: string): string {
+	return text
+		.normalize('NFC') // приводим Unicode к нормальной форме
+		.replace(/[\u0000-\u0009\u000B-\u001F\u007F-\u009F]/g, '') // убираем control chars
+		.replace(/\uFEFF/g, '') // BOM (часто из Excel)
+		.replace(
+			/([\u{1F1E6}-\u{1F1FF}])([\u{1F1E6}-\u{1F1FF}])/gu,
+			(_, a, b) => a + b // гарантируем, что флаг — это пара символов
+		);
 }

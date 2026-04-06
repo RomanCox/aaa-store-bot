@@ -6,3 +6,5 @@ google-service-account.json
 .DS_Store
 /data/*.json
 /data
+/tmp
+/tmp/*.xlsx
