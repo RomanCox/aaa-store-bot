@@ -79,7 +79,7 @@ export function buildOrderMessage(
 ): string {
   const firstLine = isForOrdersList ? "" : "🆕 <b>Поступил заказ!</b>\n"
   const formattedDate = new Date(order.createdAt).toLocaleDateString("ru-RU");
-  const dateString = ORDER_TEXTS.ORDER_DATE + formattedDate + "\n"
+  const dateString = ORDER_TEXTS.ORDER_DATE + formattedDate
 
   const user = getUser(userId);
   const roleMap: Record<string, string> = {
@@ -89,14 +89,16 @@ export function buildOrderMessage(
 
   const userLine = (!isForOrdersList || isAdmin)
     ? user?.username
-      ? `👤 Клиент: @${user.username}\n`
-      : `👤 Клиент: <code>${userId}</code>\n`
+      ? `\n👤 Клиент: @${user.username}\n`
+      : `\n👤 Клиент: <code>${userId}</code>\n`
     : "";
 
   const userRole = (!isForOrdersList && user?.role) ? `${roleMap[user.role]}\n` : "";
 
+  // const userBlock = `${userLine}`
+
   const items = order.items.map((product) =>
-    `🔹 ${product.name}
+    `🔹 ${product.name} ${product.country}
 		📦 ${product.amount}шт × ${product.price} = ${Number(product.price) * product.amount}`
   ).join("\n\n");
 
@@ -108,8 +110,7 @@ export function buildOrderMessage(
 	return `
 ${firstLine}🆔 заказа: ${order.id}
 ${dateString}
-${userLine}
-${userRole}
+${userLine}${userRole}
 ${items}
 
 💰 <b>Итого:</b> ${total}

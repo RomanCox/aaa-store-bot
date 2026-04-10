@@ -207,7 +207,7 @@ export async function orderHandler(bot: TelegramBot, chatId: number, orderId: st
     return;
   }
 
-  const message = buildOrderMessage(order, userId, true, isAdmin(chatId),);
+  const message = buildOrderMessage(order, userId, true, isAdmin(chatId));
 
   await renderScreen(bot, chatId, {
     section: SECTION.ORDERS,
