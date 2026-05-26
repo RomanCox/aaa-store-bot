@@ -1,0 +1,10 @@
+{
+  "rates": {
+    "rub_to_byn": 3.74,
+    "rub_to_usd": 70
+  },
+  "multipliers": {
+    "retail": 1.2,
+    "wholesale": null
+  }
+}
