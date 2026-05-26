@@ -30,6 +30,21 @@ export function saveCatalog() {
   );
 }
 
+// ---------------- CLEAR PRICES ----------------
+
+export function clearCatalogSource(source: PriceListType) {
+  for (const [id, item] of catalog.entries()) {
+    item.offers = item.offers.filter(
+      o => o.source !== source
+    );
+
+    // если офферов больше нет — удаляем товар
+    if (item.offers.length === 0) {
+      catalog.delete(id);
+    }
+  }
+}
+
 // ---------------- UPSERT ----------------
 
 export function upsertCatalog(
@@ -39,24 +54,25 @@ export function upsertCatalog(
 ) {
   const existing = catalog.get(productId);
 
-  // если нет — добавляем
-  if (!existing) {
+  if (existing) {
+    if (!existing.offers) {
+      existing.offers = [];
+    }
+
+    const existingOffer = existing.offers.find(
+      o => o.source === source
+    );
+
+    if (existingOffer) {
+      existingOffer.price = price;
+    } else {
+      existing.offers.push({ price, source });
+    }
+  } else {
     catalog.set(productId, {
       productId,
       offers: [{ price, source }],
     });
-    return;
-  }
-
-  // проверяем есть ли уже такой source
-  const existingOffer = existing.offers.find(o => o.source === source);
-
-  if (existingOffer) {
-    // обновляем цену
-    existingOffer.price = price;
-  } else {
-    // добавляем нового поставщика
-    existing.offers.push({ price, source });
   }
 }
 

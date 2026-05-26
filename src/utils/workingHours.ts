@@ -11,8 +11,8 @@ export function isWorkingHours(): boolean {
 
   const hours = minskTime.getHours();
 
-  return hours >= 11 && hours < 21;
-  // return true;
+  // return hours >= 11 && hours < 21;
+  return process.env.DEV ? true : hours >= 11 && hours < 21;
 }
 
 export async function guardWorkingHours(

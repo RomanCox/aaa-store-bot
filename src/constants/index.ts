@@ -22,8 +22,12 @@ export const DATA_PATH = envDataPath
   : path.resolve(__dirname, "../../data");
 
 export const ORDERS_PATH = path.join(DATA_PATH, "orders.json");
-export const PRODUCTS_PATH = path.join(DATA_PATH, "products.json");
+export const PRODUCTS_CACHE_PATH = path.join(DATA_PATH, "products-cache.json");
 export const USERS_PATH = path.join(DATA_PATH, "users.json");
 export const RATES_PATH = path.join(DATA_PATH, "rates.json");
 export const PRICE_FORMATION_PATH = path.join(DATA_PATH, "price_formation.json");
 export const BRANDS_PATH = path.join(DATA_PATH, "brands.json");
+export const COLORS_PATH = path.join(DATA_PATH, "colors.json");
+
+export const TODAY_THERE_TOMORROW_HERE_PRICE_DELIVERY = 5;
+export const SAVE_EVERY_NUMBER_ITEMS = 100;

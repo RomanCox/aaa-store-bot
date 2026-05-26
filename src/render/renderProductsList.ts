@@ -2,9 +2,10 @@ import TelegramBot from "node-telegram-bot-api";
 import { buildCallbackData, buildDownloadCallback, buildMessagesWithProducts } from "../utils";
 import { CALLBACK_TYPE, CatalogSectionState, ProductFilters, SECTION } from "../types";
 import { CATALOG_TEXTS } from "../texts";
-import { getProducts } from "../services/products.service";
 import { getChatState, getSectionState, setChatState } from "../state/chat.state";
 import { renderScreen } from "./renderScreen";
+import { getUserRole } from "../services/users.service";
+import { getCatalogUIProducts } from "../services/catalog/ui/catalog.ui";
 
 export async function renderProductsList(
   bot: TelegramBot,
@@ -17,11 +18,13 @@ export async function renderProductsList(
 
   const { selectedBrand, selectedCategory } = catalogState as CatalogSectionState;
 
-  const products = getProducts(chatId, {
+  const filter: ProductFilters = {
     brand: selectedBrand,
     category: selectedCategory,
-  })
-    .filter(product => !product.hidden);
+  };
+  const role = getUserRole(chatId);
+
+  const products = getCatalogUIProducts(filter, role);
 
   if (!products.length) {
     setChatState(chatId, {
@@ -36,7 +39,9 @@ export async function renderProductsList(
     return;
   }
 
-  const parts = buildMessagesWithProducts(products);
+  const userRole = getUserRole(chatId);
+
+  const parts = buildMessagesWithProducts(products, userRole);
 
   // сохраняем lastProductGroups в sections
   setChatState(chatId, {

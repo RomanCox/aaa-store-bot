@@ -6,7 +6,16 @@ export enum SECTION {
 	ADMIN_PANEL = "admin_panel",
 }
 
-export type AdminPanelFlowStep = "main" | "upload_xlsx" | "manage_users" | "users_list" | "add_user" | "delete_user" | "edit_user";
+export type AdminPanelFlowStep =
+	"main"
+	| "upload_aaa_store_price"
+	| "upload_today_there_tomorrow_here_price"
+	| "manage_users"
+	| "users_list"
+	| "add_user"
+	| "delete_user"
+	| "edit_user";
+
 export type CatalogFlowStep =
   "brands" |
   "categories" |

@@ -6,15 +6,15 @@ import { deleteUserInputHandler } from "./users/deleteUser.handler";
 import { editUserInputHandler } from "./users/editUser.handler";
 import { addUserInputHandler } from "./users/addUser.handler";
 import { editPriceInputHandler } from "./price.handler";
-import { getProductById } from "../services/products.service";
 import { renderFlow } from "../render/renderFlow";
 import { ordersHandler, ordersPageInputHandler } from "./orders.handler";
-import { getUser, isAdmin, usersPageInputHandler } from "../services/users.service";
+import { getUser, getUserRole, isAdmin, usersPageInputHandler } from "../services/users.service";
 import { renderScreen } from "../render/renderScreen";
 import { guardWorkingHours, safeDelete } from "../utils";
 import { adminKeyboard, mainKeyboard } from "../keyboards";
 import { UI_VERSION } from "../constants";
 import { ENV } from "../config/env";
+import { getCatalogProductById } from "../services/catalog/ui/catalog.ui";
 
 export function registerMessages(bot: TelegramBot) {
   bot.on("message", async (msg) => {
@@ -177,6 +177,7 @@ export function registerMessages(bot: TelegramBot) {
 
       edit_rub_to_byn: async (t) => await editPriceInputHandler(bot, chatId, t),
       edit_rub_to_usd: async (t) => await editPriceInputHandler(bot, chatId, t),
+      edit_usd_to_byn: async (t) => await editPriceInputHandler(bot, chatId, t),
 
       await_users_page_number: async (t) => {
         await usersPageInputHandler(bot, chatId, t);
@@ -214,7 +215,8 @@ export function registerMessages(bot: TelegramBot) {
           return;
         }
 
-        const choseProduct = getProductById(chatId, state.sections.cart?.selectedProductId);
+        const role = getUserRole(chatId);
+        const choseProduct = getCatalogProductById(state.sections.cart?.selectedProductId, role);
         if (!choseProduct) {
           await renderScreen(bot, chatId, { section: SECTION.CART, text: CART_TEXTS.PRODUCT_UNAVAILABLE });
           return;

@@ -1,13 +1,30 @@
-import { Product } from "../types";
+import { Product, UserRole } from "../types";
 import { compareSpecs, extractMemorySubstring } from "./catalog.utils";
 import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
 
-function formatProductLine(product: Product): string {
-	const name = product.name
-	const price = product.price
-	const country = product.country ?? ""
+function formatProductLine(product: Product, userRole?: UserRole): string {
+  const name = product.name;
+	const price = product.price;
+  const currency = userRole === "retail" ? "р." : "";
+	const country = product.country ?? "";
+  const sim = product.sim ?? "";
+  const active = product.activated ? "Active" : ""
 
-	return `${name} - ${price} ${country}`
+  let line = `${name} - ${price}${currency}`;
+
+  if (country) {
+    line += ` ${sim}`;
+  }
+
+  if (sim) {
+    line += ` 📲 ${sim}`;   // или line += ` (${sim})`
+  }
+
+  if (active) {
+    line += ` ✅ ${active}`;
+  }
+
+	return line;
 }
 
 function getProductGroupKey(product: Product): string | null {
@@ -72,7 +89,10 @@ type ProductMessage = {
   products: Product[];
 };
 
-export function buildMessagesWithProducts(products: Product[]): ProductMessage[] {
+function buildMessagesForProducts(
+  products: Product[],
+  userRole?: UserRole,
+): ProductMessage[] {
   const messages: ProductMessage[] = [];
 
   let currentMessage = "";
@@ -120,7 +140,7 @@ export function buildMessagesWithProducts(products: Product[]): ProductMessage[]
       }
     }
 
-		const line = formatProductLine(product);
+		const line = formatProductLine(product, userRole);
 		const safeLine= sanitizeTelegramText(line);
 
     if ((currentMessage + safeLine + "\n").length > TELEGRAM_MESSAGE_LIMIT) {
@@ -148,6 +168,23 @@ export function buildMessagesWithProducts(products: Product[]): ProductMessage[]
   }
 
   return messages;
+}
+
+export function buildMessagesWithProducts(
+  products: Product[],
+  userRole?: UserRole
+): ProductMessage[] {
+  // Разделяем товары на неактивированные и активированные
+  const notActivated = products.filter(p => !p.activated);
+  const activated = products.filter(p => p.activated === true);
+
+  // Строим сообщения для неактивированных (со старой логикой)
+  const notActivatedMessages = buildMessagesForProducts(notActivated, userRole);
+  // Строим сообщения для активированных (с пустыми строками между моделями)
+  const activatedMessages = buildMessagesForProducts(activated, userRole);
+
+  // Объединяем: сначала неактивированные, потом активированные
+  return [...notActivatedMessages, ...activatedMessages];
 }
 
 export function sanitizeTelegramText(text: string): string {

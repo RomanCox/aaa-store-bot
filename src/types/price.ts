@@ -3,6 +3,7 @@ import { ChatMode } from "./chat";
 export interface Rates {
   rub_to_byn: number;
   rub_to_usd: number;
+  usd_to_byn: number;
 }
 
 export type PriceType = "wholesale" | "retail";

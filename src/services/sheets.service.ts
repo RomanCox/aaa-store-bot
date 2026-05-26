@@ -2,6 +2,7 @@ import { google } from "googleapis";
 import { PriceFormat } from "../types";
 import { savePriceFormation } from "./price.service";
 import { saveBrands } from "./brands.service";
+import { saveColors } from "./colors.service";
 
 const auth = new google.auth.GoogleAuth({
 	keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS!,
@@ -105,4 +106,30 @@ export async function loadBrandsFromConfig() {
   }
 
   await saveBrands(result);
+}
+
+export async function loadColorsFromConfig() {
+  const rows = await getSheet("'Цвета'!A:B");
+
+  if (rows.length < 2) return;
+
+  const [, ...data] = rows;
+
+  const result: Record<string, string[]>[] = [];
+
+  for (const row of data) {
+    const [
+      colorRaw,
+      keyWordsRaw
+    ] = row;
+
+    const color = colorRaw?.trim() || undefined;
+    if (!color) continue;
+
+    const keyWords = keyWordsRaw?.trim().split('\n').filter((k: string) => k.trim() !== '') || [];
+
+    result.push({ [color]: keyWords });
+  }
+
+  await saveColors(result);
 }

@@ -1,29 +1,141 @@
 import * as XLSX from "xlsx";
-import fs from "fs";
-import os from "os";
-import path from "path";
-import { Product, PRODUCT_XLSX_HEADERS, ProductForCatalog, SECTION } from "../types";
-import { resolveBrandFromName } from "./brands.service";
-import { CATALOG_TEXTS } from "../texts";
-import TelegramBot from "node-telegram-bot-api";
-import { getChatState, getSectionState } from "../state/chat.state";
-import { renderScreen } from "../render/renderScreen";
-import { compareSpecs, extractMemorySubstring, findPriceRule } from "../utils";
-import { getPriceFormation, getRates } from "./price.service";
-import { MAX_PRICE } from "../constants";
-import { getRetailProducts } from "./products.service";
+import { IngestItem, SimType } from "../types";
+import { callAIForProductMatch, extractProductAttributes } from "../ai/productAI";
+import {
+	cleanProductName,
+	extractActivated,
+	extractFlags,
+	normalizeSimByRules,
+	normalizeStorageForCatalog,
+	extractSim,
+	hasConnectivity,
+	hasChip,
+	extractDisplayFinish,
+	normalizeModelForIPadMini,
+} from "../utils";
+import { extractBrandFromStart, resolveBrandFromName } from "./brands.service";
+import {
+	addRawNameIfNeeded,
+	buildAAAStoreRawName,
+	buildTodayThereTomorrowHereRawName,
+	normalize,
+	upsertProduct,
+} from "./products/product.builder";
+import {
+	findByRawName,
+	getProductCache,
+	matchProduct,
+	saveProductCache,
+	getProductFromCacheById,
+} from "./products/products.service";
+import { SAVE_EVERY_NUMBER_ITEMS, TODAY_THERE_TOMORROW_HERE_PRICE_DELIVERY } from "../constants";
+import { resolveColorFromName, normalizeColorInProductName } from "./colors.service";
 
-function resolvePath(p: string) {
-  if (p.startsWith("~")) {
-    return path.join(os.homedir(), p.slice(1));
-  }
-  return path.resolve(p);
+function hasRequiredColumns(row: Record<string, unknown>): boolean {
+	return ["SKU", "Категория", "Название", "Модель", "Цена"]
+		.every(col => col in row);
 }
 
-export function parseXlsxToProducts(buffer: Buffer): ProductForCatalog[] {
-	const workbook = XLSX.read(buffer, {type: "buffer"});
-	const sheetName = workbook.SheetNames[0];
-	const sheet = workbook.Sheets[sheetName];
+function getCategory(name: string) {
+	const normalizeString = name.toLowerCase()
+	if (normalizeString.includes("iphone")) return "Смартфоны";
+	if (normalizeString.includes("macbook")) return "Ноутбуки";
+	if (normalizeString.includes("mac ")) return "Компьютер";
+	if (normalizeString.includes("ipad")) return "Планшеты";
+	if (normalizeString.includes("airpods")) return "Наушники";
+	if (normalizeString.includes("watch")) return "Часы";
+	if (normalizeString.includes("display")) return "Монитор";
+	return "Аксессуары";
+}
+
+async function processItem(input: {
+	rawNameForMatch: string;
+	rawName: string;
+	price: string;
+	brand: string;
+	category: string;
+	model: string;
+	storage?: string;
+	color?: string;
+	country?: string;
+	sim?: SimType;
+	activated?: boolean,
+	connectivity?: "WiFi" | "LTE";
+  chip?: string; 
+	isAppleSmartphone?: boolean;
+}): Promise<IngestItem | undefined> {
+	const {
+		rawNameForMatch,
+		rawName,
+		price,
+		brand,
+		category,
+		model,
+		storage,
+		color,
+		country,
+		sim,
+		activated,
+		connectivity,
+    chip, 
+		isAppleSmartphone
+	} = input;
+	const match = matchProduct({
+		rawName: rawNameForMatch,
+		brand,
+		category,
+		model,
+		storage,
+		color,
+		sim,
+		activated,
+		connectivity,
+    chip, 
+	});
+
+	if (match?.product) {
+		addRawNameIfNeeded(match.product, rawNameForMatch);
+		return {
+			product: match.product,
+			price,
+			rawNameForMatch,
+			isNew: false,
+		};
+	}
+
+	const product = upsertProduct({
+		rawName: rawNameForMatch,
+		brand,
+		category,
+		model,
+		name: rawName,
+		attributes: {
+			storage: storage,
+			color: color,
+			country: isAppleSmartphone ? undefined : country,
+			sim,
+			activated,
+			connectivity,
+    	chip, 
+		},
+	});
+
+	if (!product) return;
+
+	return { product, price, rawNameForMatch, isNew: true, };
+}
+
+export async function ingestAAAStorePrice(
+	buffer: Buffer,
+	options?: {
+		onUnknownBrand?: (names: string[]) => Promise<void> | void;
+		onAiError?: (names: string[]) => Promise<void> | void;
+		onUnresolvedItems?: (names: string[]) => Promise<void> | void;
+		onCostReport?: (cost: number) => Promise<void> | void;
+	}
+): Promise<IngestItem[]> {
+	const workbook = XLSX.read(buffer, { type: "buffer" });
+	const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
 	const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, {
 		defval: "",
@@ -33,227 +145,492 @@ export function parseXlsxToProducts(buffer: Buffer): ProductForCatalog[] {
 		throw new Error("Неверный формат XLSX файла");
 	}
 
-	const products = rows
-		.map(mapRowToProduct)
-		.filter(isValidProduct);
+	const result: IngestItem[] = [];
+	const unknownBrands = new Set<string>();
+	const unresolvedItems = new Set<string>();
+	const aiErrors = new Set<string>();
 
-  const productsForCatalog = addProductMarkup(products);
+	const chunkSize = 15;
+	let unsavedCount = 0;
+	let totalAICost = 0;
 
-	return sortProducts(productsForCatalog);
-}
+	for (let i = 0; i < rows.length; i += chunkSize) {
+		const chunk = rows.slice(i, i + chunkSize);
 
-function hasRequiredColumns(row: Record<string, unknown>): boolean {
-	return ["SKU", "Категория", "Название", "Модель", "Цена"]
-		.every(col => col in row);
-}
+		const chunkResults = await Promise.all(
+			chunk.map(async (row): Promise<IngestItem | undefined> => {
+				const category = String(row["Категория"] ?? "").trim();
+				const name = String(row["Название"] ?? "").trim();
+				const model = String(row["Модель"] ?? "").trim();
+				const storageRaw = String(row["Хранилище"] ?? "").trim();
+				const price = String(row["Цена"] ?? "").trim();
+				const country = String(row["Страна"] ?? "");
+				const simTypeRaw = String(row["Тип SIM"] ?? "");
 
-function mapRowToProduct(row: Record<string, unknown>): Product {
-	const name = String(row["Название"] ?? "").trim();
+				if (!name || !price) return;
 
-	return {
-		id: String(row["SKU"] ?? "").trim(),
-		category: String(row["Категория"] ?? "").trim(),
-		name,
-		brand: resolveBrandFromName(name),
-		model: String(row["Модель"] ?? "").trim(),
-		storage: row["Хранилище"] ? String(row["Хранилище"]).trim() : undefined,
-		price: String(row["Цена"] ?? "").trim(),
-		country: row["Страна"] ? String(row["Страна"]) : undefined,
-		sim: row["Тип SIM"] ? String(row["Тип SIM"]).trim() : undefined,
-	};
-}
+				const brand = resolveBrandFromName(name);
+				if (!brand) {
+					unknownBrands.add(name);
+					return;
+				}
+				
+				let finalModel = model;
+				if (brand === "Apple" && category === "Планшеты") {
+					finalModel = normalizeModelForIPadMini(finalModel, name);
+				}
+				const color = resolveColorFromName(name);
+				const isAppleSmartphone =
+					brand === "Apple" && category === "Смартфоны";
+				const sim = normalizeSimByRules({
+					name,
+					category,
+					country,
+					simTypeRaw,
+				});
+				const displayFinish = extractDisplayFinish(name);
 
-function isValidProduct(p: Product): boolean {
-	return Boolean(
-		p.id &&
-		p.category &&
-		p.name &&
-		p.model &&
-		p.price
-	);
-}
+				const rawNameForMatch = buildAAAStoreRawName({
+					name,
+					country: isAppleSmartphone ? undefined : country,
+					sim,
+				});
 
-export function addProductMarkup(products: Product[]): ProductForCatalog[] {
-  const rates = getRates();
-  const priceFormation = getPriceFormation();
+				// 1. Прямой поиск по rawName
+				let match = findByRawName(rawNameForMatch);
+				if (match) {
+					return {
+						product: match,
+						price,
+						rawNameForMatch,
+						isNew: false,
+					};
+				}
 
-  return products.map((product) => {
-    const numberPrice = Number(product.price);
+				// 2. Извлечение атрибутов через AI (один запрос)
+        const extracted = await extractProductAttributes(name, category);
+        if (!extracted.attrs) {
+          unresolvedItems.add(name);
+          return;
+        }
 
-    if (Number.isNaN(numberPrice)) {
-      return { ...product, hidden: true };
-    }
+				let { model: extractedModel, connectivity, chip } = extracted.attrs;
+        const { cost } = extracted;
+        if (cost !== null) totalAICost += cost;
 
-    const priceUSD = numberPrice / rates.rub_to_usd;
+				if (brand === "Apple" && category === "Планшеты") {
+  				extractedModel = normalizeModelForIPadMini(extractedModel, name);
+				}
 
-    if (priceUSD >= MAX_PRICE) {
-      return { ...product, hidden: true };
-    }
+				// 3. Фильтрация кандидатов
+        const cachedProducts = getProductCache();
+        const candidates = [...cachedProducts.values()].filter(p => {
+          if (p.brand !== brand) return false;
+          if (p.category !== category) return false;
+          const storage = storageRaw.length ? storageRaw : normalizeStorageForCatalog(name);
+          if (storage && normalizeStorageForCatalog(p.attributes?.storage || "") !== storage) return false;
+          if (sim && p.attributes?.sim !== sim) return false;
+          if (connectivity) {
+            const match = p.rawNames.some(raw => hasConnectivity(raw, connectivity)) ||
+                          hasConnectivity(p.name, connectivity);
+            if (!match) return false;
+          }
+          if (chip) {
+            const match = p.rawNames.some(raw => hasChip(raw, chip)) ||
+                          hasChip(p.name, chip);
+            if (!match) return false;
+          }
+          if (displayFinish && p.attributes?.displayFinish !== displayFinish) return false;
+          return true;
+        }).map(p => ({
+          id: p.id,
+          name: p.name,
+          brand: p.brand,
+          category: p.category,
+          model: p.model,
+          storage: p.attributes?.storage ?? "",
+          color: p.attributes?.color,
+          connectivity: p.attributes?.connectivity,
+          chip: p.attributes?.chip,
+          displayFinish: p.attributes?.displayFinish,
+        }));
 
-    const wholesalePercent = findPriceRule(
-      priceUSD,
-      product.category,
-      product.brand,
-      "wholesale",
-      priceFormation
-    );
+				let matchedProduct = null;
 
-    const retailPercent = findPriceRule(
-      priceUSD,
-      product.category,
-      product.brand,
-      "retail",
-      priceFormation
-    );
+				// 4. Детерминированный поиск по model (извлечённой AI)
+				if (extractedModel) {
+          const foundCandidate = candidates.find(p =>
+            p.model.toLowerCase() === extractedModel.toLowerCase() &&
+            (!storageRaw || normalizeStorageForCatalog(p.storage) === normalizeStorageForCatalog(storageRaw)) &&
+            (!connectivity || p.connectivity === connectivity) &&
+            (!chip || p.chip === chip) &&
+            (!color || p.color === color)
+          );
+          if (foundCandidate) {
+            const candidateProduct = await getProductFromCacheById(foundCandidate.id);
+            if (candidateProduct) {
+              const incomingColor = color;
+              const candidateColor = candidateProduct.attributes?.color;
+              if (incomingColor && candidateColor && incomingColor.toLowerCase() !== candidateColor.toLowerCase()) {
+                aiErrors.add(name);
+              } else {
+                matchedProduct = candidateProduct;
+              }
+            }
+          }
+        }
 
-    const hidden =
-      !wholesalePercent &&
-      !retailPercent;
+				// 5. AI‑матчинг (если не нашли и есть кандидаты)
+				if (!matchedProduct && candidates.length > 0) {
+					const { result: ai, cost: matchCost } = await callAIForProductMatch(name, candidates);
+          if (matchCost !== null) totalAICost += matchCost;
+          if (!ai || ai.status === "error") {
+            aiErrors.add(name);
+            return;
+          }
+          if (ai.status === "matched" && ai.productId) {
+            matchedProduct = await getProductFromCacheById(ai.productId);
+          }
+				}
 
-    return { ...product, hidden };
-  });
-}
+				// 6. Если нашли – добавляем синоним и возвращаем
+				if (matchedProduct) {
+          addRawNameIfNeeded(matchedProduct, name);
+          return { product: matchedProduct, price, rawNameForMatch, isNew: false };
+        }
 
-function sortProducts(products: ProductForCatalog[]): ProductForCatalog[] {
-  return [...products].sort((a, b) => {
-    // 1. Бренд
-    const brandCompare = (a.brand ?? "").localeCompare(b.brand ?? "", "ru", {
-      sensitivity: "base",
-    });
-    if (brandCompare !== 0) return brandCompare;
+				// 7. Не нашли – создаём новый товар
+				const finalStorage = storageRaw.length ? storageRaw : normalizeStorageForCatalog(name);
+				const finalCountry = isAppleSmartphone ? undefined : country;
+        const newProduct = upsertProduct({
+          rawName: name,
+          brand,
+          category,
+          model: model || extractedModel || "",
+          name: name,
+          attributes: {
+            storage: finalStorage,
+            color,
+            country: finalCountry,
+            sim,
+            connectivity: connectivity || undefined,
+            chip: chip || undefined,
+            displayFinish: displayFinish || undefined,
+          },
+        });
+        return { product: newProduct, price, rawNameForMatch, isNew: true };
+			})
+		);
 
-    // 2. Категория
-    const categoryCompare = (a.category ?? "").localeCompare(b.category ?? "", "ru", {
-      sensitivity: "base",
-    });
-    if (categoryCompare !== 0) return categoryCompare;
+		const grouped = new Map<string, IngestItem>();
 
-    // 3. Модель (с поддержкой чисел)
-    const nameCompare = (a.model ?? "").localeCompare(b.model ?? "", "ru", {
-      numeric: true,
-      sensitivity: "base",
-    });
-    if (nameCompare !== 0) return nameCompare;
+		for (const item of chunkResults) {
 
-    // 4. Память (если есть)
-    const memA = extractMemorySubstring(a.name ?? null);
-    const memB = extractMemorySubstring(b.name ?? null);
-    const memCompare = compareSpecs(memA, memB);
-    if (memCompare !== 0) return memCompare;
+			if (!item) continue;
+			// 👇 ключ — товар в рамках ПРАЙСА, а не кеша
+			const key = item.rawNameForMatch + "|" + item.product.id;
+			const existing = grouped.get(key);
+			if (!existing) {
+				grouped.set(key, item);
+				continue;
+			}
+			if (Number(item.price) < Number(existing.price)) {
+				grouped.set(key, item);
+			}
+		}
 
-    return (a.name ?? "").localeCompare(b.name ?? "", "ru", {
-      numeric: true,
-      sensitivity: "base",
-    });
-  });
-}
+		const valid = [...grouped.values()];
 
-export function exportToCsv(products: ProductForCatalog[]) {
-  const escape = (v: any) =>
-    `"${String(v ?? "").replace(/"/g, '""')}"`;
+		result.push(...valid);
 
-  const keys = Object.keys(PRODUCT_XLSX_HEADERS) as (keyof Product)[];
+		unsavedCount += valid.length;
 
-  const header = keys.map(k => PRODUCT_XLSX_HEADERS[k]);
+		if (unsavedCount >= SAVE_EVERY_NUMBER_ITEMS) {
+			saveProductCache();
+			unsavedCount = 0;
+		}
+	}
 
-  const rows = products.map(p =>
-    keys.map(k => escape(p[k]))
-  );
+	if (unknownBrands.size && options?.onUnknownBrand) {
+		await options.onUnknownBrand([...unknownBrands]);
+	}
 
-  const csv = [
-    header.join(","),
-    ...rows.map(r => r.join(","))
-  ].join("\n");
+	if (aiErrors.size && options?.onAiError) {
+		await options.onAiError([...aiErrors]);
+	}
 
-  return "\uFEFF" + csv;
-}
+	if (unresolvedItems.size && options?.onUnresolvedItems) {
+		await options.onUnresolvedItems([...unresolvedItems]);
+	}
 
-export function saveCsvToFile(csv: string) {
-  const dir = resolvePath(process.env.EXPORT_CSV_PATH || "/var/data/exports");
-
-  // 👉 создаем папку если нет
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+	if (totalAICost > 0 && options?.onCostReport) {
+    await options.onCostReport(totalAICost);
   }
 
-  const filePath = path.join(dir, "products.csv");
+	saveProductCache();
 
-  fs.writeFileSync(filePath, csv, "utf-8");
+	return result;
 }
 
-function productsToXlsxData(products: Product[]) {
-	const headerRow = Object.values(PRODUCT_XLSX_HEADERS);
+export async function ingestTodayThereTomorrowHerePrice(
+	buffer: Buffer,
+	options?: {
+		onUnknownBrand?: (names: string[]) => Promise<void> | void;
+		onAiError?: (names: string[]) => Promise<void> | void;
+		onUnresolvedItems?: (names: string[]) => Promise<void> | void;
+		onCostReport?: (cost: number) => Promise<void> | void;
+	}
+): Promise<IngestItem[]> {
+	const workbook = XLSX.read(buffer, { type: "buffer" });
+	const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
-	const dataRows = products.map(product =>
-		Object.keys(PRODUCT_XLSX_HEADERS).map(key => {
-			const value = product[key as keyof Product];
-			return value ?? "";
-		})
-	);
+	const range = XLSX.utils.decode_range(sheet["!ref"]!);
+	const rows: { name: string; price: string }[] = [];
 
-	return [headerRow, ...dataRows];
-}
+	for (let r = 0; r <= range.e.r; r++) {
+		const name =
+			sheet[XLSX.utils.encode_cell({ r, c: 0 })]?.v?.toString().trim() ?? "";
+		const priceRaw =
+			sheet[XLSX.utils.encode_cell({ r, c: 1 })]?.v?.toString().trim() ?? "";
 
-export function generateProductsXlsx(
-	products: Product[],
-	fileName = "price.xlsx"
-): string {
-	const sheetData = productsToXlsxData(products);
+		if (!name || !priceRaw) continue;
 
-	const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
-	const workbook = XLSX.utils.book_new();
+		const price = String(Number(priceRaw) + TODAY_THERE_TOMORROW_HERE_PRICE_DELIVERY);
 
-	XLSX.utils.book_append_sheet(workbook, worksheet, "Прайс");
-
-	const filePath = path.resolve("tmp", fileName);
-
-	if (!fs.existsSync("tmp")) {
-		fs.mkdirSync("tmp");
+		rows.push({ name, price });
 	}
 
-	XLSX.writeFile(workbook, filePath);
+	const result: IngestItem[] = [];
+	const unknownBrands = new Set<string>();
+	const unresolvedItems = new Set<string>();
+	const aiErrors = new Set<string>();
 
-	return filePath;
-}
+	const chunkSize = 15;
+	let unsavedCount = 0;
+	let totalAICost = 0;
 
-export async function sendPriceList(
-	bot: TelegramBot,
-	chatId: number,
-	products: Product[]
-) {
-	if (!products.length) {
-		await renderScreen(bot, chatId, { section: SECTION.CATALOG, text: CATALOG_TEXTS.NOT_ITEMS_FOR_DOWNLOAD });
-		return;
-	}
+	for (let i = 0; i < rows.length; i += chunkSize) {
+		const chunk = rows.slice(i, i + chunkSize);
 
-	const state = getChatState(chatId);
-  const catalogState = getSectionState(state, SECTION.CATALOG);
+		const chunkResults = await Promise.all(
+			chunk.map(async ({ name, price }): Promise<IngestItem | undefined> => {
+				const { brand, nameWithoutBrand } = extractBrandFromStart(name);
 
-	const parts = ["price", catalogState?.selectedBrand, catalogState?.selectedCategory].filter(Boolean);
-	const fileName = `${parts.join("_")}.xlsx`;
+				if (!brand || !nameWithoutBrand) {
+					unknownBrands.add(name);
+					return;
+				}
 
-	const filePath = generateProductsXlsx(products, fileName);
+				const category = getCategory(name);
+				const country = extractFlags(name);
+				const color = resolveColorFromName(name);
+				const storage = normalizeStorageForCatalog(name);
+				let nameForCatalog = cleanProductName(nameWithoutBrand);
+				nameForCatalog = normalizeColorInProductName(nameForCatalog);
 
-	await bot.sendDocument(
-		chatId,
-		fs.createReadStream(filePath),
-		{
-			caption: CATALOG_TEXTS.PRICE_LIST,
-		},
-		{
-			filename: fileName,
-			contentType:
-				"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+				const isAppleSmartphone =
+					brand === "Apple" && category === "Смартфоны";
+
+				const activated = extractActivated(name);
+				const sim = extractSim(name) ?? normalizeSimByRules({ name, category, country });
+				const displayFinish = extractDisplayFinish(name);
+				const rawNameForMatch = buildTodayThereTomorrowHereRawName({
+					name,
+					sim,
+					activated,
+				});
+				
+				// 1. Поиск по rawName
+				let existingByRaw = null;
+
+				if (activated === true) {
+					// Ищем только среди активных продуктов
+					const cache = getProductCache();
+					existingByRaw = [...cache.values()].find(p =>
+						p.attributes?.activated === true &&
+						p.rawNames.some(raw => normalize(raw) === normalize(rawNameForMatch))
+					);
+				} else {
+					existingByRaw = findByRawName(rawNameForMatch);
+				}
+
+				if (existingByRaw) {
+					addRawNameIfNeeded(existingByRaw, rawNameForMatch);
+					return {
+						product: existingByRaw,
+						price,
+						rawNameForMatch,
+						isNew: false,
+					};
+				}
+
+				// 2. Извлечение атрибутов через AI (один запрос)
+				const extracted = await extractProductAttributes(name, category);
+				if (!extracted.attrs) {
+					unresolvedItems.add(name);
+					return;
+				}
+				const { attrs: {model, connectivity, chip}, cost } = extracted;
+				if (cost !== null) totalAICost += cost;
+
+				if (category === "Аксессуары") {
+  				unresolvedItems.add(name);
+  				return;
+				}
+
+				// 3. Фильтрация кандидатов с учётом извлечённых полей
+				const cachedProducts = getProductCache();
+				const candidates = [...cachedProducts.values()].filter(p => {
+  				if (p.brand !== brand) return false;
+					if (p.category !== category) return false;
+					if (storage && normalizeStorageForCatalog(p.attributes?.storage || "") !== storage) return false;
+  				if (sim && p.attributes?.sim !== sim) return false;
+					if (connectivity) {
+						const match = p.rawNames.some(raw => hasConnectivity(raw, connectivity)) ||
+													hasConnectivity(p.name, connectivity);
+						if (!match) return false;
+					}
+					if (chip) {
+						const match = p.rawNames.some(raw => hasChip(raw, chip)) ||
+													hasChip(p.name, chip);
+						if (!match) return false;
+					}
+					if (displayFinish && p.attributes?.displayFinish !== displayFinish) return false;
+					return true;
+				}).map(p => ({
+					id: p.id,
+					name: p.name,
+					brand: p.brand,
+					category: p.category,
+					model: p.model,
+					storage: p.attributes?.storage ?? "",
+					color: p.attributes?.color,
+					connectivity: p.attributes?.connectivity,
+          chip: p.attributes?.chip,
+					displayFinish: p.attributes?.displayFinish,
+				}));
+
+				let matchedProduct = null;
+
+				// 4. Детерминированный поиск по model (если есть)
+				if (model) {
+					const foundCandidate = candidates.find(p =>
+    				p.model.toLowerCase() === model.toLowerCase() &&
+						(!storage || normalizeStorageForCatalog(p.storage) === storage) &&
+						(!connectivity || p.connectivity === connectivity) &&
+						(!chip || p.chip === chip) &&
+						(!color || p.color === color)
+					);
+					if (foundCandidate) {
+						const candidateProduct = await getProductFromCacheById(foundCandidate.id);
+						if (candidateProduct) {
+							// Пост-проверка цвета
+							const incomingColor = resolveColorFromName(name);
+							const candidateColor = candidateProduct.attributes?.color;
+							if (incomingColor && candidateColor && incomingColor.toLowerCase() !== candidateColor.toLowerCase()) {
+								// Несоответствие цвета — отклоняем матч
+								aiErrors.add(name);
+							} else {
+								matchedProduct = candidateProduct;
+							}
+						}
+					}
+				}
+
+				// 5. Если не нашли – AI-матчинг (только если есть кандидаты)
+				if (!matchedProduct && candidates.length > 0) {
+					const { result: ai, cost: matchCost } = await callAIForProductMatch(name, candidates);
+					if (matchCost !== null) totalAICost += matchCost;
+					if (!ai || ai.status === "error") {
+						aiErrors.add(name);
+						return;
+					}
+					if (ai.status === "matched" && ai.productId) {
+						matchedProduct = await getProductFromCacheById(ai.productId);
+					}
+				}
+
+				// 6. Если всё ещё не нашли – создаём новый продукт (без второго AI-запроса)
+				if (!matchedProduct) {
+  				const finalCountry = isAppleSmartphone ? undefined : country;
+					const newProduct = upsertProduct({
+            rawName: rawNameForMatch,
+            brand,
+            category,
+            model: model,
+            name: nameForCatalog,
+            attributes: {
+              storage: storage,
+              color,
+              country: finalCountry,
+              sim,
+              activated,
+              connectivity: connectivity || undefined,
+              chip: chip || undefined,
+							displayFinish: displayFinish || undefined,
+            },
+          });
+					
+					return { product: newProduct, price, rawNameForMatch, isNew: true };
+				}
+				
+				// 7. Нашли существующий продукт
+				addRawNameIfNeeded(matchedProduct, rawNameForMatch);
+        return {
+          product: matchedProduct,
+          price,
+          rawNameForMatch,
+          isNew: false,
+        };
+			})
+		);
+
+		const grouped = new Map<string, IngestItem>();
+
+		for (const item of chunkResults) {
+
+			if (!item) continue;
+			// 👇 ключ — товар в рамках ПРАЙСА, а не кеша
+			const key = item.rawNameForMatch + "|" + item.product.id;
+			const existing = grouped.get(key);
+			if (!existing) {
+				grouped.set(key, item);
+				continue;
+			}
+			if (Number(item.price) < Number(existing.price)) {
+				grouped.set(key, item);
+			}
 		}
-	);
-}
 
-export function generateRetailCsv(): void {
-  const products = getRetailProducts();
+		const valid = [...grouped.values()];
 
-  const visibleProducts = products.filter(p => !p.hidden);
+		result.push(...valid);
 
-  const csv = exportToCsv(visibleProducts);
+		unsavedCount += valid.length;
 
-  saveCsvToFile(csv);
+		if (unsavedCount >= SAVE_EVERY_NUMBER_ITEMS) {
+			saveProductCache();
+			unsavedCount = 0;
+		}
+	}
+
+	if (unknownBrands.size && options?.onUnknownBrand) {
+		await options.onUnknownBrand([...unknownBrands]);
+	}
+
+	if (aiErrors.size && options?.onAiError) {
+		await options.onAiError([...aiErrors]);
+	}
+
+	if (unresolvedItems.size && options?.onUnresolvedItems) {
+		await options.onUnresolvedItems([...unresolvedItems]);
+	}
+
+	if (totalAICost > 0 && options?.onCostReport) {
+    await options.onCostReport(totalAICost);
+  }
+
+	saveProductCache();
+
+	return result;
 }

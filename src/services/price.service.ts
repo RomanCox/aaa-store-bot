@@ -10,6 +10,7 @@ import { PRICE_FORMATION_PATH, RATES_PATH } from "../constants";
 const DEFAULT_RATES: Rates = {
   rub_to_byn: 0,
   rub_to_usd: 0,
+  usd_to_byn: 0,
 };
 const DEFAULT_PRICE_FORMATION: PriceFormat[] = [];
 
@@ -29,6 +30,7 @@ export function loadRates() {
     rates = {
       rub_to_byn: Number(parsed?.rub_to_byn) || 0,
       rub_to_usd: Number(parsed?.rub_to_usd) || 0,
+      usd_to_byn: Number(parsed?.usd_to_byn) || 0,
     };
   } catch (e) {
     console.error("❌ Ошибка чтения rates.json", e);
@@ -50,6 +52,10 @@ export async function saveRates(update: PriceFormationUpdate) {
 
     case "edit_rub_to_usd":
       rates.rub_to_usd = update.value;
+      break;
+
+    case "edit_usd_to_byn":
+      rates.usd_to_byn = update.value;
       break;
   }
 
@@ -73,6 +79,7 @@ export async function editRates(
 
   const textGenerate = (ratesEditType: ChatMode) => {
     if (ratesEditType === "edit_rub_to_byn") return PRICE_TEXTS.ENTER_RUB_TO_BYN;
+    if (ratesEditType === "edit_usd_to_byn") return PRICE_TEXTS.ENTER_USD_TO_BYN;
     return PRICE_TEXTS.ENTER_RUB_TO_USD;
   };
 

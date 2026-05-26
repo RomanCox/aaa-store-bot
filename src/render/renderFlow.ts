@@ -1,5 +1,4 @@
 import TelegramBot from "node-telegram-bot-api";
-import { getProductById, getProducts } from "../services/products.service";
 import { buildDownloadCallback, getBrands, getCategories, getModels, getStorageValues } from "../utils";
 import { getChatState, getSectionState, setChatState } from "../state/chat.state";
 import {
@@ -13,17 +12,19 @@ import {
 } from "../keyboards";
 import { CART_TEXTS, CATALOG_TEXTS } from "../texts";
 import {
-  CartSectionState,
-  CatalogSectionState,
-  Product, ProductFilters,
-  ProductForCart,
-  SECTION
+	CartSectionState,
+	CatalogSectionState,
+	Product, ProductFilters,
+	ProductForCart,
+	SECTION, UserRole
 } from "../types";
 import { renderProductsList } from "./renderProductsList";
 import { editCartKeyboard } from "../keyboards/editCart.keyboard";
 import { getCurrency } from "../services/price.service";
 import { editProductInCartKeyboard } from "../keyboards/editProductInCart.keyboard";
 import { renderScreen } from "./renderScreen";
+import { getCatalogProductById, getCatalogUIProducts } from "../services/catalog/ui/catalog.ui";
+import { getUserRole } from "../services/users.service";
 
 async function renderRoot(bot: TelegramBot, chatId: number) {
 	const state = getChatState(chatId);
@@ -44,13 +45,15 @@ async function renderRoot(bot: TelegramBot, chatId: number) {
 			const price = Number(item.price);
 			const amount = item.amount;
 			const country = item.country ?? "";
+			const sim = item.sim ?? "";
+			const active = item.activated ? "Active" : ""
 
 			const itemTotal = price * amount;
 			totalSum += itemTotal;
 
 			return (
-				`${index + 1}. <i>${item.name}</i>\n` +
-				`  📦 ${amount} шт. × ${price} ${currency} ${country} = ${itemTotal} ${currency}`
+				`${index + 1}. <i>${item.name} ${country} (${sim}) (${active})</i>\n` +
+				`  📦 ${amount} шт. × ${price} ${currency} = ${itemTotal} ${currency}`
 			);
 		});
 
@@ -145,10 +148,11 @@ export async function renderBrands(
   const sectionState = getSectionState(state, section);
   if (!sectionState) return;
 
-  const products = getProducts(chatId);
-  const brands = getBrands(products);
+	const filters: ProductFilters = {};
 
-  const filters: ProductFilters = {};
+	const role = getUserRole(chatId);
+  const products = getCatalogUIProducts(filters, role);
+  const brands = getBrands(products);
 
   if (!brands.length) {
 		setChatState(chatId, {
@@ -203,10 +207,11 @@ export async function renderCategories(
     return;
   }
 
-  const products = getProducts(chatId, { brand: selectedBrand });
-  const categories = getCategories(products, selectedBrand);
+	const filters: ProductFilters = { brand: selectedBrand };
 
-  const filters: ProductFilters = { brand: selectedBrand };
+	const role = getUserRole(chatId);
+  const products = getCatalogUIProducts(filters, role);
+  const categories = getCategories(products, selectedBrand);
   const downloadKey = buildDownloadCallback(filters);
 
   if (!categories.length) {
@@ -244,10 +249,13 @@ async function renderModels(bot: TelegramBot, chatId: number) {
   const sectionState = getSectionState(state, SECTION.CART);
   if (!sectionState) return;
 
-	const products = getProducts(chatId, {
+	const filters: ProductFilters = {
 		brand: sectionState.selectedBrand,
 		category: sectionState.selectedCategory,
-	});
+	};
+
+	const role = getUserRole(chatId);
+	const products = getCatalogUIProducts(filters, role);
 
 	const models = getModels(products, sectionState.selectedBrand, sectionState.selectedCategory);
 
@@ -286,11 +294,14 @@ async function renderStorage(bot: TelegramBot, chatId: number) {
   const sectionState = getSectionState(state, SECTION.CART);
   if (!sectionState) return;
 
-	const products = getProducts(chatId, {
+	const filters: ProductFilters = {
 		brand: sectionState.selectedBrand,
 		category: sectionState.selectedCategory,
 		model: sectionState.selectedModel,
-	});
+	};
+
+	const role = getUserRole(chatId);
+	const products = getCatalogUIProducts(filters, role);
 
 	const storageValues = getStorageValues(
 		products, sectionState.selectedBrand, sectionState.selectedCategory, sectionState.selectedModel
@@ -338,12 +349,18 @@ async function renderChoosingProduct(bot: TelegramBot, chatId: number) {
   const sectionState = getSectionState(state, SECTION.CART);
   if (!sectionState) return;
 
-	const products = getProducts(chatId, {
+	const filters: ProductFilters = {
 		brand: sectionState.selectedBrand,
 		category: sectionState.selectedCategory,
 		model: sectionState.selectedModel,
-		storage: sectionState.selectedStorage
-	});
+		storage: sectionState.selectedStorage,
+	};
+
+	const userRole = getUserRole(chatId);
+	const products = getCatalogUIProducts(filters, userRole);
+	const notActivated = products.filter(p => !p.activated);
+  const activated = products.filter(p => p.activated);
+	const sortedProducts = [...notActivated, ...activated];
 
 	if (
 		!sectionState.selectedBrand ||
@@ -363,14 +380,29 @@ async function renderChoosingProduct(bot: TelegramBot, chatId: number) {
 		return;
 	}
 
-	const buildText = (products: Product[]) => {
-		const lines = products.map((item, index) => {
+	const buildText = (products: Product[], userRole?: UserRole) => {
+		const lines = sortedProducts.map((item, index) => {
 			const price = Number(item.price);
+			const currency = userRole === "retail" ? "р." : "";
 			const country = item.country ?? "";
+			const sim = item.sim ?? "";
+			const active = item.activated ? "Active" : ""
 
-			return (
-				`${index + 1}. ${item.name} - ${price} ${country}`
-			);
+			let line = `${index + 1}. ${item.name} - ${price}${currency}`;
+
+			if (country) {
+				line += ` ${sim}`;
+			}
+
+			if (sim) {
+				line += ` 📲 ${sim}`; // или line += ` (${sim})`
+			}
+
+			if (active) {
+				line += ` ✅ ${active}`;
+			}
+
+			return line;
 		});
 
 		return (
@@ -390,8 +422,8 @@ async function renderChoosingProduct(bot: TelegramBot, chatId: number) {
 
   await renderScreen(bot, chatId, {
     section: SECTION.CART,
-    text: buildText(products),
-    inlineKeyboard: choosingProductKeyboard(chatId, products),
+    text: buildText(sortedProducts, userRole),
+    inlineKeyboard: choosingProductKeyboard(chatId, sortedProducts),
     parse_mode: "HTML",
   });
 }
@@ -401,19 +433,22 @@ async function renderAmount(bot: TelegramBot, chatId: number) {
   const sectionState = getSectionState(state, SECTION.CART);
   if (!sectionState) return;
 
-	const product = getProductById(chatId, sectionState.selectedProductId);
+	const userRole = getUserRole(chatId);
+	const product = getCatalogProductById(sectionState.selectedProductId, userRole);
 
 	if (!sectionState.selectedBrand || !product) {
     await renderScreen(bot, chatId, { section: SECTION.CART, text: CART_TEXTS.PRODUCT_UNAVAILABLE });
 		return;
 	}
 
-	const text =
-		`${product.name}\n` +
-		CART_TEXTS.CART_PRICE +
-		product.price +
-		product.country + "\n" +
-		CART_TEXTS.CHOOSE_AMOUNT
+	const currency = userRole === "retail" ? "р." : "";
+
+	let header = product.name;
+	if (product.country) header += ` ${product.country}`;
+	if (product.sim) header += ` (${product.sim})`;
+	if (product.activated) header += ' (Active)';
+
+	const text = `${header}\n${CART_TEXTS.CART_PRICE}${product.price}${currency}\n${CART_TEXTS.CHOOSE_AMOUNT}`;
 
   await renderScreen(bot, chatId, {
     section: SECTION.CART,
@@ -429,10 +464,13 @@ export async function renderFlow(bot: TelegramBot, chatId: number) {
   const cartState = getSectionState(state, SECTION.CART);
   if (!cartState) return;
 
-	const products = getProducts(chatId, {
+	const filters: ProductFilters = {
 		brand: cartState.selectedBrand,
 		category: cartState.selectedCategory,
-	});
+	};
+
+	const role = getUserRole(chatId);
+	const products = getCatalogUIProducts(filters, role);
 
 	if (!products || products.length === 0) {
 		setChatState(chatId, {

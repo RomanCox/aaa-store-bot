@@ -1,16 +1,54 @@
 import TelegramBot from "node-telegram-bot-api";
 import fs from "fs";
 import path from "path";
-import { generateRetailCsv, parseXlsxToProducts } from "../services/xlsx.service";
-import { saveProducts } from "../services/products.service";
+import {
+  ingestAAAStorePrice,
+  ingestTodayThereTomorrowHerePrice,
+} from "../services/xlsx.service";
 import { isAdmin } from "../services/users.service";
 import { getChatState, setChatState, updateSectionState } from "../state/chat.state";
 import { ADMIN_TEXTS, START_TEXTS } from "../texts";
 import { renderScreen } from "../render/renderScreen";
-import { SECTION } from "../types";
+import { IngestItem, PriceListType, SECTION } from "../types";
 import { adminKeyboard } from "../keyboards";
 import { safeDelete } from "../utils";
-import { sendHiddenProductsReport } from "../render/reports";
+import { onAiError, onCostReport, onUnresolvedItems, sendHiddenProductsReport, sendUnknownBrandsReport } from "../render/reports";
+import { clearCatalogSource, saveCatalog, upsertCatalog } from "../services/catalog/catalog.service";
+import { getCatalogProducts } from "../services/catalog/catalog.builder";
+import { generateRetailCsv } from "./catalog.hanlder";
+
+async function handleIngestResult(
+  bot: TelegramBot,
+  chatId: number,
+  items: IngestItem[],
+  source: PriceListType,
+) {
+  if (!items.length) {
+    await bot.sendMessage(chatId, ADMIN_TEXTS.ERROR_ITEMS);
+    return;
+  }
+
+  clearCatalogSource(source);
+
+  for (const item of items) {
+    upsertCatalog(item.product.id, item.price, source);
+  }
+
+  saveCatalog();
+
+  const result = getCatalogProducts();
+
+  await sendHiddenProductsReport(bot, result);
+
+  const newItemsCount = items.filter(i => i.isNew).length;
+
+  await bot.sendMessage(
+    chatId,
+    `${ADMIN_TEXTS.PRICE_UPLOAD_SUCCESS + items.length + ADMIN_TEXTS.PRICE_UPLOAD_NEW_ITEMS + newItemsCount}`
+  );
+
+  generateRetailCsv();
+}
 
 export function registerDocumentHandler(bot: TelegramBot) {
 	bot.on("document", async (query) => {
@@ -27,6 +65,8 @@ export function registerDocumentHandler(bot: TelegramBot) {
 			return;
 		}
 
+    const flowStep = state.sections.admin_panel?.flowStep;
+
 		const document = query.document;
 		if (!document) {
       await renderScreen(bot, query.chat.id, { section: SECTION.ADMIN_PANEL, text: ADMIN_TEXTS.CANT_FIND_FILE });
@@ -40,15 +80,43 @@ export function registerDocumentHandler(bot: TelegramBot) {
 			const filePath = await bot.downloadFile(document.file_id, tmpDir);
 			const buffer = fs.readFileSync(filePath);
 
-			const products = parseXlsxToProducts(buffer);
-      generateRetailCsv();
+      if (flowStep === "upload_aaa_store_price") {
+        const items = await ingestAAAStorePrice(buffer, {
+          onUnknownBrand: async (names) => {
+            await sendUnknownBrandsReport(bot, names);
+          },
+          onAiError: async (names) => {
+            await onAiError(bot, names);
+          },
+          onUnresolvedItems: async (names) => {
+            await onUnresolvedItems(bot, names);
+          },
+          onCostReport: async (totalCost) => {
+            await onCostReport(bot, totalCost);
+          },
+        });
 
-			if (!products.length) {
-        await bot.sendMessage(chatId, ADMIN_TEXTS.ERROR_ITEMS);
-				return;
-			}
+        await handleIngestResult(bot, chatId, items, "AAA-store");
+      }
 
-			saveProducts(products);
+      if (flowStep === "upload_today_there_tomorrow_here_price") {
+        const items = await ingestTodayThereTomorrowHerePrice(buffer, {
+          onUnknownBrand: async (names) => {
+            await sendUnknownBrandsReport(bot, names);
+          },
+          onAiError: async (names) => {
+            await onAiError(bot, names);
+          },
+          onUnresolvedItems: async (names) => {
+            await onUnresolvedItems(bot, names);
+          },
+          onCostReport: async (totalCost) => {
+            await onCostReport(bot, totalCost);
+          },
+        });
+
+        await handleIngestResult(bot, chatId, items, "Today there tomorrow here");
+      }
 
       const state = getChatState(userId);
       const adminState = state.sections[SECTION.ADMIN_PANEL];
@@ -61,10 +129,6 @@ export function registerDocumentHandler(bot: TelegramBot) {
         messageId: undefined,
       }));
 
-      await bot.sendMessage(chatId, ADMIN_TEXTS.PRICE_UPLOAD_SUCCESS + products.length);
-
-      await sendHiddenProductsReport(bot, chatId, products);
-
       await renderScreen(bot, chatId, {
         section: SECTION.ADMIN_PANEL,
         text: START_TEXTS.ADMIN_PANEL,
@@ -74,6 +138,7 @@ export function registerDocumentHandler(bot: TelegramBot) {
 
 			setChatState(userId, { mode: "idle" });
 		} catch (error) {
+      console.log(error)
       await bot.sendMessage(chatId, ADMIN_TEXTS.FILE_ERROR);
 
       await renderScreen(bot, chatId, {

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node src/index.ts",
-    "build": "tsc && cpx \"src/data/**/*\" dist/data",
+    "build": "node --max-old-space-size=2048 node_modules/typescript/bin/tsc && cpx \"src/data/**/*\" dist/data",
     "start": "node dist/index.js"
   },
   "keywords": [],
@@ -13,6 +13,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.14.0",
   "dependencies": {
+    "bottleneck": "^2.19.5",
     "dotenv": "^17.2.3",
     "googleapis": "^170.1.0",
     "node-telegram-bot-api": "^0.67.0",

@@ -1,23 +1,25 @@
 import TelegramBot from "node-telegram-bot-api";
-import { CALLBACK_TYPE, CATALOG_VALUE, SECTION, UserRole } from "../types";
+import { CALLBACK_TYPE, CATALOG_VALUE, ProductFilters, SECTION, UserRole } from "../types";
 import { getChatState, setChatState } from "../state/chat.state";
 import { renderFlow } from "../render/renderFlow";
 import { downloadCatalogHelpers, guardWorkingHours, parseCallbackData, safeAnswerCallback } from "../utils";
 import { handleBack } from "./back.handler";
-import { addUser, deleteUser, editUser, startUserManagement, startXlsxUpload } from "../services/admin.service";
-import { getProductById, getProducts, refreshProductsMarkup } from "../services/products.service";
+import { addUser, deleteUser, editUser, startUserManagement, startPriceUpload } from "../services/admin.service";
 import { renderProductsList } from "../render/renderProductsList";
 import { showUsersList } from "./users/users.handler";
 import { ADMIN_TEXTS, CART_TEXTS, COMMON_TEXTS, PAGINATION_TEXTS, USERS_ERRORS, USERS_TEXTS } from "../texts";
-import { createUser, isAdmin, updateUserRole } from "../services/users.service";
-import { generateRetailCsv, sendPriceList } from "../services/xlsx.service";
+import { createUser, getUserRole, isAdmin, updateUserRole } from "../services/users.service";
 import { addOrder, buildOrderMessage, createOrder } from "../services/orders.service";
 import { orderHandler, ordersHandler } from "./orders.handler";
 import { renderScreen } from "../render/renderScreen";
 import { editRates } from "../services/price.service";
-import { loadBrandsFromConfig, loadPricesFormats } from "../services/sheets.service";
+import { loadBrandsFromConfig, loadColorsFromConfig, loadPricesFormats } from "../services/sheets.service";
 import { renderSection } from "../render/renderSection";
 import { sendHiddenProductsReport } from "../render/reports";
+import { generateRetailCsv, sendPriceList } from "./catalog.hanlder";
+import { getCatalogProductById, getCatalogUIProducts } from "../services/catalog/ui/catalog.ui";
+import { getCatalogProducts } from "../services/catalog/catalog.builder";
+import { getProductCache, getProductCacheValues } from "../services/products/products.service";
 
 const ADMIN_CHAT_ID = Number(process.env.ADMIN_CHAT_ID);
 
@@ -44,10 +46,15 @@ export function registerCallbacks(bot: TelegramBot) {
         });
       }
 
-			case CALLBACK_TYPE.UPLOAD_XLSX: {
-				await startXlsxUpload(bot, chatId);
+			case CALLBACK_TYPE.AAA_STORE_PRICE: {
+				await startPriceUpload(bot, chatId, "upload_aaa_store_price");
 				return;
 			}
+
+      case CALLBACK_TYPE.TODAY_THERE_TOMORROW_HERE_PRICE: {
+        await startPriceUpload(bot, chatId, "upload_today_there_tomorrow_here_price");
+        return;
+      }
 
 			case CALLBACK_TYPE.MANAGE_USERS: {
 				await startUserManagement(bot, chatId);
@@ -204,15 +211,21 @@ export function registerCallbacks(bot: TelegramBot) {
 				return;
 			}
 
+      case CALLBACK_TYPE.EDIT_USD_TO_BYN: {
+        await editRates(bot, chatId, "edit_usd_to_byn");
+        return;
+      }
+
       case CALLBACK_TYPE.RENEW_PRICE: {
         try {
           await loadPricesFormats();
           await loadBrandsFromConfig();
+          await loadColorsFromConfig();
 
-          const updatedProducts = refreshProductsMarkup();
+          const updatedProducts = getCatalogProducts({ role: "admin" });
           generateRetailCsv();
 
-          await sendHiddenProductsReport(bot, chatId, updatedProducts);
+          await sendHiddenProductsReport(bot, updatedProducts);
 
           await bot.sendMessage(chatId, ADMIN_TEXTS.RENEW_PRICE_SUCCESS, {
             parse_mode: "HTML",
@@ -225,6 +238,28 @@ export function registerCallbacks(bot: TelegramBot) {
           await safeAnswerCallback(bot, query.id);
         }
 
+        return;
+      }
+
+      case CALLBACK_TYPE.CHECK: {
+        const cached_products = getProductCacheValues();
+        const filtered = cached_products.filter(({ rawNames }) => rawNames.length > 1);
+
+        if (!filtered.length) {
+          await bot.sendMessage(chatId, "Проблемных товаров не найдено");
+          return;
+        }
+
+        const lines = filtered.map(p => {
+          return [
+            `📦 ${p.name}`,
+            ...p.rawNames.map(r => `• ${r}`),
+          ].join("\n");
+        });
+        await bot.sendMessage(
+          chatId,
+          lines.join("\n\n").slice(0, 4000)
+        );
         return;
       }
 
@@ -302,11 +337,13 @@ export function registerCallbacks(bot: TelegramBot) {
 
           const catalogSection = state.sections?.[SECTION.CATALOG];
 
-          const filteredProducts = getProducts(chatId, {
+          const role = getUserRole(chatId);
+          const filters: ProductFilters = {
             brand: catalogSection?.selectedBrand,
             category: catalogSection?.selectedCategory,
             model: selectedModel,
-          });
+          };
+          const filteredProducts = getCatalogUIProducts(filters, role);
 
           const hasStorage = filteredProducts.some(p => p.storage);
           const hasNoStorage = filteredProducts.some(p => !p.storage);
@@ -365,7 +402,8 @@ export function registerCallbacks(bot: TelegramBot) {
         return guardWorkingHours(bot, chatId, async () => {
           const filters = downloadCatalogHelpers(params);
 
-          const productsToExport = getProducts(chatId, filters);
+          const role = getUserRole(chatId);
+          const productsToExport = getCatalogUIProducts(filters, role);
 
           if (!productsToExport.length) {
             await renderScreen(bot, chatId, {
@@ -451,7 +489,8 @@ export function registerCallbacks(bot: TelegramBot) {
             return;
           }
 
-          const chosenProduct = getProductById(chatId, state.sections?.[SECTION.CART]?.selectedProductId);
+          const role = getUserRole(chatId);
+          const chosenProduct = getCatalogProductById(state.sections?.[SECTION.CART]?.selectedProductId, role);
 
           if (!chosenProduct) {
             await renderScreen(bot, chatId, {

@@ -1,4 +1,4 @@
-import { Rates, PriceFormat, UserRole } from "../types";
+import { Rates, PriceFormat, UserRole, PriceListType } from "../types";
 
 export function findPriceRule(
   priceUSD: number,
@@ -33,12 +33,24 @@ export function findPriceRule(
   return 0;
 }
 
+export function normalizeOfferPrice(
+  offer: { price: string; source: PriceListType },
+  rates: Rates
+) {
+  if (offer.source === "AAA-store") {
+    return Number(offer.price) / rates.rub_to_usd;
+  }
+
+  return Number(offer.price);
+}
+
 export function priceFormat(
   price: string,
   rates: Rates,
   priceFormation: PriceFormat[],
   category?: string,
   brand?: string,
+  source?: PriceListType,
   clientType?: UserRole
 ) {
 	const numberPrice = Number(price);
@@ -49,7 +61,9 @@ export function priceFormat(
 
   if (!clientType) return price;
 
-  const priceUSD = numberPrice / rates.rub_to_usd;
+  const priceUSD = source === "Today there tomorrow here"
+    ? numberPrice
+    : numberPrice / rates.rub_to_usd;
 
   const value = findPriceRule(
     priceUSD,
@@ -63,14 +77,18 @@ export function priceFormat(
 
   // WHOLESALE
   if (clientType === "wholesale") {
-    const resultUSD = (numberPrice + valueInRub) / rates.rub_to_usd;
+    const resultUSD = source === "Today there tomorrow here"
+      ? (numberPrice + value)
+      : (numberPrice + valueInRub) / rates.rub_to_usd;
 
     return String(Math.round(resultUSD));
   }
 
   // RETAIL
   if (clientType === "retail") {
-    const resultBYN = (numberPrice + valueInRub) / 100 * rates.rub_to_byn;
+    const resultBYN = source === "Today there tomorrow here"
+      ? (numberPrice + value) * rates.usd_to_byn
+      : (numberPrice + valueInRub) / 100 * rates.rub_to_byn;
 
     return String(Math.round(resultBYN / 10) * 10);
   }

@@ -7,12 +7,14 @@ import { registerStart } from "./handlers/start.handler";
 import { registerCallbacks } from "./handlers/callback.handler";
 import { registerMessages } from "./handlers/message.handler";
 import { registerDocumentHandler } from "./handlers/document.handler";
-import { loadProducts } from "./services/products.service";
 import { loadPriceFormation, loadRates } from "./services/price.service";
 import { loadOrdersFromFile } from "./services/orders.service";
 import { loadBrandsFromFile } from "./services/brands.service";
 import { cleanOldFiles } from "./utils/cleanOldFiles";
 import { TIME_LIMIT_DELETING_OLD_FILES } from "./constants";
+import { loadProductCache } from "./services/products/products.service";
+import { loadCatalog } from "./services/catalog/catalog.service";
+import { loadColorsFromFile } from "./services/colors.service";
 
 const TMP_DIR = path.join(__dirname, '../tmp');
 
@@ -20,11 +22,13 @@ async function bootstrap() {
 	const bot = await createBot();
 
 	loadUsers();
-	loadProducts();
+  loadProductCache();
+  loadCatalog();
   loadRates();
 	loadPriceFormation();
   loadOrdersFromFile();
   loadBrandsFromFile();
+  loadColorsFromFile();
 
 	registerStart(bot);
 	registerMessages(bot);
