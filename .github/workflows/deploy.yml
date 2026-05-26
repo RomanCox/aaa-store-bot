@@ -1,24 +1,24 @@
-name: Deploy Telegram Bot
+name: Deploy to test server (dev branch)
 
 on:
   push:
-    branches:
-      - main
+    branches: [ dev ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
           script: |
-            cd /home/mobileti/your_project_folder
-            git pull origin main
-            pnpm install
-            pm2 restart bot
-
+            cd /opt/aaa-store-bot
+            git pull origin dev
+            pnpm install --prod
+            sudo systemctl restart aaa-store-bot
