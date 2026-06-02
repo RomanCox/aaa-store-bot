@@ -16,24 +16,13 @@ function formatProductLine(product: Product, userRole?: UserRole): string {
     line += ` ${sim}`;
   }
 
-  // if (sim) {
-  //   line += ` 📲 ${sim}`;
-  // }
+  const simIcons: Record<string, string> = {
+    "SIM + ESIM": "📲",
+    "ESIM": "📶",
+    "Dual SIM": "☎️",
+  };
+  const simIcon = simIcons[sim] ?? sim;
   if (sim) {
-    let simIcon = "";
-    switch (sim) {
-      case "SIM + ESIM":
-        simIcon = "📲";
-        break;
-      case "ESIM":
-        simIcon = "📶";
-        break;
-      case "Dual SIM":
-        simIcon = "☎️";
-        break;
-      default:
-        simIcon = sim; // для неизвестных значений оставляем текст
-    }
     line += ` ${simIcon}`;
   }
 

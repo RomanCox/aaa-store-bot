@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
-import {buildCallbackData, buildDownloadCallback, buildMessagesForProducts, buildMessagesWithProducts} from "../utils";
+import { buildCallbackData, buildDownloadCallback, buildMessagesForProducts } from "../utils";
 import { CALLBACK_TYPE, CatalogSectionState, ProductFilters, SECTION } from "../types";
 import { CATALOG_TEXTS } from "../texts";
 import { getChatState, getSectionState, setChatState } from "../state/chat.state";
