@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
-import { buildCallbackData, buildDownloadCallback, buildMessagesWithProducts } from "../utils";
+import {buildCallbackData, buildDownloadCallback, buildMessagesForProducts, buildMessagesWithProducts} from "../utils";
 import { CALLBACK_TYPE, CatalogSectionState, ProductFilters, SECTION } from "../types";
 import { CATALOG_TEXTS } from "../texts";
 import { getChatState, getSectionState, setChatState } from "../state/chat.state";
@@ -41,7 +41,14 @@ export async function renderProductsList(
 
   const userRole = getUserRole(chatId);
 
-  const parts = buildMessagesWithProducts(products, userRole);
+  // const parts = buildMessagesWithProducts(products, userRole);
+  const parts = buildMessagesForProducts(products, userRole);
+  if (selectedBrand === "Apple" && selectedCategory === "Смартфоны" && parts.length > 0) {
+    parts.push({
+      text: CATALOG_TEXTS.SIM_LEGEND,
+      products: [],
+    });
+  }
 
   // сохраняем lastProductGroups в sections
   setChatState(chatId, {
@@ -62,14 +69,20 @@ export async function renderProductsList(
     };
     const downloadKey = buildDownloadCallback(filters);
 
+    // Кнопка только если в этой части есть товары
+    const inlineKeyboard = part.products.length > 0
+      ? [[{
+        text: CATALOG_TEXTS.DOWNLOAD_CATALOG,
+        callback_data: buildCallbackData(CALLBACK_TYPE.DOWNLOAD_XLSX, downloadKey),
+      }]]
+      : undefined;
+
     // создаём новое сообщение для каждого блока продуктов (keepOldMessage)
     await renderScreen(bot, chatId, {
       section: SECTION.CATALOG,
       text: part.text,
-      inlineKeyboard: [[{
-        text: CATALOG_TEXTS.DOWNLOAD_CATALOG,
-        callback_data: buildCallbackData(CALLBACK_TYPE.DOWNLOAD_XLSX, downloadKey),
-      }]],
+      inlineKeyboard,
+      parse_mode: "HTML",
     });
   }
 }

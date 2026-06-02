@@ -16,8 +16,25 @@ function formatProductLine(product: Product, userRole?: UserRole): string {
     line += ` ${sim}`;
   }
 
+  // if (sim) {
+  //   line += ` 📲 ${sim}`;
+  // }
   if (sim) {
-    line += ` 📲 ${sim}`;   // или line += ` (${sim})`
+    let simIcon = "";
+    switch (sim) {
+      case "SIM + ESIM":
+        simIcon = "📲";
+        break;
+      case "ESIM":
+        simIcon = "📶";
+        break;
+      case "Dual SIM":
+        simIcon = "☎️";
+        break;
+      default:
+        simIcon = sim; // для неизвестных значений оставляем текст
+    }
+    line += ` ${simIcon}`;
   }
 
   if (active) {
@@ -89,7 +106,7 @@ type ProductMessage = {
   products: Product[];
 };
 
-function buildMessagesForProducts(
+export function buildMessagesForProducts(
   products: Product[],
   userRole?: UserRole,
 ): ProductMessage[] {

@@ -19,7 +19,6 @@ import { sendHiddenProductsReport } from "../render/reports";
 import { generateRetailCsv, sendPriceList } from "./catalog.hanlder";
 import { getCatalogProductById, getCatalogUIProducts } from "../services/catalog/ui/catalog.ui";
 import { getCatalogProducts } from "../services/catalog/catalog.builder";
-import { getProductCache, getProductCacheValues } from "../services/products/products.service";
 
 const ADMIN_CHAT_ID = Number(process.env.ADMIN_CHAT_ID);
 

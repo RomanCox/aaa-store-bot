@@ -358,9 +358,6 @@ async function renderChoosingProduct(bot: TelegramBot, chatId: number) {
 
 	const userRole = getUserRole(chatId);
 	const products = getCatalogUIProducts(filters, userRole);
-	const notActivated = products.filter(p => !p.activated);
-  const activated = products.filter(p => p.activated);
-	const sortedProducts = [...notActivated, ...activated];
 
 	if (
 		!sectionState.selectedBrand ||
@@ -381,7 +378,7 @@ async function renderChoosingProduct(bot: TelegramBot, chatId: number) {
 	}
 
 	const buildText = (products: Product[], userRole?: UserRole) => {
-		const lines = sortedProducts.map((item, index) => {
+		const lines = products.map((item, index) => {
 			const price = Number(item.price);
 			const currency = userRole === "retail" ? "р." : "";
 			const country = item.country ?? "";
@@ -422,8 +419,8 @@ async function renderChoosingProduct(bot: TelegramBot, chatId: number) {
 
   await renderScreen(bot, chatId, {
     section: SECTION.CART,
-    text: buildText(sortedProducts, userRole),
-    inlineKeyboard: choosingProductKeyboard(chatId, sortedProducts),
+    text: buildText(products, userRole),
+    inlineKeyboard: choosingProductKeyboard(chatId, products),
     parse_mode: "HTML",
   });
 }
