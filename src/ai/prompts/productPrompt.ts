@@ -75,3 +75,22 @@ Output: {"status":"matched","productId":"...","confidence":0.95} or {"status":"n
 Incoming: ${incomingName}
 Candidates: ${JSON.stringify(candidates, null, 2)}`;
 }
+
+export function buildMatchSmartphonePrompt(incomingName: string, candidates: AiCandidate[]) {
+  return `Return ONLY JSON. No text, no markdown, no explanations.
+
+Match based on model, storage, modifiers (Pro, Plus, Max, Ultra, Mini, SE, Lite, FE), and color.
+For smartphones, also consider generation/year if explicitly mentioned (e.g., "iPhone 14" vs "iPhone 15").
+SIM, country, activation, carrier, and network bands are already filtered – ignore them.
+
+Order of number and modifier does not matter: "Pro 4" = "4 Pro".
+Different if modifier differs: "Galaxy S24" vs "Galaxy S24 Ultra" → different.
+Different if model generation differs: "iPhone 15" vs "iPhone 15 Pro" → different.
+Different if storage differs: "128GB" vs "256GB" → different.
+Different if color differs: "Midnight" vs "Starlight" → different.
+
+Output: {"status":"matched","productId":"...","confidence":0.95} or {"status":"no_match","productId":"","confidence":0.0}
+
+Incoming: ${incomingName}
+Candidates: ${JSON.stringify(candidates, null, 2)}`;
+}

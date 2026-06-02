@@ -1,5 +1,5 @@
 import { callAI } from "./aiService";
-import { buildMatchProductPrompt, buildProductFromCandidatesPrompt, buildProductPrompt, buildPromptForExtractProductAttributes } from "./prompts/productPrompt";
+import { buildMatchProductPrompt, buildMatchSmartphonePrompt, buildProductFromCandidatesPrompt, buildProductPrompt, buildPromptForExtractProductAttributes } from "./prompts/productPrompt";
 import { normalizeCategory } from "../utils/category";
 import { AiCandidate, ExtractedAttrs, MatchResult, ProductCreationResult } from "../types";
 
@@ -86,8 +86,12 @@ export async function callAIForProduct(
 export async function callAIForProductMatch(
   name: string,
   candidates: AiCandidate[],
+  category?: string,
 ): Promise<{ result: MatchResult; cost: number | null }> {
-  const prompt = buildMatchProductPrompt(name, candidates);
+  const prompt =
+    category?.toLowerCase() === "смартфоны"
+      ? buildMatchSmartphonePrompt(name, candidates)
+      : buildMatchProductPrompt(name, candidates);
 
   const res = await callAI(prompt);
 
@@ -144,3 +148,4 @@ export async function callAIForProductMatch(
     };
   }
 }
+
