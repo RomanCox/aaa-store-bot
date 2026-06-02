@@ -14,7 +14,7 @@ export const BUTTONS_IN_RAW_FOR_CHOOSING_PRODUCT_KEYBOARD = 4;
 export const BUTTONS_IN_RAW_FOR_MODELS_KEYBOARD = 2;
 export const BUTTONS_IN_RAW_FOR_STORAGE_VALUES_KEYBOARD = 2;
 export const BUTTONS_IN_RAW_FOR_EDIT_CART_KEYBOARD = 5;
-export const UI_VERSION = 1;
+export const UI_VERSION = 2;
 
 const envDataPath = process.env.DATA_PATH;
 export const DATA_PATH = envDataPath
