@@ -18,7 +18,7 @@ exports.BUTTONS_IN_RAW_FOR_CHOOSING_PRODUCT_KEYBOARD = 4;
 exports.BUTTONS_IN_RAW_FOR_MODELS_KEYBOARD = 2;
 exports.BUTTONS_IN_RAW_FOR_STORAGE_VALUES_KEYBOARD = 2;
 exports.BUTTONS_IN_RAW_FOR_EDIT_CART_KEYBOARD = 5;
-exports.UI_VERSION = 1;
+exports.UI_VERSION = 2;
 const envDataPath = process.env.DATA_PATH;
 exports.DATA_PATH = envDataPath
     ? path_1.default.resolve(envDataPath)
