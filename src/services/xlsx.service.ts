@@ -282,7 +282,7 @@ export async function ingestAAAStorePrice(
 
 				// 5. AI‑матчинг (если не нашли и есть кандидаты)
 				if (!matchedProduct && candidates.length > 0) {
-					const { result: ai, cost: matchCost } = await callAIForProductMatch(name, candidates);
+					const { result: ai, cost: matchCost } = await callAIForProductMatch(name, candidates, category);
           if (matchCost !== null) totalAICost += matchCost;
           if (!ai || ai.status === "error") {
             aiErrors.add(name);
@@ -395,6 +395,9 @@ export async function ingestTodayThereTomorrowHerePrice(
 
 		if (!name || !priceRaw) continue;
 
+		const category = getCategory(name);
+		if (category !== "Смартфоны") continue;
+
 		const price = String(Number(priceRaw) + TODAY_THERE_TOMORROW_HERE_PRICE_DELIVERY);
 
 		rows.push({ name, price });
@@ -473,11 +476,6 @@ export async function ingestTodayThereTomorrowHerePrice(
 				const { attrs: {model, connectivity, chip}, cost } = extracted;
 				if (cost !== null) totalAICost += cost;
 
-				if (category === "Аксессуары") {
-  				unresolvedItems.add(name);
-  				return;
-				}
-
 				// 3. Фильтрация кандидатов с учётом извлечённых полей
 				const cachedProducts = getProductCache();
 				const candidates = [...cachedProducts.values()].filter(p => {
@@ -539,7 +537,7 @@ export async function ingestTodayThereTomorrowHerePrice(
 
 				// 5. Если не нашли – AI-матчинг (только если есть кандидаты)
 				if (!matchedProduct && candidates.length > 0) {
-					const { result: ai, cost: matchCost } = await callAIForProductMatch(name, candidates);
+					const { result: ai, cost: matchCost } = await callAIForProductMatch(name, candidates, category);
 					if (matchCost !== null) totalAICost += matchCost;
 					if (!ai || ai.status === "error") {
 						aiErrors.add(name);
