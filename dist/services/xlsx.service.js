@@ -245,7 +245,7 @@ async function ingestAAAStorePrice(buffer, options) {
             }
             // 5. AI‑матчинг (если не нашли и есть кандидаты)
             if (!matchedProduct && candidates.length > 0) {
-                const { result: ai, cost: matchCost } = await (0, productAI_1.callAIForProductMatch)(name, candidates);
+                const { result: ai, cost: matchCost } = await (0, productAI_1.callAIForProductMatch)(name, candidates, category);
                 if (matchCost !== null)
                     totalAICost += matchCost;
                 if (!ai || ai.status === "error") {
@@ -330,6 +330,9 @@ async function ingestTodayThereTomorrowHerePrice(buffer, options) {
         const priceRaw = sheet[XLSX.utils.encode_cell({ r, c: 1 })]?.v?.toString().trim() ?? "";
         if (!name || !priceRaw)
             continue;
+        const category = getCategory(name);
+        if (category !== "Смартфоны")
+            continue;
         const price = String(Number(priceRaw) + constants_1.TODAY_THERE_TOMORROW_HERE_PRICE_DELIVERY);
         rows.push({ name, price });
     }
@@ -392,10 +395,6 @@ async function ingestTodayThereTomorrowHerePrice(buffer, options) {
             const { attrs: { model, connectivity, chip }, cost } = extracted;
             if (cost !== null)
                 totalAICost += cost;
-            if (category === "Аксессуары") {
-                unresolvedItems.add(name);
-                return;
-            }
             // 3. Фильтрация кандидатов с учётом извлечённых полей
             const cachedProducts = (0, products_service_1.getProductCache)();
             const candidates = [...cachedProducts.values()].filter(p => {
@@ -460,7 +459,7 @@ async function ingestTodayThereTomorrowHerePrice(buffer, options) {
             }
             // 5. Если не нашли – AI-матчинг (только если есть кандидаты)
             if (!matchedProduct && candidates.length > 0) {
-                const { result: ai, cost: matchCost } = await (0, productAI_1.callAIForProductMatch)(name, candidates);
+                const { result: ai, cost: matchCost } = await (0, productAI_1.callAIForProductMatch)(name, candidates, category);
                 if (matchCost !== null)
                     totalAICost += matchCost;
                 if (!ai || ai.status === "error") {

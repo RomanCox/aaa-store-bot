@@ -76,8 +76,10 @@ async function callAIForProduct(name, brand, category, candidates) {
         return { result: { status: "error" }, cost: res.cost };
     }
 }
-async function callAIForProductMatch(name, candidates) {
-    const prompt = (0, productPrompt_1.buildMatchProductPrompt)(name, candidates);
+async function callAIForProductMatch(name, candidates, category) {
+    const prompt = category?.toLowerCase() === "смартфоны"
+        ? (0, productPrompt_1.buildMatchSmartphonePrompt)(name, candidates)
+        : (0, productPrompt_1.buildMatchProductPrompt)(name, candidates);
     const res = await (0, aiService_1.callAI)(prompt);
     if (!res) {
         console.log("MATCH EMPTY AI RESPONSE", {
