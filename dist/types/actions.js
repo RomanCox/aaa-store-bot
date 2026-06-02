@@ -37,7 +37,6 @@ var CALLBACK_TYPE;
     CALLBACK_TYPE["DELETE_POSITION_FROM_CART"] = "delete_product_from_cart";
     CALLBACK_TYPE["ORDERS"] = "orders";
     CALLBACK_TYPE["CHOOSE_ORDER"] = "choose_order";
-    CALLBACK_TYPE["CHECK"] = "check";
 })(CALLBACK_TYPE || (exports.CALLBACK_TYPE = CALLBACK_TYPE = {}));
 var PAGINATION;
 (function (PAGINATION) {

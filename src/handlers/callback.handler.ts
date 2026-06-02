@@ -241,28 +241,6 @@ export function registerCallbacks(bot: TelegramBot) {
         return;
       }
 
-      case CALLBACK_TYPE.CHECK: {
-        const cached_products = getProductCacheValues();
-        const filtered = cached_products.filter(({ rawNames }) => rawNames.length > 1);
-
-        if (!filtered.length) {
-          await bot.sendMessage(chatId, "Проблемных товаров не найдено");
-          return;
-        }
-
-        const lines = filtered.map(p => {
-          return [
-            `📦 ${p.name}`,
-            ...p.rawNames.map(r => `• ${r}`),
-          ].join("\n");
-        });
-        await bot.sendMessage(
-          chatId,
-          lines.join("\n\n").slice(0, 4000)
-        );
-        return;
-      }
-
       case CALLBACK_TYPE.BRAND: {
         return guardWorkingHours(bot, chatId, async () => {
           const state = getChatState(chatId);

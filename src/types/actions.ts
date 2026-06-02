@@ -32,9 +32,7 @@ export enum CALLBACK_TYPE {
 	DECREASE_AMOUNT = "decrease_amount",
 	DELETE_POSITION_FROM_CART = "delete_product_from_cart",
   ORDERS = "orders",
-  CHOOSE_ORDER = "choose_order",
-
-	CHECK = "check"
+  CHOOSE_ORDER = "choose_order"
 }
 
 export enum PAGINATION {

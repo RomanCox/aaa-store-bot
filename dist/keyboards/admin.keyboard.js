@@ -30,11 +30,5 @@ function adminKeyboard() {
                 callback_data: types_1.CALLBACK_TYPE.RENEW_PRICE
             },
         ],
-        [
-            {
-                text: texts_1.ADMIN_TEXTS.CHECK,
-                callback_data: types_1.CALLBACK_TYPE.CHECK
-            },
-        ],
     ];
 }

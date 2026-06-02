@@ -21,7 +21,6 @@ const reports_1 = require("../render/reports");
 const catalog_hanlder_1 = require("./catalog.hanlder");
 const catalog_ui_1 = require("../services/catalog/ui/catalog.ui");
 const catalog_builder_1 = require("../services/catalog/catalog.builder");
-const products_service_1 = require("../services/products/products.service");
 const ADMIN_CHAT_ID = Number(process.env.ADMIN_CHAT_ID);
 function registerCallbacks(bot) {
     bot.on("callback_query", async (query) => {
@@ -201,22 +200,6 @@ function registerCallbacks(bot) {
                     });
                     await (0, utils_1.safeAnswerCallback)(bot, query.id);
                 }
-                return;
-            }
-            case types_1.CALLBACK_TYPE.CHECK: {
-                const cached_products = (0, products_service_1.getProductCacheValues)();
-                const filtered = cached_products.filter(({ rawNames }) => rawNames.length > 1);
-                if (!filtered.length) {
-                    await bot.sendMessage(chatId, "Проблемных товаров не найдено");
-                    return;
-                }
-                const lines = filtered.map(p => {
-                    return [
-                        `📦 ${p.name}`,
-                        ...p.rawNames.map(r => `• ${r}`),
-                    ].join("\n");
-                });
-                await bot.sendMessage(chatId, lines.join("\n\n").slice(0, 4000));
                 return;
             }
             case types_1.CALLBACK_TYPE.BRAND: {
