@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node src/index.ts",
-    "build": "node --max-old-space-size=2048 node_modules/typescript/bin/tsc && cpx \"src/data/**/*\" dist/data",
+    "build": "tsc && cpx \\\"src/**/*.json\\\" dist",
     "start": "node dist/index.js"
   },
   "keywords": [],
