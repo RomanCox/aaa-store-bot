@@ -26,6 +26,7 @@ export async function editPriceInputHandler(
   const allowedModes = [
     "edit_rub_to_byn",
     "edit_rub_to_usd",
+    "edit_usd_to_byn",
   ] as const;
 
   if (!allowedModes.includes(state.mode as any)) {
@@ -46,6 +47,7 @@ export async function editPriceInputHandler(
     const successTexts: Record<typeof allowedModes[number], string> = {
       edit_rub_to_byn: PRICE_TEXTS.ENTER_RUB_TO_BYN_EDIT_SUCCESSFUL,
       edit_rub_to_usd: PRICE_TEXTS.ENTER_RUB_TO_USD_EDIT_SUCCESSFUL,
+      edit_usd_to_byn: PRICE_TEXTS.ENTER_USD_TO_BYN_EDIT_SUCCESSFUL,
     };
 
     await renderScreen(bot, chatId, {

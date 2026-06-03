@@ -1,6 +1,7 @@
 export enum CALLBACK_TYPE {
 	MAIN = "main",
-  UPLOAD_XLSX = "upload_xlsx",
+  AAA_STORE_PRICE = "upload_aaa_store_price",
+  TODAY_THERE_TOMORROW_HERE_PRICE = "upload_today_there_tomorrow_here_price",
   MANAGE_USERS = "manage_users",
 	ADD_USER = "add_user",
 	DELETE_USER = "delete_user",
@@ -20,6 +21,7 @@ export enum CALLBACK_TYPE {
 	DOWNLOAD_XLSX = "download_xlsx",
 	EDIT_RUB_TO_BYN = "edit_rub_to_byn",
 	EDIT_RUB_TO_USD = "edit_rub_to_usd",
+	EDIT_USD_TO_BYN = "edit_usd_to_byn",
   RENEW_PRICE = "renew_price",
 	SUBMIT_ORDER = "submit_order",
 	ADD_ITEM_TO_CART = "add_item_to_cart",
@@ -30,7 +32,7 @@ export enum CALLBACK_TYPE {
 	DECREASE_AMOUNT = "decrease_amount",
 	DELETE_POSITION_FROM_CART = "delete_product_from_cart",
   ORDERS = "orders",
-  CHOOSE_ORDER = "choose_order",
+  CHOOSE_ORDER = "choose_order"
 }
 
 export enum PAGINATION {

@@ -90,7 +90,7 @@ export async function handleBack(chatId: number) {
 
   if (!adminState) return;
 
-  if (adminState.flowStep === "upload_xlsx") {
+  if (adminState.flowStep === "upload_aaa_store_price" || adminState.flowStep === "upload_today_there_tomorrow_here_price") {
     setChatState(chatId, {
       mode: "idle",
       sections: {

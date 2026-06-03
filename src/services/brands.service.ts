@@ -52,3 +52,40 @@ export function resolveBrandFromName(name: string): string | undefined {
 export function brandsFromConfig() {
   return Array.from(brands.keys());
 }
+
+export function extractBrandFromStart(name: string): {
+  brand?: string;
+  nameWithoutBrand: string;
+} {
+  const original = name.trimStart();
+  const lower = original.toLowerCase();
+
+  let matchedBrand: string | undefined;
+  let matchedLength = 0;
+
+  for (const [brand, keyWords] of brands.entries()) {
+    for (const keyWord of keyWords) {
+      const key = keyWord.toLowerCase();
+
+      if (lower.startsWith(key) && key.length > matchedLength) {
+        matchedBrand = brand;
+        matchedLength = key.length;
+      }
+    }
+  }
+
+  if (!matchedBrand) {
+    return {
+      brand: undefined,
+      nameWithoutBrand: original,
+    };
+  }
+
+  // обрезаем бренд + пробел после него
+  const nameWithoutBrand = original.slice(matchedLength).trimStart();
+
+  return {
+    brand: matchedBrand,
+    nameWithoutBrand,
+  };
+}

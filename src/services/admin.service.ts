@@ -1,12 +1,12 @@
 import TelegramBot from "node-telegram-bot-api";
 import { ADMIN_TEXTS } from "../texts";
-import { CALLBACK_TYPE } from "../types";
+import { AdminPanelFlowStep, CALLBACK_TYPE } from "../types";
 import { getChatState, setChatState } from "../state/chat.state";
 import { SECTION } from "../types";
 import { USERS_TEXTS } from "../texts";
 import { renderScreen } from "../render/renderScreen";
 
-export async function startXlsxUpload(bot: TelegramBot, chatId: number) {
+export async function startPriceUpload(bot: TelegramBot, chatId: number, flowStep: AdminPanelFlowStep) {
   const state = getChatState(chatId);
   const mainState = state.sections?.[SECTION.ADMIN_PANEL];
 
@@ -18,7 +18,7 @@ export async function startXlsxUpload(bot: TelegramBot, chatId: number) {
       [SECTION.ADMIN_PANEL]: {
         messageId: mainState?.messageId,
         users: mainState?.users ?? {},
-        flowStep: "upload_xlsx",
+        flowStep,
       },
     },
   });
