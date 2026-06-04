@@ -11,11 +11,6 @@ export function isWorkingHours(): boolean {
 
   const hours = minskTime.getHours();
 
-  console.log(`[DEBUG] hours = ${hours}, DEV = ${process.env.DEV}`);
-
-  const working = (hours >= 11 && hours < 21);
-  console.log(`[DEBUG] working = ${working}`);
-
   return process.env.DEV ? true : hours >= 11 && hours < 21;
 }
 
