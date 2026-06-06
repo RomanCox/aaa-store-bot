@@ -14,6 +14,7 @@ export function generateId(input: {
   country?: string;
   sim?: string;
   activated?: boolean;
+  rawName?: string;
   // connectivity?: "WiFi" | "LTE" | "";
   // chip?: string;
   // displayFinish?: string;
@@ -33,6 +34,7 @@ export function generateId(input: {
     // normalizeIdPart(input.chip),
     // normalizeIdPart(input.displayFinish),
     // input.displayFinish ? normalizeIdPart(input.displayFinish) : null,
+    input.rawName ? normalizeIdPart(input.rawName) : null
   ]
     .filter(Boolean)
     .join("|");

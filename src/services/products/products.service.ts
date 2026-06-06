@@ -95,8 +95,8 @@ export function matchProduct(input: MatchInput) {
   if (input.color && normalize(attrs.color ?? "") !== normalize(input.color)) continue;
   if (input.sim && attrs.sim !== input.sim) continue;
   if (input.activated !== undefined && attrs.activated !== input.activated) continue;
-  if (input.connectivity !== undefined && attrs.connectivity !== input.connectivity) continue;
-  if (input.chip !== undefined && attrs.chip !== input.chip) continue;
+  // if (input.connectivity !== undefined && attrs.connectivity !== input.connectivity) continue;
+  // if (input.chip !== undefined && attrs.chip !== input.chip) continue;
 
   return { product, matchType: "structural" };
 }

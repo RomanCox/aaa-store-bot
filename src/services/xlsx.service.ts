@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx";
-import { IngestItem, SimType } from "../types";
+import { CachedProduct, IngestItem, SimType } from "../types";
 import { callAIForProductMatch, extractProductAttributes } from "../ai/productAI";
 import {
 	cleanProductName,
@@ -27,9 +27,11 @@ import {
 	matchProduct,
 	saveProductCache,
 	getProductFromCacheById,
+	setProductToCache,
 } from "./products/products.service";
 import { SAVE_EVERY_NUMBER_ITEMS, TODAY_THERE_TOMORROW_HERE_PRICE_DELIVERY } from "../constants";
 import { resolveColorFromName, normalizeColorInProductName } from "./colors.service";
+import { generateId } from "./products/productId";
 
 function hasRequiredColumns(row: Record<string, unknown>): boolean {
 	return ["SKU", "Категория", "Название", "Модель", "Цена"]
@@ -209,22 +211,42 @@ export async function ingestAAAStorePrice(
 
 				if (!isAppleSmartphone) {
 					const finalStorage = storageRaw || normalizeStorageForCatalog(name);
-					// Страну для не-смартфонов не убираем
 					const finalCountry = country;
-					const newProduct = upsertProduct({
-						rawName: name,
-						brand,
-						category,
-						model: finalModel || "",
-						name: name,
-						attributes: {
-							storage: finalStorage,
+					
+					// 1. Пытаемся найти существующий товар по rawName
+					let existingProduct = findByRawName(rawNameForMatch);
+					
+					if (!existingProduct) {
+						// 2. Не нашли — создаём новый товар с уникальным ID (не детерминированным)
+						const id = generateId({
+							brand,
+							category,
+							model,
+							storage: storageRaw,
 							color,
-							country: finalCountry,
+							country,
 							sim,
-						},
-					});
-					return { product: newProduct, price, rawNameForMatch, isNew: true };
+							rawName: name,
+						});
+						const newProduct: CachedProduct = {
+							id,
+							brand,
+							category,
+							model: finalModel || "",
+							name: name,
+							attributes: {
+								storage: finalStorage,
+								color,
+								country: finalCountry,
+								sim,
+							},
+							rawNames: [name],
+						};
+						setProductToCache(id, newProduct);
+						existingProduct = newProduct;
+					}
+					
+					return { product: existingProduct, price, rawNameForMatch, isNew: !existingProduct };
 				}
 
 				// 2. Извлечение атрибутов через AI (один запрос)
