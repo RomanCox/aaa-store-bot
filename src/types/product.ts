@@ -62,7 +62,7 @@ export interface UpsertProductInput {
   	chip?: string;
 		displayFinish?: "Nano Texture" | "";
 	};
-};
+}
 
 export interface CatalogItem {
 	productId: string;

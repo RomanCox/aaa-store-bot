@@ -462,7 +462,7 @@ export async function ingestTodayThereTomorrowHerePrice(
 				// 1. Поиск по rawName
 				let existingByRaw = null;
 
-				if (activated === true) {
+				if (activated) {
 					// Ищем только среди активных продуктов
 					const cache = getProductCache();
 					existingByRaw = [...cache.values()].find(p =>

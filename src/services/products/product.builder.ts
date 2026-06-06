@@ -1,4 +1,4 @@
-import { CachedProduct, SimType, UpsertProductInput } from "../../types";
+import { CachedProduct, UpsertProductInput } from "../../types";
 import { generateId } from "./productId";
 import {  getProductFromCacheById, setProductToCache } from "./products.service";
 
