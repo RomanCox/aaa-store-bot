@@ -17,9 +17,9 @@ function formatProductLine(product: Product, userRole?: UserRole): string {
   }
 
   const simIcons: Record<string, string> = {
-    "SIM + ESIM": "📲",
-    "ESIM": "📶",
-    "Dual SIM": "☎️",
+    "SIM + ESIM": "📲 Sim+Esim",
+    "ESIM": "📶 Esim",
+    "Dual SIM": "☎️ DualSim",
   };
   const simIcon = simIcons[sim] ?? sim;
   if (sim) {

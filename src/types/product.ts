@@ -22,9 +22,9 @@ export interface CachedProduct {
 		country?: string;
 		sim?: string;
 		activated?: boolean;
-		connectivity?: "WiFi" | "LTE" | "";
-    chip?: string;
-		displayFinish?: "Nano Texture" | "";
+		// connectivity?: "WiFi" | "LTE" | "";
+    // chip?: string;
+		// displayFinish?: "Nano Texture" | "";
 	};
 
 	rawNames: string[];

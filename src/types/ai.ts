@@ -1,7 +1,7 @@
 export interface AIResponse {
   content: string;
   cost: number;
-};
+}
 
 export type MatchResult =
   | { status: "matched"; productId: string; confidence: number }
@@ -16,13 +16,13 @@ export interface ProductCreationResult {
   name?: string;
   storage?: string;
   color?: string;
-};
+}
 
 export interface ExtractedAttrs {
   model: string;
   connectivity: "WiFi" | "LTE" | "";
   chip: string;
-};
+}
 
 export type LowConfidenceItem = {
   name: string;

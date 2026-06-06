@@ -207,6 +207,26 @@ export async function ingestAAAStorePrice(
 					};
 				}
 
+				if (!isAppleSmartphone) {
+					const finalStorage = storageRaw || normalizeStorageForCatalog(name);
+					// Страну для не-смартфонов не убираем
+					const finalCountry = country;
+					const newProduct = upsertProduct({
+						rawName: name,
+						brand,
+						category,
+						model: finalModel || "",
+						name: name,
+						attributes: {
+							storage: finalStorage,
+							color,
+							country: finalCountry,
+							sim,
+						},
+					});
+					return { product: newProduct, price, rawNameForMatch, isNew: true };
+				}
+
 				// 2. Извлечение атрибутов через AI (один запрос)
         const extracted = await extractProductAttributes(name, category);
         if (!extracted.attrs) {
@@ -217,10 +237,6 @@ export async function ingestAAAStorePrice(
 				let { model: extractedModel, connectivity, chip } = extracted.attrs;
         const { cost } = extracted;
         if (cost !== null) totalAICost += cost;
-
-				if (brand === "Apple" && category === "Планшеты") {
-  				extractedModel = normalizeModelForIPadMini(extractedModel, name);
-				}
 
 				// 3. Фильтрация кандидатов
         const cachedProducts = getProductCache();
@@ -240,7 +256,7 @@ export async function ingestAAAStorePrice(
                           hasChip(p.name, chip);
             if (!match) return false;
           }
-          if (displayFinish && p.attributes?.displayFinish !== displayFinish) return false;
+          // if (displayFinish && p.attributes?.displayFinish !== displayFinish) return false;
           return true;
         }).map(p => ({
           id: p.id,
@@ -250,9 +266,9 @@ export async function ingestAAAStorePrice(
           model: p.model,
           storage: p.attributes?.storage ?? "",
           color: p.attributes?.color,
-          connectivity: p.attributes?.connectivity,
-          chip: p.attributes?.chip,
-          displayFinish: p.attributes?.displayFinish,
+          // connectivity: p.attributes?.connectivity,
+          // chip: p.attributes?.chip,
+          // displayFinish: p.attributes?.displayFinish,
         }));
 
 				let matchedProduct = null;
@@ -262,8 +278,8 @@ export async function ingestAAAStorePrice(
           const foundCandidate = candidates.find(p =>
             p.model.toLowerCase() === extractedModel.toLowerCase() &&
             (!storageRaw || normalizeStorageForCatalog(p.storage) === normalizeStorageForCatalog(storageRaw)) &&
-            (!connectivity || p.connectivity === connectivity) &&
-            (!chip || p.chip === chip) &&
+            // (!connectivity || p.connectivity === connectivity) &&
+            // (!chip || p.chip === chip) &&
             (!color || p.color === color)
           );
           if (foundCandidate) {
@@ -281,17 +297,17 @@ export async function ingestAAAStorePrice(
         }
 
 				// 5. AI‑матчинг (если не нашли и есть кандидаты)
-				if (!matchedProduct && candidates.length > 0) {
-					const { result: ai, cost: matchCost } = await callAIForProductMatch(name, candidates, category);
-          if (matchCost !== null) totalAICost += matchCost;
-          if (!ai || ai.status === "error") {
-            aiErrors.add(name);
-            return;
-          }
-          if (ai.status === "matched" && ai.productId) {
-            matchedProduct = await getProductFromCacheById(ai.productId);
-          }
-				}
+				// if (!matchedProduct && candidates.length > 0) {
+				// 	const { result: ai, cost: matchCost } = await callAIForProductMatch(name, candidates, category);
+        //   if (matchCost !== null) totalAICost += matchCost;
+        //   if (!ai || ai.status === "error") {
+        //     aiErrors.add(name);
+        //     return;
+        //   }
+        //   if (ai.status === "matched" && ai.productId) {
+        //     matchedProduct = await getProductFromCacheById(ai.productId);
+        //   }
+				// }
 
 				// 6. Если нашли – добавляем синоним и возвращаем
 				if (matchedProduct) {
@@ -306,7 +322,7 @@ export async function ingestAAAStorePrice(
           rawName: name,
           brand,
           category,
-          model: model || extractedModel || "",
+          model: finalModel || extractedModel || "",
           name: name,
           attributes: {
             storage: finalStorage,
@@ -473,8 +489,9 @@ export async function ingestTodayThereTomorrowHerePrice(
 					unresolvedItems.add(name);
 					return;
 				}
-				const { attrs: {model, connectivity, chip}, cost } = extracted;
+				const { attrs: {model, connectivity: extractedConnectivity, chip}, cost } = extracted;
 				if (cost !== null) totalAICost += cost;
+				const connectivity = category === "Планшеты" ? extractedConnectivity : undefined;
 
 				// 3. Фильтрация кандидатов с учётом извлечённых полей
 				const cachedProducts = getProductCache();
@@ -493,7 +510,7 @@ export async function ingestTodayThereTomorrowHerePrice(
 													hasChip(p.name, chip);
 						if (!match) return false;
 					}
-					if (displayFinish && p.attributes?.displayFinish !== displayFinish) return false;
+					// if (displayFinish && p.attributes?.displayFinish !== displayFinish) return false;
 					return true;
 				}).map(p => ({
 					id: p.id,
@@ -503,9 +520,9 @@ export async function ingestTodayThereTomorrowHerePrice(
 					model: p.model,
 					storage: p.attributes?.storage ?? "",
 					color: p.attributes?.color,
-					connectivity: p.attributes?.connectivity,
-          chip: p.attributes?.chip,
-					displayFinish: p.attributes?.displayFinish,
+					// connectivity: p.attributes?.connectivity,
+          // chip: p.attributes?.chip,
+					// displayFinish: p.attributes?.displayFinish,
 				}));
 
 				let matchedProduct = null;
@@ -515,8 +532,8 @@ export async function ingestTodayThereTomorrowHerePrice(
 					const foundCandidate = candidates.find(p =>
     				p.model.toLowerCase() === model.toLowerCase() &&
 						(!storage || normalizeStorageForCatalog(p.storage) === storage) &&
-						(!connectivity || p.connectivity === connectivity) &&
-						(!chip || p.chip === chip) &&
+						// (!connectivity || p.connectivity === connectivity) &&
+						// (!chip || p.chip === chip) &&
 						(!color || p.color === color)
 					);
 					if (foundCandidate) {

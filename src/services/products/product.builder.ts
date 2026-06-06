@@ -76,16 +76,12 @@ export function upsertProduct(input: UpsertProductInput): CachedProduct {
   const id = generateId({
     brand,
     category,
-    // rawName: rawName,
     model,
     storage: attributes?.storage,
     color: attributes?.color,
     country: attributes?.country,
     sim: attributes?.sim,
-    connectivity: attributes?.connectivity,
-    chip: attributes?.chip,
     activated: attributes?.activated,
-    displayFinish: attributes?.displayFinish,
   });
 
   const existing = getProductFromCacheById(id);
