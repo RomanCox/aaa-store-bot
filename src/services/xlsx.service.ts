@@ -91,8 +91,8 @@ async function processItem(input: {
 		color,
 		sim,
 		activated,
-		connectivity,
-    chip, 
+		// connectivity,
+    // chip, 
 	});
 
 	if (match?.product) {
@@ -117,8 +117,8 @@ async function processItem(input: {
 			country: isAppleSmartphone ? undefined : country,
 			sim,
 			activated,
-			connectivity,
-    	chip, 
+			// connectivity,
+    	// chip, 
 		},
 	});
 
@@ -318,18 +318,18 @@ export async function ingestAAAStorePrice(
           }
         }
 
-				// 5. AI‑матчинг (если не нашли и есть кандидаты)
-				// if (!matchedProduct && candidates.length > 0) {
-				// 	const { result: ai, cost: matchCost } = await callAIForProductMatch(name, candidates, category);
-        //   if (matchCost !== null) totalAICost += matchCost;
-        //   if (!ai || ai.status === "error") {
-        //     aiErrors.add(name);
-        //     return;
-        //   }
-        //   if (ai.status === "matched" && ai.productId) {
-        //     matchedProduct = await getProductFromCacheById(ai.productId);
-        //   }
-				// }
+				// 5. AI‑матчинг (если не нашли и есть кандидаты) - только для iPhone
+				if (isAppleSmartphone && !matchedProduct && candidates.length > 0) {
+					const { result: ai, cost: matchCost } = await callAIForProductMatch(name, candidates, category);
+          if (matchCost !== null) totalAICost += matchCost;
+          if (!ai || ai.status === "error") {
+            aiErrors.add(name);
+            return;
+          }
+          if (ai.status === "matched" && ai.productId) {
+            matchedProduct = await getProductFromCacheById(ai.productId);
+          }
+				}
 
 				// 6. Если нашли – добавляем синоним и возвращаем
 				if (matchedProduct) {
@@ -351,9 +351,9 @@ export async function ingestAAAStorePrice(
             color,
             country: finalCountry,
             sim,
-            connectivity: connectivity || undefined,
-            chip: chip || undefined,
-            displayFinish: displayFinish || undefined,
+            // connectivity: connectivity || undefined,
+            // chip: chip || undefined,
+            // displayFinish: displayFinish || undefined,
           },
         });
         return { product: newProduct, price, rawNameForMatch, isNew: true };
@@ -602,9 +602,9 @@ export async function ingestTodayThereTomorrowHerePrice(
               country: finalCountry,
               sim,
               activated,
-              connectivity: connectivity || undefined,
-              chip: chip || undefined,
-							displayFinish: displayFinish || undefined,
+              // connectivity: connectivity || undefined,
+              // chip: chip || undefined,
+							// displayFinish: displayFinish || undefined,
             },
           });
 					

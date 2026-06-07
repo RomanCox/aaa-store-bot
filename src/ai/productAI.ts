@@ -88,10 +88,11 @@ export async function callAIForProductMatch(
   candidates: AiCandidate[],
   category?: string,
 ): Promise<{ result: MatchResult; cost: number | null }> {
-  const prompt =
-    category?.toLowerCase() === "смартфоны"
-      ? buildMatchSmartphonePrompt(name, candidates)
-      : buildMatchProductPrompt(name, candidates);
+  // const prompt =
+    // category?.toLowerCase() === "смартфоны"
+      // ? buildMatchSmartphonePrompt(name, candidates)
+      // : buildMatchProductPrompt(name, candidates);
+  const prompt = buildMatchSmartphonePrompt(name, candidates);
 
   const res = await callAI(prompt);
 

@@ -41,9 +41,9 @@ export interface AiCandidate {
 	sim?: string;
 	country?: string;
 	activated?: boolean;
-	connectivity?: "WiFi" | "LTE" | "";
-  chip?: string;
-	displayFinish?: "Nano Texture" | "";
+	// connectivity?: "WiFi" | "LTE" | "";
+  // chip?: string;
+	// displayFinish?: "Nano Texture" | "";
 }
 
 export interface UpsertProductInput {
@@ -58,9 +58,9 @@ export interface UpsertProductInput {
 		country?: string;
 		sim?: string;
 		activated?: boolean;
-		connectivity?: "WiFi" | "LTE" | "";
-  	chip?: string;
-		displayFinish?: "Nano Texture" | "";
+		// connectivity?: "WiFi" | "LTE" | "";
+  	// chip?: string;
+		// displayFinish?: "Nano Texture" | "";
 	};
 }
 
@@ -124,8 +124,8 @@ export type MatchInput = {
 	country?: string;
 	sim?: string;
 	activated?: boolean;
-	connectivity?: "WiFi" | "LTE";
-  chip?: string; 
+	// connectivity?: "WiFi" | "LTE";
+  // chip?: string; 
 };
 
 export type SimType = "ESIM" | "SIM" | "Dual SIM" | "SIM + ESIM" | undefined;
