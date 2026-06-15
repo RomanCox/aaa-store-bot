@@ -8,12 +8,12 @@
 
 ### 1. Подключение к серверу
 ```bash
-ssh mobileti@93.125.99.154
+ssh h99447@vh154.hoster.by -p22
 ```
 
 ### 2. Перейти в директорию проекта
 ```bash
-cd ~/repositories/aaa-store-bot
+cd ~/bots/aaa-store-bot
 ```
 
 ### 3. Сделать билд (если было обновление с git)
