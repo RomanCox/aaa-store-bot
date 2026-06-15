@@ -1,6 +1,6 @@
 import * as XLSX from "xlsx";
-import { CachedProduct, IngestItem, SimType } from "../types";
-import {callAIForProductMatch, extractModelOnly, extractProductAttributes} from "../ai/productAI";
+import { CachedProduct, IngestItem } from "../types";
+import { callAIForProductMatch, extractModelOnly } from "../ai/productAI";
 import {
 	cleanProductName,
 	extractActivated,
@@ -462,7 +462,7 @@ export async function ingestAAAStorePrice(
 						const { result: ai, cost: matchCost } = await callAIForProductMatch(name, candidates, category);
 						if (matchCost !== null) totalAICost += matchCost;
 						if (ai && ai.status === 'matched' && ai.productId) {
-							matchedProduct = await getProductFromCacheById(ai.productId);
+							matchedProduct = getProductFromCacheById(ai.productId);
 							if (matchedProduct) addRawNameIfNeeded(matchedProduct, rawNameForMatch);
 						}
 					}
@@ -594,8 +594,8 @@ export async function ingestTodayThereTomorrowHerePrice(
 				let nameForCatalog = cleanProductName(nameWithoutBrand);
 				nameForCatalog = normalizeColorInProductName(nameForCatalog);
 
-				const isAppleSmartphone =
-					brand === "Apple" && category === "Смартфоны";
+				// const isAppleSmartphone =
+				// 	brand === "Apple" && category === "Смартфоны";
 
 				const activated = extractActivated(name);
 				const sim = extractSim(name) ?? normalizeSimByRules({ name, category, country });

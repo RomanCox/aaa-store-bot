@@ -1,6 +1,6 @@
 import { callAI } from "./aiService";
 import {
-  buildMatchProductPrompt, buildMatchSmartphonePrompt, buildProductFromCandidatesPrompt, buildProductPrompt,
+  buildMatchSmartphonePrompt, buildProductFromCandidatesPrompt, buildProductPrompt,
   buildPromptForExtractModel, buildPromptForExtractProductAttributes
 } from "./prompts/productPrompt";
 import { normalizeCategory } from "../utils/category";
