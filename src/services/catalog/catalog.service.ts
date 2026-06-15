@@ -50,7 +50,8 @@ export function clearCatalogSource(source: PriceListType) {
 export function upsertCatalog(
   productId: string,
   price: string,
-  source: PriceListType
+  source: PriceListType,
+  country?: string,
 ) {
   const existing = catalog.get(productId);
 
@@ -60,18 +61,18 @@ export function upsertCatalog(
     }
 
     const existingOffer = existing.offers.find(
-      o => o.source === source
+      o => o.source === source && o.country === country
     );
 
     if (existingOffer) {
       existingOffer.price = price;
     } else {
-      existing.offers.push({ price, source });
+      existing.offers.push({ price, source,country });
     }
   } else {
     catalog.set(productId, {
       productId,
-      offers: [{ price, source }],
+      offers: [{ price, source, country }],
     });
   }
 }

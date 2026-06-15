@@ -41,6 +41,7 @@ export async function renderProductsList(
 
   const userRole = getUserRole(chatId);
 
+  //TODO delete this?
   // const parts = buildMessagesWithProducts(products, userRole);
   const parts = buildMessagesForProducts(products, userRole);
   if (selectedBrand === "Apple" && selectedCategory === "Смартфоны" && parts.length > 0) {

@@ -11,7 +11,7 @@ export function generateId(input: {
   model: string;
   storage?: string;
   color?: string;
-  country?: string;
+  // country?: string;
   sim?: string;
   activated?: boolean;
   rawName?: string;
@@ -25,7 +25,7 @@ export function generateId(input: {
     normalizeIdPart(input.model),
     normalizeIdPart(input.storage),
     normalizeIdPart(input.color),
-    normalizeIdPart(input.country),
+    // normalizeIdPart(input.country),
     normalizeIdPart(input.sim),
     // normalizeIdPart(input.activated === undefined? "": String(input.activated)),
     input.activated === true ? normalizeIdPart("true") : null,

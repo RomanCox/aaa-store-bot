@@ -215,6 +215,22 @@ export function getModels(
 	);
 }
 
+export function normalizeStorageInName(name: string): string {
+	if (!name) return name;
+	let result = name;
+
+	// Для второго прайса: 1024 → 1TB, 2048 → 2TB, 3072 → 3TB, 4096 → 4TB
+	result = result.replace(/\b1024\s*(?:GB)?\b/gi, '1TB');
+	result = result.replace(/\b2048\s*(?:GB)?\b/gi, '2TB');
+	result = result.replace(/\b3072\s*(?:GB)?\b/gi, '3TB');
+	result = result.replace(/\b4096\s*(?:GB)?\b/gi, '4TB');
+
+	// Для обоих прайсов: убираем пробел перед TB (1 TB → 1TB, 2 TB → 2TB)
+	result = result.replace(/(\d+)\s+TB\b/gi, '$1TB');
+
+	return result;
+}
+
 export function getStorageValues(
 	products: Product[],
 	brand?: string,
@@ -265,18 +281,30 @@ export function extractActivated(name: string): boolean {
 }
 
 export function cleanProductName(name: string): string {
-  return name
-    .replace(/[\u{1F1E6}-\u{1F1FF}]{2}/gu, "")   // флаги
-    .replace(/\(active\)/gi, "")                 // (active)
-    .replace(/\bactive\b/gi, "")                // active без скобок
-    .replace(/🔓/g, "")                          // эмодзи unlocked
-		// --- удалить указания на SIM (со скобками и без) ---
+  // return name
+  //   .replace(/[\u{1F1E6}-\u{1F1FF}]{2}/gu, "")   // флаги
+  //   .replace(/\(active\)/gi, "")                 // (active)
+  //   .replace(/\bactive\b/gi, "")                // active без скобок
+  //   .replace(/🔓/g, "")                          // эмодзи unlocked
+	// 	// --- удалить указания на SIM (со скобками и без) ---
+	// 	.replace(/\([^)]*(?:sim|esim|eSim|dual|1sim|2sim|1Sim|2Sim)[^)]*\)/gi, '')
+  //   .replace(/\b(?:sim|esim|eSim|dual|1sim|2sim|1Sim|2Sim)\b/gi, '')
+  //   .replace(/\s+/g, " ")
+  //   .trim();
+	const cleaned = name
+		.replace(/[\u{1F1E6}-\u{1F1FF}]{2}/gu, "")
+		.replace(/\(active\)/gi, "")
+		.replace(/\bactive\b/gi, "")
+		.replace(/🔓/g, "")
 		.replace(/\([^)]*(?:sim|esim|eSim|dual|1sim|2sim|1Sim|2Sim)[^)]*\)/gi, '')
-    .replace(/\b(?:sim|esim|eSim|dual|1sim|2sim|1Sim|2Sim)\b/gi, '')
-    .replace(/\s+/g, " ")
-    .trim();
+		.replace(/\b(?:sim|esim|eSim|dual|1sim|2sim|1Sim|2Sim)\b/gi, '')
+		.replace(/\s+/g, " ")
+		.trim();
+
+	return normalizeStorageInName(cleaned);
 }
 
+//TODO delete this?
 export function buildRawName(input: {
 	name: string;
 	brand?: string;

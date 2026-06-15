@@ -12,7 +12,7 @@ export function buildPromptForExtractProductAttributes(name: string, category: s
 Input: ${name}
 Output: {"model":"iPad Air 13","storage":"1024","color":"Blue","connectivity":"LTE","chip":"M2"}
 `
-};
+}
 
 export function buildProductFromCandidatesPrompt(
   name: string,
@@ -42,6 +42,29 @@ Incoming: ${name}
 Brand: ${brand}
 Category: ${category}
 Candidates: ${JSON.stringify(candidates.slice(0, 3), null, 2)}`;
+}
+
+export function buildPromptForExtractModel(
+  name: string,
+  existingModels: string[]
+): string {
+  const modelsList =
+    existingModels.length > 0
+      ? existingModels.map(m => `"${m}"`).join(', ')
+      : "none yet";
+
+  return `Return ONLY JSON. You are given a product name of an Apple iPhone. Extract the exact model name as it appears in our catalog.
+
+Rules:
+- The model must be one of the existing models if possible: ${modelsList}.
+- If the product name contains a new iPhone number (e.g., iPhone 18), create a new model following the same pattern: "iPhone <number>", optionally with "Pro", "Pro Max", "Plus".
+- Examples: "iPhone 16", "iPhone 16 Pro", "iPhone 16 Pro Max", "iPhone 16e".
+- Do not include storage, color, SIM, or any other attributes.
+
+Input: "${name}"
+
+Output: {"model": "iPhone 17 Pro Max"}
+`;
 }
 
 export function buildProductPrompt(name: string, brand: string, category: string): string {

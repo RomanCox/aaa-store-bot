@@ -1,5 +1,8 @@
 import { callAI } from "./aiService";
-import { buildMatchProductPrompt, buildMatchSmartphonePrompt, buildProductFromCandidatesPrompt, buildProductPrompt, buildPromptForExtractProductAttributes } from "./prompts/productPrompt";
+import {
+  buildMatchProductPrompt, buildMatchSmartphonePrompt, buildProductFromCandidatesPrompt, buildProductPrompt,
+  buildPromptForExtractModel, buildPromptForExtractProductAttributes
+} from "./prompts/productPrompt";
 import { normalizeCategory } from "../utils/category";
 import { AiCandidate, ExtractedAttrs, MatchResult, ProductCreationResult } from "../types";
 
@@ -24,6 +27,26 @@ export async function extractProductAttributes(name: string, category: string): 
     };
   } catch (e) {
     return { attrs: null, cost: response.cost };
+  }
+}
+
+export async function extractModelOnly(
+  name: string,
+  existingModels: string[]
+): Promise<{ model: string | null; cost: number | null }> {
+  const prompt = buildPromptForExtractModel(name, existingModels);
+  const response = await callAI(prompt);
+  if (!response) return { model: null, cost: null };
+
+  const jsonMatch = response.content.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) return { model: null, cost: response.cost };
+
+  try {
+    const parsed = JSON.parse(jsonMatch[0]);
+    const model = parsed.model && typeof parsed.model === 'string' ? parsed.model.trim() : null;
+    return { model, cost: response.cost };
+  } catch (e) {
+    return { model: null, cost: response.cost };
   }
 }
 

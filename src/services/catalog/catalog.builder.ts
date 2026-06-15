@@ -33,6 +33,10 @@ export function getCatalogProducts(options?: {
 
     const basePrice = minOffer.price;
     const source = minOffer.source;
+    let country = minOffer.country;
+    if (cached.brand === 'Apple' && cached.category === 'Смартфоны') {
+      country = undefined;
+    }
 
     const price = isNoMarkupRole
       ? basePrice
@@ -58,7 +62,7 @@ export function getCatalogProducts(options?: {
       model: cached.model,
 
       storage: cached.attributes?.storage,
-      country: cached.attributes?.country,
+      country,
       sim: cached.attributes?.sim,
       activated: cached.attributes?.activated,
 

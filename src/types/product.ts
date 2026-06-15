@@ -5,6 +5,7 @@ export interface IngestItem {
 	price: string;
 	rawNameForMatch: string;
 	isNew: boolean;
+	country?: string;
 }
 
 export interface CachedProduct {
@@ -19,7 +20,7 @@ export interface CachedProduct {
 	attributes?: {
 		storage?: string;
 		color?: string;
-		country?: string;
+		// country?: string;
 		sim?: string;
 		activated?: boolean;
 		// connectivity?: "WiFi" | "LTE" | "";
@@ -39,7 +40,7 @@ export interface AiCandidate {
 	storage?: string;
 	color?: string;
 	sim?: string;
-	country?: string;
+	// country?: string;
 	activated?: boolean;
 	// connectivity?: "WiFi" | "LTE" | "";
   // chip?: string;
@@ -55,7 +56,7 @@ export interface UpsertProductInput {
 	attributes?: {
 		storage?: string;
 		color?: string;
-		country?: string;
+		// country?: string;
 		sim?: string;
 		activated?: boolean;
 		// connectivity?: "WiFi" | "LTE" | "";
@@ -64,12 +65,15 @@ export interface UpsertProductInput {
 	};
 }
 
+interface OfferType {
+	price: string;
+	source: PriceListType;
+	country?: string;
+}
+
 export interface CatalogItem {
 	productId: string;
-	offers: {
-		price: string;
-		source: PriceListType;
-	}[];
+	offers: OfferType[];
 }
 
 export interface ProductCore {
@@ -86,10 +90,7 @@ export interface ProductCore {
 }
 
 export interface Product extends ProductCore {
-	offers?: {
-		price: string;
-		source: PriceListType;
-	}[];
+	offers?: OfferType[];
 }
 
 export interface ProductForUI extends Product {
@@ -121,7 +122,7 @@ export type MatchInput = {
 	model: string;
 	storage?: string;
 	color?: string;
-	country?: string;
+	// country?: string;
 	sim?: string;
 	activated?: boolean;
 	// connectivity?: "WiFi" | "LTE";

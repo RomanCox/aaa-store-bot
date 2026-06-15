@@ -31,7 +31,7 @@ async function handleIngestResult(
   clearCatalogSource(source);
 
   for (const item of items) {
-    upsertCatalog(item.product.id, item.price, source);
+    upsertCatalog(item.product.id, item.price, source, item.country);
   }
 
   saveCatalog();

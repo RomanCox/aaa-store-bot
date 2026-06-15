@@ -13,7 +13,7 @@ function formatProductLine(product: Product, userRole?: UserRole): string {
   let line = `${name} - ${price}${currency}`;
 
   if (country) {
-    line += ` ${sim}`;
+    line += ` ${country}`;
   }
 
   const simIcons: Record<string, string> = {
@@ -176,6 +176,7 @@ export function buildMessagesForProducts(
   return messages;
 }
 
+//TODO delete this?
 export function buildMessagesWithProducts(
   products: Product[],
   userRole?: UserRole

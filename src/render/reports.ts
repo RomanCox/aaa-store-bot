@@ -68,7 +68,6 @@ export async function sendHiddenProductsReport(bot: TelegramBot, products: Produ
   );
 
   if (unresolvedBrandProducts.length > 0) {
-    console.log(unresolvedBrandProducts)
     const unresolvedHeader =
       ADMIN_TEXTS.ITEMS_WITH_UNKNOWN_BRAND +
       unresolvedBrandProducts.length +

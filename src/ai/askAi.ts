@@ -8,7 +8,7 @@ export async function askAI(prompt: string): Promise<AIResponse> {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "xiaomi/mimo-v2.5",
+      model: "claude-3.5-haiku",
       temperature: 0,
       max_tokens: 200,
       response_format: {

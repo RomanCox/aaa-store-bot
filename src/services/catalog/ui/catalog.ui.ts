@@ -15,6 +15,7 @@ export function getCatalogUIProducts(
   role?: UserRole,
 ): ProductForUI[] {
   const allProducts = getCatalogProducts({ role });
+
   const visibleProducts = allProducts.filter(p => !p.hidden);
 
   return sortProducts(
