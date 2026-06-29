@@ -1,6 +1,8 @@
 import { AIResponse } from "../types";
 
 export async function askAI(prompt: string): Promise<AIResponse> {
+  const model = process.env.OPENROUTER_MODEL || '~anthropic/claude-haiku-latest';
+
   const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -8,7 +10,7 @@ export async function askAI(prompt: string): Promise<AIResponse> {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "claude-3.5-haiku",
+      model,
       temperature: 0,
       max_tokens: 200,
       response_format: {
