@@ -16,11 +16,13 @@
     "bottleneck": "^2.19.5",
     "dotenv": "^17.2.3",
     "googleapis": "^170.1.0",
+    "node-cron": "^4.5.0",
     "node-telegram-bot-api": "^0.67.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"
   },
   "devDependencies": {
     "@types/node": "^25.0.10",
+    "@types/node-cron": "^3.0.11",
     "@types/node-telegram-bot-api": "^0.64.13",
     "cpx": "^1.5.0",
     "ts-node": "^10.9.2",

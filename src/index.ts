@@ -15,6 +15,7 @@ import { TIME_LIMIT_DELETING_OLD_FILES } from "./constants";
 import { loadProductCache } from "./services/products/products.service";
 import { loadCatalog } from "./services/catalog/catalog.service";
 import { loadColorsFromFile } from "./services/colors.service";
+import "./services/backup.service";
 
 const TMP_DIR = path.join(__dirname, '../tmp');
 
