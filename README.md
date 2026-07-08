@@ -18,6 +18,8 @@ cd ~/bots/aaa-store-bot
 
 ### 3. Сделать билд (если было обновление с git)
 ```bash
+git fetch
+git pull origin main
 pnpm run build
 ```
 

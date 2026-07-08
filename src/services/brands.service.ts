@@ -35,14 +35,21 @@ export async function saveBrands(update: Record<string, string[]>[]) {
 
 export function resolveBrandFromName(name: string): string | undefined {
   const trimmedName = name.trim().toLowerCase();
+  if (!trimmedName) return undefined;
 
   for (const [brand, keyWords] of brands.entries()) {
-    if (
-      keyWords.some(keyWord =>
-        trimmedName.startsWith(keyWord.toLowerCase())
-      )
-    ) {
-      return brand;
+    for (const kw of keyWords) {
+      const lowerKw = kw.toLowerCase();
+      // Экранируем спецсимволы для безопасного использования в RegExp
+      const escaped = lowerKw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      // Разбиваем ключевое слово на части по пробелам
+      const parts = escaped.split(/\s+/);
+      // Собираем паттерн: каждое слово оборачиваем в \b, между ними пробел (или \s+)
+      const pattern = '\\b' + parts.join('\\s+') + '\\b';
+      const regex = new RegExp(pattern, 'i'); // 'i' опционально, т.к. строки уже в нижнем регистре
+      if (regex.test(trimmedName)) {
+        return brand;
+      }
     }
   }
 
