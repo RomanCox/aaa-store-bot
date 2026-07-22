@@ -40,14 +40,8 @@ export function resolveBrandFromName(name: string): string | undefined {
   for (const [brand, keyWords] of brands.entries()) {
     for (const kw of keyWords) {
       const lowerKw = kw.toLowerCase();
-      // Экранируем спецсимволы для безопасного использования в RegExp
-      const escaped = lowerKw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      // Разбиваем ключевое слово на части по пробелам
-      const parts = escaped.split(/\s+/);
-      // Собираем паттерн: каждое слово оборачиваем в \b, между ними пробел (или \s+)
-      const pattern = '\\b' + parts.join('\\s+') + '\\b';
-      const regex = new RegExp(pattern, 'i'); // 'i' опционально, т.к. строки уже в нижнем регистре
-      if (regex.test(trimmedName)) {
+      // Проверяем, начинается ли строка с ключевого слова, за которым следует пробел или конец
+      if (trimmedName.startsWith(lowerKw + ' ') || trimmedName === lowerKw) {
         return brand;
       }
     }
