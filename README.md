@@ -2,6 +2,11 @@
 
 Телеграм-бот для управления розничным и оптовым магазином.
 
+таблица:
+https://docs.google.com/spreadsheets/d/1FMiacxRrb3wQTMBL2q3lgaVoNSOrMbepSXK2ujThvHk
+
+таблица ценообразования:
+
 ---
 
 ## Быстрый запуск на сервере

@@ -660,6 +660,7 @@ export async function ingestTodayThereTomorrowHerePrice(
 					if (p.category !== category) return false;
 					if (storage && normalizeStorageForCatalog(p.attributes?.storage || "") !== storage) return false;
   				if (sim && p.attributes?.sim !== sim) return false;
+					if (color && p.attributes?.color && p.attributes.color !== color) return false;
 
 					const incomingActivated = activated ?? false;
 					const productActivated = p.attributes?.activated === true;

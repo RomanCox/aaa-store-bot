@@ -67,8 +67,15 @@ export function extractBrandFromStart(name: string): {
   for (const [brand, keyWords] of brands.entries()) {
     for (const keyWord of keyWords) {
       const key = keyWord.toLowerCase();
+      const nextChar = lower.charAt(key.length);
 
-      if (lower.startsWith(key) && key.length > matchedLength) {
+      // Ключевое слово должно совпадать с началом строки целиком (за ним пробел или конец строки),
+      // иначе "SE"/"Mac" ложно матчатся на "Sensor"/"Machine" и т.п.
+      if (
+        lower.startsWith(key) &&
+        (nextChar === "" || /\s/.test(nextChar)) &&
+        key.length > matchedLength
+      ) {
         matchedBrand = brand;
         matchedLength = key.length;
       }
