@@ -451,8 +451,8 @@ export async function ingestAAAStorePrice(
 						if (p.category !== category) return false;
 						if (storage && normalizeStorageForCatalog(p.attributes?.storage || '') !== storage) return false;
 						if (sim && p.attributes?.sim !== sim) return false;
-						if (color && p.attributes?.color && p.attributes.color !== color) return false;
-						return true;
+						return !(color && p.attributes?.color && p.attributes.color !== color);
+
 					}).map(p => ({
 						id: p.id, name: p.name, brand: p.brand, category: p.category,
 						model: p.model, storage: p.attributes?.storage ?? '', color: p.attributes?.color
