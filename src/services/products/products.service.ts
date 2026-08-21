@@ -2,7 +2,7 @@ import fs from "fs";
 import { CachedProduct, MatchInput } from "../../types";
 import { PRODUCTS_CACHE_PATH } from "../../constants";
 import { normalize } from "./product.builder";
-import { writeJsonFileAtomic } from "../../utils/atomicWrite";
+import { writeJsonFileAtomic } from "../../utils";
 
 let productCache = new Map<string, CachedProduct>();
 

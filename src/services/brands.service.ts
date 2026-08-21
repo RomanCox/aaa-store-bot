@@ -1,6 +1,6 @@
 import fs from "fs";
 import { BRANDS_PATH } from "../constants";
-import { writeJsonFileAtomic } from "../utils/atomicWrite";
+import { writeJsonFileAtomic } from "../utils";
 
 let brands = new Map<string, string[]>();
 

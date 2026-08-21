@@ -6,7 +6,7 @@ import { PRICE_TEXTS } from "../texts";
 import { getUserRole } from "./users.service";
 import { renderScreen } from "../render/renderScreen";
 import { PRICE_FORMATION_PATH, RATES_PATH } from "../constants";
-import { writeJsonFileAtomic } from "../utils/atomicWrite";
+import { writeJsonFileAtomic } from "../utils";
 
 const DEFAULT_RATES: Rates = {
   rub_to_byn: 0,

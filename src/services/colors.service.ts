@@ -1,6 +1,6 @@
 import fs from "fs";
 import { COLORS_PATH } from "../constants";
-import { writeJsonFileAtomic } from "../utils/atomicWrite";
+import { writeJsonFileAtomic } from "../utils";
 
 let colors = new Map<string, string[]>();
 

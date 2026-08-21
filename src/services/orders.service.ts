@@ -4,7 +4,7 @@ import fs from "fs";
 import { ORDERS_PATH } from "../constants";
 import { ORDER_TEXTS } from "../texts";
 import { getUser } from "./users.service";
-import { writeJsonFileAtomic } from "../utils/atomicWrite";
+import { writeJsonFileAtomic } from "../utils";
 
 export let orders: Order[] = [];
 

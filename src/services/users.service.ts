@@ -6,7 +6,7 @@ import { getChatState, setChatState } from "../state/chat.state";
 import { showUsersList } from "../handlers/users/users.handler";
 import { renderScreen } from "../render/renderScreen";
 import { USERS_PATH } from "../constants";
-import { writeJsonFileAtomic } from "../utils/atomicWrite";
+import { writeJsonFileAtomic } from "../utils";
 
 let users = new Map<number, User>();
 
