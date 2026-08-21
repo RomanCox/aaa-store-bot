@@ -6,6 +6,7 @@ import { getChatState, setChatState } from "../state/chat.state";
 import { showUsersList } from "../handlers/users/users.handler";
 import { renderScreen } from "../render/renderScreen";
 import { USERS_PATH } from "../constants";
+import { writeJsonFileAtomic } from "../utils/atomicWrite";
 
 let users = new Map<number, User>();
 
@@ -66,11 +67,7 @@ export async function updateUserRole(userId: number, role: User["role"]) {
 
 function persist() {
 	const data = Array.from(users.values());
-	fs.writeFileSync(
-		USERS_PATH,
-		JSON.stringify(data, null, 2),
-		"utf-8"
-	);
+	writeJsonFileAtomic(USERS_PATH, data);
 }
 
 export function isAllowed(userId: number): boolean {

@@ -4,6 +4,7 @@ import fs from "fs";
 import { ORDERS_PATH } from "../constants";
 import { ORDER_TEXTS } from "../texts";
 import { getUser } from "./users.service";
+import { writeJsonFileAtomic } from "../utils/atomicWrite";
 
 export let orders: Order[] = [];
 
@@ -13,15 +14,16 @@ export function loadOrdersFromFile() {
     return;
   }
 
-  orders = JSON.parse(fs.readFileSync(ORDERS_PATH, "utf-8"));
+  try {
+    orders = JSON.parse(fs.readFileSync(ORDERS_PATH, "utf-8"));
+  } catch (e) {
+    console.error("❌ Ошибка чтения orders.json", e);
+    orders = [];
+  }
 }
 
 function persist() {
-  fs.writeFileSync(
-    ORDERS_PATH,
-    JSON.stringify(orders, null, 2),
-    "utf-8"
-  );
+  writeJsonFileAtomic(ORDERS_PATH, orders);
 }
 
 export function getOrdersForAdmin() {

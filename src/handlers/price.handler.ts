@@ -2,14 +2,24 @@ import { SECTION } from "../types";
 import { saveRates } from "../services/price.service";
 import { getChatState, setChatState } from "../state/chat.state";
 import TelegramBot from "node-telegram-bot-api";
-import { PRICE_ERRORS, PRICE_TEXTS } from "../texts";
+import { PRICE_ERRORS, PRICE_TEXTS, USERS_ERRORS } from "../texts";
 import { renderScreen } from "../render/renderScreen";
+import { isAdmin } from "../services/users.service";
 
 export async function editPriceInputHandler(
   bot: TelegramBot,
   chatId: number,
   value: string
 ) {
+  if (!isAdmin(chatId)) {
+    await renderScreen(bot, chatId, {
+      section: SECTION.ADMIN_PANEL,
+      text: USERS_ERRORS.ONLY_ADMIN,
+      withBackButton: true,
+    });
+    return;
+  }
+
   const numberValue = Number(value.trim());
 
   if (Number.isNaN(numberValue)) {

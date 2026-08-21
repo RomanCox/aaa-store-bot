@@ -21,6 +21,13 @@ export const DATA_PATH = envDataPath
   ? path.resolve(envDataPath)
   : path.resolve(__dirname, "../../data");
 
+// Единый источник пути к tmp — не зависит от process.cwd() (важно для pm2/docker/systemd,
+// где рабочая директория процесса может отличаться от корня проекта).
+const envTmpPath = process.env.TMP_PATH;
+export const TMP_PATH = envTmpPath
+  ? path.resolve(envTmpPath)
+  : path.resolve(__dirname, "../../tmp");
+
 export const ORDERS_PATH = path.join(DATA_PATH, "orders.json");
 export const PRODUCTS_CACHE_PATH = path.join(DATA_PATH, "products-cache.json");
 export const USERS_PATH = path.join(DATA_PATH, "users.json");

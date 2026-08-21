@@ -7,10 +7,10 @@ export function downloadCatalogHelpers(parts: string[]): ProductFilters {
   for (const part of parts) {
     const [key, value] = part.split('=');
 
-    if (key === 'brand') filters.brand = value;
-    if (key === 'category') filters.category = value;
-    if (key === 'model') filters.model = value;
-    if (key === 'storage') filters.storage = value;
+    if (key === 'b') filters.brand = value;
+    if (key === 'c') filters.category = value;
+    if (key === 'm') filters.model = value;
+    if (key === 's') filters.storage = value;
   }
 
   return filters;

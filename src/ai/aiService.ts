@@ -43,15 +43,22 @@ export async function callAI(prompt: string): Promise<AIResponse | null> {
   }
 
   // 3. create job
-  const job = aiLimiter.schedule(async () => {
-    const result = await withRetry(() => askAI(prompt));
+  // Никогда не реджектится — иначе одна упавшая AI-строка (сеть/ключ/лимит)
+  // обрушит весь Promise.all при импорте прайса. Ошибка = null, как "нет ответа".
+  const job = aiLimiter.schedule(async (): Promise<AIResponse | null> => {
+    try {
+      const result = await withRetry(() => askAI(prompt));
 
-    if (!result) {
+      if (!result) {
+        return null;
+      }
+
+      memoryCache.set(prompt, result);
+      return result;
+    } catch (e) {
+      console.error("AI request failed:", e);
       return null;
     }
-
-    memoryCache.set(prompt, result);
-    return result;
   });
 
   // 4. store pending

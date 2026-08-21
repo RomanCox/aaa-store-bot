@@ -6,6 +6,7 @@ import { PRICE_TEXTS } from "../texts";
 import { getUserRole } from "./users.service";
 import { renderScreen } from "../render/renderScreen";
 import { PRICE_FORMATION_PATH, RATES_PATH } from "../constants";
+import { writeJsonFileAtomic } from "../utils/atomicWrite";
 
 const DEFAULT_RATES: Rates = {
   rub_to_byn: 0,
@@ -43,29 +44,27 @@ export function getRates(): Rates {
 }
 
 export async function saveRates(update: PriceFormationUpdate) {
-  const newRates = getRates();
+  // Мутируем копию, а не live `rates` — если запись на диск упадёт,
+  // in-memory состояние не должно разъехаться с тем, что реально сохранено.
+  const updatedRates: Rates = { ...rates };
 
   switch (update.type) {
     case "edit_rub_to_byn":
-      rates.rub_to_byn = update.value;
+      updatedRates.rub_to_byn = update.value;
       break;
 
     case "edit_rub_to_usd":
-      rates.rub_to_usd = update.value;
+      updatedRates.rub_to_usd = update.value;
       break;
 
     case "edit_usd_to_byn":
-      rates.usd_to_byn = update.value;
+      updatedRates.usd_to_byn = update.value;
       break;
   }
 
-  fs.writeFileSync(
-    RATES_PATH,
-    JSON.stringify(newRates, null, 2),
-    "utf-8"
-  );
+  writeJsonFileAtomic(RATES_PATH, updatedRates);
 
-  rates = newRates;
+  rates = updatedRates;
 }
 
 export async function editRates(
@@ -113,11 +112,7 @@ export function getPriceFormation(): PriceFormat[] {
 }
 
 export async function savePriceFormation(update: PriceFormat[]) {
-	fs.writeFileSync(
-		PRICE_FORMATION_PATH,
-		JSON.stringify(update, null, 2),
-		"utf-8"
-	);
+	writeJsonFileAtomic(PRICE_FORMATION_PATH, update);
 
 	priceFormation = update;
 }

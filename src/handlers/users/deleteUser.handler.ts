@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
-import { deleteUser } from "../../services/users.service";
+import { deleteUser, isAdmin } from "../../services/users.service";
 import { USERS_ERRORS, USERS_TEXTS } from "../../texts";
 import { getChatState, setChatState } from "../../state/chat.state";
 import { SECTION } from "../../types";
@@ -31,6 +31,16 @@ export async function deleteUserInputHandler(
     await renderScreen(bot, chatId, {
       section: SECTION.ADMIN_PANEL,
       text: USERS_ERRORS.DELETE_MYSELF,
+      withBackButton: true,
+    });
+    return;
+  }
+
+  // только администратор может удалять
+  if (!isAdmin(chatId)) {
+    await renderScreen(bot, chatId, {
+      section: SECTION.ADMIN_PANEL,
+      text: USERS_ERRORS.ONLY_ADMIN,
       withBackButton: true,
     });
     return;

@@ -22,6 +22,24 @@ import { getCatalogProducts } from "../services/catalog/catalog.builder";
 
 const ADMIN_CHAT_ID = Number(process.env.ADMIN_CHAT_ID);
 
+// Действия, доступные только администраторам — UI их скрывает от остальных,
+// но callback_data можно прислать напрямую, минуя клавиатуру, поэтому нужна серверная проверка.
+const ADMIN_ONLY_ACTIONS = new Set<string>([
+	CALLBACK_TYPE.AAA_STORE_PRICE,
+	CALLBACK_TYPE.TODAY_THERE_TOMORROW_HERE_PRICE,
+	CALLBACK_TYPE.MANAGE_USERS,
+	CALLBACK_TYPE.ADD_USER,
+	CALLBACK_TYPE.DELETE_USER,
+	CALLBACK_TYPE.EDIT_USER,
+	CALLBACK_TYPE.USERS_LIST,
+	CALLBACK_TYPE.ROLE_FOR_NEW_USER,
+	CALLBACK_TYPE.NEW_ROLE_FOR_EXIST_USER,
+	CALLBACK_TYPE.EDIT_RUB_TO_BYN,
+	CALLBACK_TYPE.EDIT_RUB_TO_USD,
+	CALLBACK_TYPE.EDIT_USD_TO_BYN,
+	CALLBACK_TYPE.RENEW_PRICE,
+]);
+
 export function registerCallbacks(bot: TelegramBot) {
 	bot.on("callback_query", async (query) => {
 		const chatId = query.message?.chat.id;
@@ -33,6 +51,15 @@ export function registerCallbacks(bot: TelegramBot) {
 
 		const parsed = parseCallbackData(data);
 		const {action, params} = parsed;
+
+		if (ADMIN_ONLY_ACTIONS.has(action) && !isAdmin(chatId)) {
+			await renderScreen(bot, chatId, {
+				section: SECTION.ADMIN_PANEL,
+				text: USERS_ERRORS.ONLY_ADMIN,
+				withBackButton: true,
+			});
+			return;
+		}
 
 		switch (action) {
       case CALLBACK_TYPE.BACK: {

@@ -133,7 +133,7 @@ async function renderEditProductInCart (bot: TelegramBot, chatId: number) {
   await renderScreen(bot, chatId, {
     section: SECTION.CART,
     text: buildText(product),
-    inlineKeyboard: editProductInCartKeyboard(chatId),
+    inlineKeyboard: editProductInCartKeyboard(product?.amount ?? 1),
     parse_mode: "HTML",
     withBackButton: true,
   });

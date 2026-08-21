@@ -1,5 +1,6 @@
 import fs from "fs";
 import { COLORS_PATH } from "../constants";
+import { writeJsonFileAtomic } from "../utils/atomicWrite";
 
 let colors = new Map<string, string[]>();
 
@@ -21,11 +22,7 @@ export async function saveColors(update: Record<string, string[]>[]) {
     normalizedData[colorName] = keywords;
   }
 
-  fs.writeFileSync(
-    COLORS_PATH,
-    JSON.stringify(normalizedData, null, 2),
-    "utf-8"
-  );
+  writeJsonFileAtomic(COLORS_PATH, normalizedData);
 
   colors.clear();
   for (const [colorName, keywords] of Object.entries(normalizedData)) {

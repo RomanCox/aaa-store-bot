@@ -1,6 +1,6 @@
 import TelegramBot from "node-telegram-bot-api";
-import { buildCallbackData, buildDownloadCallback, buildMessagesForProducts } from "../utils";
-import { CALLBACK_TYPE, CatalogSectionState, ProductFilters, SECTION } from "../types";
+import { buildDownloadCallback, buildMessagesForProducts } from "../utils";
+import { CatalogSectionState, ProductFilters, SECTION } from "../types";
 import { CATALOG_TEXTS } from "../texts";
 import { getChatState, getSectionState, setChatState } from "../state/chat.state";
 import { renderScreen } from "./renderScreen";
@@ -74,7 +74,7 @@ export async function renderProductsList(
     const inlineKeyboard = part.products.length > 0
       ? [[{
         text: CATALOG_TEXTS.DOWNLOAD_CATALOG,
-        callback_data: buildCallbackData(CALLBACK_TYPE.DOWNLOAD_XLSX, downloadKey),
+        callback_data: downloadKey,
       }]]
       : undefined;
 

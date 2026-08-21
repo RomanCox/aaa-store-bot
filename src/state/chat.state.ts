@@ -56,7 +56,15 @@ export function getSectionState<T extends SECTION>(
 
 export function setChatState(chatId: number, patch: Partial<ChatState>) {
 	const current = getChatState(chatId);
-	chatState.set(chatId, { ...current, ...patch });
+	chatState.set(chatId, {
+		...current,
+		...patch,
+		// sections мержится по ключу, а не заменяется целиком — иначе патч с
+		// частью секций тихо стирает состояние остальных (не переданных) секций.
+		sections: patch.sections
+			? { ...current.sections, ...patch.sections }
+			: current.sections,
+	});
 }
 
 export function updateSectionState<K extends SECTION>(

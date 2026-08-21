@@ -1,6 +1,6 @@
 import TelegramBot from "node-telegram-bot-api";
 import fs from "fs";
-import path from "path";
+import { TMP_PATH } from "../constants";
 import {
   ingestAAAStorePrice,
   ingestTodayThereTomorrowHerePrice,
@@ -74,10 +74,9 @@ export function registerDocumentHandler(bot: TelegramBot) {
 		}
 
 		try {
-      const tmpDir = path.resolve("tmp");
-			if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);
+      if (!fs.existsSync(TMP_PATH)) fs.mkdirSync(TMP_PATH, { recursive: true });
 
-			const filePath = await bot.downloadFile(document.file_id, tmpDir);
+			const filePath = await bot.downloadFile(document.file_id, TMP_PATH);
 			const buffer = fs.readFileSync(filePath);
 
       if (flowStep === "upload_aaa_store_price") {

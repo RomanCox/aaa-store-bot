@@ -2,6 +2,7 @@ import fs from "fs";
 import { CachedProduct, MatchInput } from "../../types";
 import { PRODUCTS_CACHE_PATH } from "../../constants";
 import { normalize } from "./product.builder";
+import { writeJsonFileAtomic } from "../../utils/atomicWrite";
 
 let productCache = new Map<string, CachedProduct>();
 
@@ -35,31 +36,11 @@ export function loadProductCache() {
 }
 
 export function saveProductCache() {
-  let existing: CachedProduct[] = [];
-
-  try {
-    existing = JSON.parse(
-      fs.readFileSync(PRODUCTS_CACHE_PATH, "utf-8")
-    );
-  } catch {
-    existing = [];
-  }
-
-  const map = new Map<string, CachedProduct>();
-
-  for (const item of existing) {
-    map.set(item.id, item);
-  }
-
-  for (const item of productCache.values()) {
-    map.set(item.id, item);
-  }
-
-  fs.writeFileSync(
-    PRODUCTS_CACHE_PATH,
-    JSON.stringify([...map.values()], null, 2),
-    "utf-8"
-  );
+  // productCache в памяти — единственный источник правды (только этот модуль пишет
+  // в PRODUCTS_CACHE_PATH), поэтому не нужно перечитывать и мёржить файл с диска
+  // на каждый вызов — это блокирующий full-file I/O на каждые SAVE_EVERY_NUMBER_ITEMS
+  // товаров при импорте прайса.
+  writeJsonFileAtomic(PRODUCTS_CACHE_PATH, [...productCache.values()]);
 }
 
 

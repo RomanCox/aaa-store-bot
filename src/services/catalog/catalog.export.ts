@@ -2,6 +2,7 @@ import { Product, PRODUCT_XLSX_HEADERS, ProductCore, ProductForUI } from "../../
 import * as XLSX from "xlsx";
 import path from "path";
 import fs from "fs";
+import { TMP_PATH } from "../../constants";
 
 export function exportToCsv(products: ProductForUI[]) {
   const escape = (v: any) =>
@@ -47,10 +48,10 @@ export function generateProductsXlsx(
 
   XLSX.utils.book_append_sheet(workbook, worksheet, "Прайс");
 
-  const filePath = path.resolve("tmp", fileName);
+  const filePath = path.join(TMP_PATH, fileName);
 
-  if (!fs.existsSync("tmp")) {
-    fs.mkdirSync("tmp");
+  if (!fs.existsSync(TMP_PATH)) {
+    fs.mkdirSync(TMP_PATH, { recursive: true });
   }
 
   XLSX.writeFile(workbook, filePath);

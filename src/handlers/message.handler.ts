@@ -115,6 +115,8 @@ export function registerMessages(bot: TelegramBot) {
       },
 
       [MENU_TEXTS.ADMIN_PANEL]: async () => {
+        if (!isAdmin(chatId)) return;
+
         setChatState(chatId, {
           section: SECTION.ADMIN_PANEL,
           mode: "idle",
@@ -163,7 +165,7 @@ export function registerMessages(bot: TelegramBot) {
       await menuHandlers[text]();
 
       // Удаляем сообщение пользователя после обработки
-      await safeDelete(bot, msg.message_id);
+      await safeDelete(bot, chatId, msg.message_id);
       return;
     }
 

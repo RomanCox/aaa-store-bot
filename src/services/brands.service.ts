@@ -1,5 +1,6 @@
 import fs from "fs";
 import { BRANDS_PATH } from "../constants";
+import { writeJsonFileAtomic } from "../utils/atomicWrite";
 
 let brands = new Map<string, string[]>();
 
@@ -21,11 +22,7 @@ export async function saveBrands(update: Record<string, string[]>[]) {
     normalizedData[brandName] = keywords;
   }
 
-  fs.writeFileSync(
-    BRANDS_PATH,
-    JSON.stringify(normalizedData, null, 2),
-    "utf-8"
-  );
+  writeJsonFileAtomic(BRANDS_PATH, normalizedData);
 
   brands.clear();
   for (const [brandName, keywords] of Object.entries(normalizedData)) {
@@ -33,15 +30,47 @@ export async function saveBrands(update: Record<string, string[]>[]) {
   }
 }
 
+// export function resolveBrandFromName(name: string): string | undefined {
+//   if (!name || !name.trim()) return undefined;
+//
+//   // Нормализуем строку: заменяем все виды пробелов на один обычный
+//   const normalized = name
+//     .trim()
+//     .replace(/\s+/g, ' ')
+//     .toLowerCase();
+//
+//   for (const [brand, keyWords] of brands.entries()) {
+//     for (const kw of keyWords) {
+//       const lowerKw = kw.toLowerCase();
+//
+//       // Экранируем спецсимволы в ключевом слове
+//       const escapedKw = lowerKw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+//       const pattern = new RegExp(`^${escapedKw}(\\s|$)`);
+//
+//       if (pattern.test(normalized)) {
+//         return brand;
+//       }
+//     }
+//   }
+//
+//   return undefined;
+// }
+
 export function resolveBrandFromName(name: string): string | undefined {
-  const trimmedName = name.trim().toLowerCase();
-  if (!trimmedName) return undefined;
+  if (!name || !name.trim()) return undefined;
+
+  const normalized = name
+    .trim()
+    .replace(/\s+/g, ' ')
+    .toLowerCase();
 
   for (const [brand, keyWords] of brands.entries()) {
     for (const kw of keyWords) {
       const lowerKw = kw.toLowerCase();
-      // Проверяем, начинается ли строка с ключевого слова, за которым следует пробел или конец
-      if (trimmedName.startsWith(lowerKw + ' ') || trimmedName === lowerKw) {
+      const escapedKw = lowerKw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const pattern = new RegExp(`^${escapedKw}(\\s|$)`, 'u');
+
+      if (pattern.test(normalized)) {
         return brand;
       }
     }
