@@ -47,6 +47,31 @@ function sortByPriority(
 	});
 }
 
+const CATEGORY_EMOJI_MAP: Record<string, string> = {
+	'Смартфоны': '📱',
+	'Ноутбуки': '💻',
+	'Компьютер': '🖥️',
+	'Планшеты': '📋',
+	'Часы': '⌚',
+	'Аксессуары': '🧩',
+	'Наушники': '🎧',
+	'Выпрямитель': '🌀',
+	'Пылесосы': '🧹',
+	'Очистители/Увлажнители': '💨',
+	'Фен': '💨',
+	'Стайлер': '✨',
+	'Джойстики': '🎮',
+	'Диски': '💿',
+	'Игровые приставки': '🕹️',
+	'Колонки': '🔊',
+	'Камеры': '📷'
+};
+
+function addEmojiToCategory(category: string): string {
+	const emoji = CATEGORY_EMOJI_MAP[category];
+	return emoji ? `${emoji} ${category}` : category;
+}
+
 function normalizeForCompare(value?: string): string {
 	return (value ?? "")
 		.trim()
@@ -197,7 +222,9 @@ export function getCategories(
 		)
 	);
 
-	return sortByPriority(categories, CATEGORY_ORDER);
+	const sortedCategories = sortByPriority(categories, CATEGORY_ORDER);
+
+	return sortedCategories.map(addEmojiToCategory);
 }
 
 export function getModels(

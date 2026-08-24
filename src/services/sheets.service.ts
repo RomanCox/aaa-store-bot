@@ -83,16 +83,17 @@ export async function loadPricesFormats() {
 }
 
 export async function loadBrandsFromConfig() {
-  const rows = await getSheet("'Брендообразование'!A:B");
+  const rows = await getSheet("'Брендообразование'!A:C");
 
   if (rows.length < 2) return;
 
   const [, ...data] = rows;
 
-  const result: Record<string, string[]>[] = [];
+  const parsed: { order: number; brand: string; keyWords: string[] }[] = [];
 
   for (const row of data) {
     const [
+      orderRaw,
       brandRaw,
       keyWordsRaw
     ] = row;
@@ -100,10 +101,25 @@ export async function loadBrandsFromConfig() {
     const brand = brandRaw?.trim() || undefined;
     if (!brand) continue;
 
+    // Number("") === 0, поэтому пустую ячейку нужно отличать от нуля явно.
+    const orderTrimmed = orderRaw?.trim() ?? "";
+    const order = orderTrimmed === "" ? NaN : Number(orderTrimmed);
     const keyWords = keyWordsRaw?.trim().split('\n').filter((k: string) => k.trim() !== '') || [];
 
-    result.push({ [brand]: keyWords });
+    // Строки без числа (или с некорректным числом) уходят в конец,
+    // сохраняя между собой исходный порядок из таблицы.
+    parsed.push({
+      order: Number.isFinite(order) ? order : Number.POSITIVE_INFINITY,
+      brand,
+      keyWords,
+    });
   }
+
+  // Сортировка стабильна (ES2019+), поэтому бренды с одинаковым
+  // или отсутствующим номером не перемешиваются между собой.
+  parsed.sort((a, b) => a.order - b.order);
+
+  const result = parsed.map(({ brand, keyWords }) => ({ [brand]: keyWords }));
 
   await saveBrands(result);
 }

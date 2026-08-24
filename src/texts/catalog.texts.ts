@@ -5,7 +5,7 @@ export const CATALOG_TEXTS = {
 	EMPTY_CATALOG:
 		"Здесь пока нет товаров. Пожалуйста, попробуйте еще раз чуть позже или свяжитесь с менеджером.",
 
-	CHOOSE_CATEGORY_First: "Сначала выберите категорию",
+	CHOOSE_CATEGORY_FIRST: "Сначала выберите категорию",
 
 	LOADING: "⏳ Загружаю товары...",
 
