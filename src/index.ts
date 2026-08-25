@@ -9,7 +9,7 @@ import { registerDocumentHandler } from "./handlers/document.handler";
 import { loadPriceFormation, loadRates } from "./services/price.service";
 import { loadOrdersFromFile } from "./services/orders.service";
 import { loadBrandsFromFile } from "./services/brands.service";
-import { cleanOldFiles } from "./utils/cleanOldFiles";
+import { cleanOldFiles } from "./utils";
 import { TIME_LIMIT_DELETING_OLD_FILES, TMP_PATH } from "./constants";
 import { loadProductCache } from "./services/products/products.service";
 import { loadCatalog } from "./services/catalog/catalog.service";
