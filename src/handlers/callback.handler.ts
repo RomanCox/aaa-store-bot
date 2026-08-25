@@ -19,6 +19,7 @@ import { sendHiddenProductsReport } from "../render/reports";
 import { generateRetailCsv, sendPriceList } from "./catalog.hanlder";
 import { getCatalogProductById, getCatalogUIProducts } from "../services/catalog/ui/catalog.ui";
 import { getCatalogProducts } from "../services/catalog/catalog.builder";
+import { stripCategoryEmoji } from "../utils";
 
 const ADMIN_CHAT_ID = Number(process.env.ADMIN_CHAT_ID);
 
@@ -302,7 +303,7 @@ export function registerCallbacks(bot: TelegramBot) {
       case CALLBACK_TYPE.CATEGORY: {
         return guardWorkingHours(bot, chatId, async () => {
           const [categoryValue] = params;
-          const selectedCategory = categoryValue !== CATALOG_VALUE.ALL ? categoryValue : undefined;
+          const selectedCategory = categoryValue !== CATALOG_VALUE.ALL ? stripCategoryEmoji(categoryValue) : undefined;
 
           const state = getChatState(chatId);
           const currentSection = state.section;
