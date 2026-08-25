@@ -31,7 +31,7 @@ import {
 	setProductToCache,
 } from "./products/products.service";
 import { SAVE_EVERY_NUMBER_ITEMS, TODAY_THERE_TOMORROW_HERE_PRICE_DELIVERY } from "../constants";
-import { resolveColorFromName, normalizeColorInProductName } from "./colors.service";
+import { resolveColorFromName, normalizeColorInProductName, removeColorFromName } from "./colors.service";
 import { generateId } from "./products/productId";
 
 function hasRequiredColumns(row: Record<string, unknown>): boolean {
@@ -39,9 +39,42 @@ function hasRequiredColumns(row: Record<string, unknown>): boolean {
 		.every(col => col in row);
 }
 
+// Токен модели iPhone: "iPhone 17 Pro Max", "iPhone SE", "iPhone Air" и т.п.
+const IPHONE_MODEL_TOKEN = /iphone\s*(se|air|xr|xs|x)\b|iphone\s*\d{1,2}\s*(pro\s*max|pro|max|plus|mini|e)?/gi;
+
+// Вычитаем из названия все токены, которые умеем распознавать у "чистого" iPhone
+// (модель, память, цвет, sim/(active), флаги стран) — чтобы посмотреть, что останется.
+function stripKnownIphoneTokens(name: string): string {
+	let rest = name;
+
+	rest = rest.replace(/\bapple\b/gi, " "); // бренд в начале строки, getCategory вызывается ещё до extractBrandFromStart
+	rest = rest.replace(IPHONE_MODEL_TOKEN, " ");
+	rest = rest.replace(/[\u{1F1E6}-\u{1F1FF}]{2}/gu, " "); // флаги стран
+	rest = rest.replace(/\(active\)/gi, " ").replace(/\bactive\b/gi, " ");
+	rest = rest.replace(/\([^)]*(?:sim|esim|dual|1sim|2sim)[^)]*\)/gi, " ");
+	rest = rest.replace(/\b(?:sim|esim|dual|1sim|2sim)\b/gi, " ");
+	rest = rest.replace(/\b\d{1,4}\s*(gb|tb)\b/gi, " "); // "256GB", "1 TB"
+	rest = rest.replace(/\b(64|128|256|512|1024|2048|3072|4096)\b/g, " "); // голое число памяти
+	rest = rest.replace(/\bspace\b/gi, " "); // "Space Gray"/"Space Black" — colors.json не всегда знает составной синоним целиком
+
+	rest = removeColorFromName(rest);
+
+	return rest.replace(/\s+/g, " ").trim();
+}
+
+// Если после вычитания всех известных iPhone-токенов остаётся значимый хвост слов
+// (например "Tilta Khronos Street Snap Kit") — это не сам телефон, а что-то с ним в комплекте/на его основе.
+function isIphoneAccessoryName(name: string): boolean {
+	const rest = stripKnownIphoneTokens(name);
+	const words = rest.split(/\s+/).filter(Boolean);
+	return words.length > 1; // 1 слово оставляем как запас на шум распознавания
+}
+
 function getCategory(name: string) {
 	const normalizeString = name.toLowerCase()
-	if (normalizeString.includes("iphone")) return "Смартфоны";
+	if (normalizeString.includes("iphone")) {
+		return isIphoneAccessoryName(name) ? "Аксессуары" : "Смартфоны";
+	}
 	if (normalizeString.includes("macbook")) return "Ноутбуки";
 	if (normalizeString.includes("mac ")) return "Компьютер";
 	if (normalizeString.includes("ipad")) return "Планшеты";
@@ -558,8 +591,11 @@ export async function ingestTodayThereTomorrowHerePrice(
 		if (!name || !priceRaw) continue;
 
 		const category = getCategory(name);
-		//TODO прайс работает только для смртфонов, здесь добавляем если надо другие категории
-		if (category !== "Смартфоны") continue;
+		// Аксессуары пропускаем только если в названии всё ещё явно фигурирует iPhone (например,
+		// кейсы/крепления "для iPhone 17 Pro Max ...") — для них есть отдельная лёгкая ветка обработки ниже.
+		// Остальные категории этого прайса пока не матчатся стабильно — добавим позже.
+		const isIphoneAccessoryRow = category === "Аксессуары" && name.toLowerCase().includes("iphone");
+		if (category !== "Смартфоны" && !isIphoneAccessoryRow) continue;
 
 		const price = String(Number(priceRaw) + TODAY_THERE_TOMORROW_HERE_PRICE_DELIVERY);
 
@@ -628,6 +664,28 @@ export async function ingestTodayThereTomorrowHerePrice(
 						rawNameForMatch,
 						isNew: false,
 					};
+				}
+
+				// Для "iPhone-аксессуаров" не гоняем AI-подбор модели телефона — model там почти всегда
+				// один и тот же ("iPhone 17 Pro Max"), из-за чего разные по сути товары (кейс/крепление/kit)
+				// схлопывались бы в один и тот же id. Вместо этого модель = само уникальное название товара,
+				// уникальность обеспечивается уже пройденной проверкой по rawName выше.
+				if (category === "Аксессуары") {
+					const newProduct = upsertProduct({
+						rawName: rawNameForMatch,
+						brand,
+						category,
+						model: nameForCatalog,
+						name: nameForCatalog,
+						attributes: {
+							storage,
+							color,
+							sim,
+							activated,
+						},
+					});
+
+					return { product: newProduct, price, rawNameForMatch, isNew: true };
 				}
 
 				// 2. Извлечение атрибутов через AI (один запрос)

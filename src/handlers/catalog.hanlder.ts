@@ -6,7 +6,7 @@ import { getChatState, getSectionState } from "../state/chat.state";
 import { exportToCsv, generateProductsXlsx } from "../services/catalog/catalog.export";
 import fs from "fs";
 import { getCatalogProducts } from "../services/catalog/catalog.builder";
-import { saveCsvToFile } from "../utils/file.service";
+import { saveCsvToFile } from "../utils";
 
 export async function sendPriceList(
   bot: TelegramBot,

@@ -51,6 +51,33 @@ export function resolveColorFromName(name: string): string | undefined {
   return undefined;
 }
 
+// В отличие от normalizeColorInProductName (заменяет синоним на каноническое имя цвета),
+// эта функция вырезает упоминание цвета целиком — нужна там, где нам важно посмотреть
+// что осталось от названия ПОСЛЕ вычитания всех распознанных токенов (см. isIphoneAccessoryName в xlsx.service.ts).
+export function removeColorFromName(productName: string): string {
+  const lowerName = productName.toLowerCase();
+  let bestMatch: { start: number; end: number; length: number } | null = null;
+
+  for (const [, synonyms] of colors.entries()) {
+    for (const synonym of synonyms) {
+      const lowerSynonym = synonym.toLowerCase();
+      const index = lowerName.indexOf(lowerSynonym);
+      if (index !== -1) {
+        const length = synonym.length
+        if (!bestMatch || length > bestMatch.length) {
+          bestMatch = { start: index, end: index + length, length }
+        }
+      }
+    }
+  }
+
+  if (!bestMatch) return productName;
+
+  const before = productName.slice(0, bestMatch.start);
+  const after = productName.slice(bestMatch.end);
+  return `${before} ${after}`.replace(/\s+/g, ' ').trim();
+}
+
 export function normalizeColorInProductName(productName: string): string {
   const lowerName = productName.toLowerCase();
   let bestMatch: {

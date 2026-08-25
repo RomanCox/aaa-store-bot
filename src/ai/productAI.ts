@@ -3,7 +3,7 @@ import {
   buildMatchSmartphonePrompt, buildProductFromCandidatesPrompt, buildProductPrompt,
   buildPromptForExtractModel, buildPromptForExtractProductAttributes
 } from "./prompts/productPrompt";
-import { normalizeCategory } from "../utils/category";
+import { normalizeCategory } from "../utils";
 import { AiCandidate, ExtractedAttrs, MatchResult, ProductCreationResult } from "../types";
 
 export async function extractProductAttributes(name: string, category: string): Promise<{ attrs: ExtractedAttrs | null; cost: number | null }> {
