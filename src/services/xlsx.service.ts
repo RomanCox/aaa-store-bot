@@ -597,7 +597,10 @@ export async function ingestTodayThereTomorrowHerePrice(
 		const isIphoneAccessoryRow = category === "Аксессуары" && name.toLowerCase().includes("iphone");
 		if (category !== "Смартфоны" && !isIphoneAccessoryRow) continue;
 
-		const price = String(Number(priceRaw) + TODAY_THERE_TOMORROW_HERE_PRICE_DELIVERY);
+		// В файле цена отображается как целое число, но в самой ячейке из-за числового формата
+		// может быть скрыта дробная часть (например видно "210", а .v === 210.09) — округляем,
+		// чтобы в каталоге не оседали эти невидимые копейки.
+		const price = String(Math.round(Number(priceRaw)) + TODAY_THERE_TOMORROW_HERE_PRICE_DELIVERY);
 
 		rows.push({ name, price });
 	}
