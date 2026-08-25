@@ -72,6 +72,13 @@ function addEmojiToCategory(category: string): string {
 	return emoji ? `${emoji} ${category}` : category;
 }
 
+// Кнопки категорий отправляют боту свой текст вместе с эмодзи (см. addEmojiToCategory),
+// а в кеше товаров категории хранятся без эмодзи — поэтому перед любым сравнением/поиском
+// по selectedCategory нужно сначала срезать эмодзи и пробел перед названием.
+export function stripCategoryEmoji(category: string): string {
+	return category.replace(/^[^\p{L}\p{N}]+/u, "").trim();
+}
+
 function normalizeForCompare(value?: string): string {
 	return (value ?? "")
 		.trim()
