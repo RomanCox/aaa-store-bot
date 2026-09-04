@@ -12,7 +12,9 @@ export function normalize(str: string) {
 
 export function buildAAAStoreRawName(input: {
   name: string;
-  // country?: string;
+  // передаётся только для REGION_SENSITIVE_CATEGORIES, чтобы разные региональные
+  // версии одного товара не схлопывались в один rawName при поиске по кешу
+  country?: string;
   sim?: string;
 }) {
   let result = input.name.trim();
@@ -21,9 +23,9 @@ export function buildAAAStoreRawName(input: {
     result += ` (${input.sim})`;
   }
 
-  // if (input.country) {
-  //   result += ` ${input.country}`;
-  // }
+  if (input.country) {
+    result += ` ${input.country}`;
+  }
 
   return result;
 }
@@ -79,7 +81,7 @@ export function upsertProduct(input: UpsertProductInput): CachedProduct {
     model,
     storage: attributes?.storage,
     color: attributes?.color,
-    // country: attributes?.country,
+    country: attributes?.country,
     sim: attributes?.sim,
     activated: attributes?.activated,
   });

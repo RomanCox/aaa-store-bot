@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
-import { LowConfidenceItem, ProductForUI } from "../types";
+import { IngestSkippedGroup, LowConfidenceItem, ProductForUI } from "../types";
 import { ADMIN_TEXTS } from "../texts";
 import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
 import { resolveBrandFromName } from "../services/brands.service";
@@ -97,6 +97,49 @@ export async function sendHiddenProductsReport(bot: TelegramBot, products: Produ
     if (unresolvedMessage) {
       await bot.sendMessage(ADMIN_ID, unresolvedMessage);
     }
+  }
+}
+
+// Показывает, куда делась разница между "строк в прайсе" и "товаров в каталоге":
+// для групп без отдельного отчёта (пустые строки, дубли, не та категория) — печатает список,
+// для тех, что уже разосланы отдельным сообщением (бренд/модель) — только считает.
+export async function sendSkippedItemsReport(
+  bot: TelegramBot,
+  skipped: IngestSkippedGroup[]
+) {
+  if (!skipped.length || !ADMIN_ID) return;
+
+  const total = skipped.reduce((sum, group) => sum + group.names.length, 0);
+  if (!total) return;
+
+  let message = ADMIN_TEXTS.SKIPPED_ITEMS_HEADER + total + "\n";
+
+  for (const group of skipped) {
+    const groupHeader = `\n${group.title} — ${group.names.length}` +
+      (group.reportedSeparately ? ADMIN_TEXTS.SKIPPED_ITEMS_REPORTED_ABOVE : "") +
+      "\n";
+
+    if ((message + groupHeader).length > TELEGRAM_MESSAGE_LIMIT) {
+      await bot.sendMessage(ADMIN_ID, message);
+      message = "";
+    }
+    message += groupHeader;
+
+    if (group.reportedSeparately) continue;
+
+    for (const name of group.names) {
+      const line = `• ${name}\n`;
+
+      if ((message + line).length > TELEGRAM_MESSAGE_LIMIT) {
+        await bot.sendMessage(ADMIN_ID, message);
+        message = "";
+      }
+      message += line;
+    }
+  }
+
+  if (message) {
+    await bot.sendMessage(ADMIN_ID, message);
   }
 }
 

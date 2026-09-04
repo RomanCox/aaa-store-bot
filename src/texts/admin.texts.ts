@@ -6,8 +6,12 @@ export const ADMIN_TEXTS = {
 	UPLOAD_XLSX_MESSAGE: "📎 *Загрузить XLSX*\n\n" +
 		"Пожалуйста, отправьте файл в формате `.xlsx`.\n" +
 		"После загрузки я обработаю данные.",
-  PRICE_UPLOAD_SUCCESS: "✅ Прайс успешно загружен\nВсего товаров: ",
+  PRICE_UPLOAD_SUCCESS: "✅ Прайс успешно загружен\n",
+  PRICE_UPLOAD_TOTAL_ROWS: "Товаров в прайсе: ",
+  PRICE_UPLOAD_TOTAL_ITEMS: "Всего товаров: ",
   PRICE_UPLOAD_NEW_ITEMS: "\nНовых товаров: ",
+  SKIPPED_ITEMS_HEADER: "⚠️ Не учтено в каталоге: ",
+  SKIPPED_ITEMS_REPORTED_ABOVE: " (список см. в сообщении выше)",
   ITEMS_WITHOUT_MARKUP: "\n\n⚠️ Товары без наценки  - ",
   ITEMS_WITH_UNKNOWN_BRAND: "⚠️ Не удалось определить бренд - ",
   MANAGE_USERS_MESSAGE: "👨‍💼 *Управление пользователями*\n\nВыберите действие:",
