@@ -27,6 +27,16 @@ export const CATEGORY_MAP = {
   unknown: "Другое",
 } as const;
 
+// Категории бытовой техники, где у товара разные региональные версии (вилка/комплектация)
+// с разной ценой — их нельзя схлопывать в одну карточку каталога, id должен учитывать регион.
+export const REGION_SENSITIVE_CATEGORIES: ReadonlySet<string> = new Set([
+  CATEGORY_MAP.vacuum,
+  CATEGORY_MAP.hair_dryer,
+  CATEGORY_MAP.styler,
+  CATEGORY_MAP.straightener,
+  CATEGORY_MAP.purifier,
+]);
+
 export const CATEGORY_REVERSE_MAP: Record<string, keyof typeof CATEGORY_MAP> = {
   "Смартфоны": "smartphone",
   "Ноутбуки": "laptop",

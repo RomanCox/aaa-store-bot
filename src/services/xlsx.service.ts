@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx";
-import { CachedProduct, IngestItem } from "../types";
+import { CachedProduct, IngestItem, IngestResult, IngestSkippedGroup } from "../types";
 import { callAIForProductMatch, extractModelOnly } from "../ai/productAI";
 import {
 	cleanProductName,
@@ -13,6 +13,7 @@ import {
 	// extractDisplayFinish,
 	normalizeModelForIPadMini,
 	normalizeStorageInName,
+	isRegionSensitiveCategory,
 } from "../utils";
 import { extractBrandFromStart, resolveBrandFromName } from "./brands.service";
 import {
@@ -378,7 +379,7 @@ export async function ingestAAAStorePrice(
 		onUnresolvedItems?: (names: string[]) => Promise<void> | void;
 		onCostReport?: (cost: number) => Promise<void> | void;
 	}
-): Promise<IngestItem[]> {
+): Promise<IngestResult> {
 	const workbook = XLSX.read(buffer, { type: "buffer" });
 	const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
@@ -394,6 +395,10 @@ export async function ingestAAAStorePrice(
 	const unknownBrands = new Set<string>();
 	const unresolvedItems = new Set<string>();
 	const aiErrors = new Set<string>();
+	// Строки без названия/цены и позиции-дубли внутри прайса — раньше пропадали молча,
+	// теперь собираем их, чтобы показать админу в сводке после загрузки.
+	const emptyRows: string[] = [];
+	const duplicates: string[] = [];
 
 	const chunkSize = 15;
 	let unsavedCount = 0;
@@ -403,7 +408,7 @@ export async function ingestAAAStorePrice(
 		const chunk = rows.slice(i, i + chunkSize);
 
 		const chunkResults = await Promise.all(
-			chunk.map(async (row): Promise<IngestItem | undefined> => {
+			chunk.map(async (row, idx): Promise<IngestItem | undefined> => {
 				const category = String(row["Категория"] ?? "").trim();
 				const nameRaw = String(row["Название"] ?? "").trim();
 				const model = String(row["Модель"] ?? "").trim();
@@ -414,7 +419,11 @@ export async function ingestAAAStorePrice(
 
 				const name = normalizeStorageInName(nameRaw);
 
-				if (!name || !price) return;
+				if (!name || !price) {
+					// +2: строка 1 — заголовки, sheet_to_json 0-индексирует данные с 0
+					emptyRows.push(`Строка ${i + idx + 2}`);
+					return;
+				}
 
 				const brand = resolveBrandFromName(name);
 				if (!brand) {
@@ -429,6 +438,10 @@ export async function ingestAAAStorePrice(
 				const color = resolveColorFromName(name);
 				const isAppleSmartphone =
 					brand === "Apple" && category === "Смартфоны";
+				// Бытовая техника (пылесосы/фены/стайлеры/выпрямители/увлажнители) — у неё
+				// разные региональные версии (вилка) с разной ценой, их нельзя схлопывать
+				// в одну карточку каталога, поэтому регион участвует в rawName и id.
+				const isRegionSensitive = isRegionSensitiveCategory(category);
 				const sim = normalizeSimByRules({
 					name,
 					category,
@@ -439,6 +452,7 @@ export async function ingestAAAStorePrice(
 				const rawNameForMatch = buildAAAStoreRawName({
 					name,
 					sim,
+					country: isRegionSensitive ? country : undefined,
 				});
 
 				// 1. Прямой поиск по rawName
@@ -459,11 +473,16 @@ export async function ingestAAAStorePrice(
 					if (!existingProduct) {
 						const id = generateId({
 							brand, category, model: finalModel || model,
-							storage: storageRaw, color, sim, rawName: name
+							storage: storageRaw, color, sim, rawName: name,
+							country: isRegionSensitive ? country : undefined,
 						});
 						const newProduct: CachedProduct = {
 							id, brand, category, model: finalModel || "",
-							name, attributes: { storage: finalStorage, color, sim },
+							name,
+							attributes: {
+								storage: finalStorage, color, sim,
+								country: isRegionSensitive ? country : undefined,
+							},
 							rawNames: [rawNameForMatch]
 						};
 						setProductToCache(id, newProduct);
@@ -531,6 +550,9 @@ export async function ingestAAAStorePrice(
 			}
 			if (Number(item.price) < Number(existing.price)) {
 				grouped.set(key, item);
+				duplicates.push(`${existing.rawNameForMatch} — оставлена цена ${item.price} (была ${existing.price})`);
+			} else {
+				duplicates.push(`${item.rawNameForMatch} — дублирует позицию с ценой ${existing.price}`);
 			}
 		}
 
@@ -564,7 +586,24 @@ export async function ingestAAAStorePrice(
 
 	saveProductCache();
 
-	return result;
+	const skipped: IngestSkippedGroup[] = [];
+	if (emptyRows.length) {
+		skipped.push({ title: "Пустые строки (нет названия или цены)", names: emptyRows });
+	}
+	if (unknownBrands.size) {
+		skipped.push({ title: "Не удалось определить бренд", names: [...unknownBrands], reportedSeparately: true });
+	}
+	if (unresolvedItems.size) {
+		skipped.push({ title: "Не удалось определить модель", names: [...unresolvedItems], reportedSeparately: true });
+	}
+	if (aiErrors.size) {
+		skipped.push({ title: "Ошибка AI-подбора", names: [...aiErrors], reportedSeparately: true });
+	}
+	if (duplicates.length) {
+		skipped.push({ title: "Дубли в прайсе (совпадающая позиция)", names: duplicates });
+	}
+
+	return { items: result, totalRows: rows.length, skipped };
 }
 
 export async function ingestTodayThereTomorrowHerePrice(
@@ -575,27 +614,37 @@ export async function ingestTodayThereTomorrowHerePrice(
 		onUnresolvedItems?: (names: string[]) => Promise<void> | void;
 		onCostReport?: (cost: number) => Promise<void> | void;
 	}
-): Promise<IngestItem[]> {
+): Promise<IngestResult> {
 	const workbook = XLSX.read(buffer, { type: "buffer" });
 	const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
 	const range = XLSX.utils.decode_range(sheet["!ref"]!);
 	const rows: { name: string; price: string }[] = [];
+	// Строка 0 — заголовки, поэтому строк данных в файле ровно range.e.r.
+	const totalRows = range.e.r;
+	const emptyRows: string[] = [];
+	const categoryMismatch: string[] = [];
 
-	for (let r = 0; r <= range.e.r; r++) {
+	for (let r = 1; r <= range.e.r; r++) {
 		const name =
 			sheet[XLSX.utils.encode_cell({ r, c: 0 })]?.v?.toString().trim() ?? "";
 		const priceRaw =
 			sheet[XLSX.utils.encode_cell({ r, c: 1 })]?.v?.toString().trim() ?? "";
 
-		if (!name || !priceRaw) continue;
+		if (!name || !priceRaw) {
+			emptyRows.push(`Строка ${r + 1}`); // r 0-индексный, в самом файле это строка r+1
+			continue;
+		}
 
 		const category = getCategory(name);
 		// Аксессуары пропускаем только если в названии всё ещё явно фигурирует iPhone (например,
 		// кейсы/крепления "для iPhone 17 Pro Max ...") — для них есть отдельная лёгкая ветка обработки ниже.
 		// Остальные категории этого прайса пока не матчатся стабильно — добавим позже.
 		const isIphoneAccessoryRow = category === "Аксессуары" && name.toLowerCase().includes("iphone");
-		if (category !== "Смартфоны" && !isIphoneAccessoryRow) continue;
+		if (category !== "Смартфоны" && !isIphoneAccessoryRow) {
+			categoryMismatch.push(name);
+			continue;
+		}
 
 		// В файле цена отображается как целое число, но в самой ячейке из-за числового формата
 		// может быть скрыта дробная часть (например видно "210", а .v === 210.09) — округляем,
@@ -609,6 +658,7 @@ export async function ingestTodayThereTomorrowHerePrice(
 	const unknownBrands = new Set<string>();
 	const unresolvedItems = new Set<string>();
 	const aiErrors = new Set<string>();
+	const duplicates: string[] = [];
 
 	const chunkSize = 15;
 	let unsavedCount = 0;
@@ -831,6 +881,9 @@ export async function ingestTodayThereTomorrowHerePrice(
 			}
 			if (Number(item.price) < Number(existing.price)) {
 				grouped.set(key, item);
+				duplicates.push(`${existing.rawNameForMatch} — оставлена цена ${item.price} (была ${existing.price})`);
+			} else {
+				duplicates.push(`${item.rawNameForMatch} — дублирует позицию с ценой ${existing.price}`);
 			}
 		}
 
@@ -864,5 +917,25 @@ export async function ingestTodayThereTomorrowHerePrice(
 
 	saveProductCache();
 
-	return result;
+	const skipped: IngestSkippedGroup[] = [];
+	if (emptyRows.length) {
+		skipped.push({ title: "Пустые строки (нет названия или цены)", names: emptyRows });
+	}
+	if (categoryMismatch.length) {
+		skipped.push({ title: "Не телефон (эта категория не обрабатывается в этом прайсе)", names: categoryMismatch });
+	}
+	if (unknownBrands.size) {
+		skipped.push({ title: "Не удалось определить бренд", names: [...unknownBrands], reportedSeparately: true });
+	}
+	if (unresolvedItems.size) {
+		skipped.push({ title: "Не удалось определить модель", names: [...unresolvedItems], reportedSeparately: true });
+	}
+	if (aiErrors.size) {
+		skipped.push({ title: "Ошибка AI-подбора", names: [...aiErrors], reportedSeparately: true });
+	}
+	if (duplicates.length) {
+		skipped.push({ title: "Дубли в прайсе (совпадающая позиция)", names: duplicates });
+	}
+
+	return { items: result, totalRows, skipped };
 }

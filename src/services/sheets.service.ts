@@ -104,7 +104,9 @@ export async function loadBrandsFromConfig() {
     // Number("") === 0, поэтому пустую ячейку нужно отличать от нуля явно.
     const orderTrimmed = orderRaw?.trim() ?? "";
     const order = orderTrimmed === "" ? NaN : Number(orderTrimmed);
-    const keyWords = keyWordsRaw?.trim().split('\n').filter((k: string) => k.trim() !== '') || [];
+    const keyWords = (keyWordsRaw?.trim().split('\n') ?? [])
+      .map((k: string) => k.trim())
+      .filter((k: string) => k !== '');
 
     // Строки без числа (или с некорректным числом) уходят в конец,
     // сохраняя между собой исходный порядок из таблицы.
@@ -142,7 +144,9 @@ export async function loadColorsFromConfig() {
     const color = colorRaw?.trim() || undefined;
     if (!color) continue;
 
-    const keyWords = keyWordsRaw?.trim().split('\n').filter((k: string) => k.trim() !== '') || [];
+    const keyWords = (keyWordsRaw?.trim().split('\n') ?? [])
+      .map((k: string) => k.trim())
+      .filter((k: string) => k !== '');
 
     result.push({ [color]: keyWords });
   }

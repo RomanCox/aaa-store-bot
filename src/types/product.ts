@@ -8,6 +8,23 @@ export interface IngestItem {
 	country?: string;
 }
 
+// Группа строк прайса, которые не попали в итоговый каталог — чтобы админ видел,
+// куда делась разница между "строк в файле" и "товаров в каталоге", а не гадал.
+export interface IngestSkippedGroup {
+	title: string;
+	names: string[];
+	// true — по этой группе уже отправлен отдельный отчёт (⚠️ Не удалось определить бренд/модель),
+	// повторно список не шлём, только считаем в сводке.
+	reportedSeparately?: boolean;
+}
+
+export interface IngestResult {
+	items: IngestItem[];
+	// строк в файле без учёта строки с заголовками
+	totalRows: number;
+	skipped: IngestSkippedGroup[];
+}
+
 export interface CachedProduct {
 	id: string;
 
@@ -20,7 +37,10 @@ export interface CachedProduct {
 	attributes?: {
 		storage?: string;
 		color?: string;
-		// country?: string;
+		// Регион/вилка — заполняется только для категорий бытовой техники
+		// (REGION_SENSITIVE_CATEGORIES), где цена и комплектация зависят от региона.
+		// Для остальных категорий не используется.
+		country?: string;
 		sim?: string;
 		activated?: boolean;
 		// connectivity?: "WiFi" | "LTE" | "";
@@ -56,7 +76,7 @@ export interface UpsertProductInput {
 	attributes?: {
 		storage?: string;
 		color?: string;
-		// country?: string;
+		country?: string;
 		sim?: string;
 		activated?: boolean;
 		// connectivity?: "WiFi" | "LTE" | "";
