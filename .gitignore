@@ -4,6 +4,8 @@ google-service-account.json
 .idea
 .DS_Store
 /data/*.json
+/backups/*.json
 /data
+/backups
 /tmp
 /tmp/*.xlsx

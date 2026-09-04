@@ -394,10 +394,9 @@ export async function ingestAAAStorePrice(
 	const unknownBrands = new Set<string>();
 	const unresolvedItems = new Set<string>();
 	const aiErrors = new Set<string>();
-	// Строки без названия/цены и позиции-дубли внутри прайса — раньше пропадали молча,
-	// теперь собираем их, чтобы показать админу в сводке после загрузки.
+	// Строки без названия/цены — раньше пропадали молча, теперь собираем их,
+	// чтобы показать админу в сводке после загрузки.
 	const emptyRows: string[] = [];
-	const duplicates: string[] = [];
 
 	const chunkSize = 15;
 	let unsavedCount = 0;
@@ -551,9 +550,6 @@ export async function ingestAAAStorePrice(
 			}
 			if (Number(item.price) < Number(existing.price)) {
 				grouped.set(key, item);
-				duplicates.push(`${existing.rawNameForMatch} — оставлена цена ${item.price} (была ${existing.price})`);
-			} else {
-				duplicates.push(`${item.rawNameForMatch} — дублирует позицию с ценой ${existing.price}`);
 			}
 		}
 
@@ -599,9 +595,6 @@ export async function ingestAAAStorePrice(
 	}
 	if (aiErrors.size) {
 		skipped.push({ title: "Ошибка AI-подбора", names: [...aiErrors], reportedSeparately: true });
-	}
-	if (duplicates.length) {
-		skipped.push({ title: "Дубли в прайсе (совпадающая позиция)", names: duplicates });
 	}
 
 	return { items: result, totalRows: rows.length, skipped };
@@ -659,7 +652,6 @@ export async function ingestTodayThereTomorrowHerePrice(
 	const unknownBrands = new Set<string>();
 	const unresolvedItems = new Set<string>();
 	const aiErrors = new Set<string>();
-	const duplicates: string[] = [];
 
 	const chunkSize = 15;
 	let unsavedCount = 0;
@@ -882,9 +874,6 @@ export async function ingestTodayThereTomorrowHerePrice(
 			}
 			if (Number(item.price) < Number(existing.price)) {
 				grouped.set(key, item);
-				duplicates.push(`${existing.rawNameForMatch} — оставлена цена ${item.price} (была ${existing.price})`);
-			} else {
-				duplicates.push(`${item.rawNameForMatch} — дублирует позицию с ценой ${existing.price}`);
 			}
 		}
 
@@ -933,9 +922,6 @@ export async function ingestTodayThereTomorrowHerePrice(
 	}
 	if (aiErrors.size) {
 		skipped.push({ title: "Ошибка AI-подбора", names: [...aiErrors], reportedSeparately: true });
-	}
-	if (duplicates.length) {
-		skipped.push({ title: "Дубли в прайсе (совпадающая позиция)", names: duplicates });
 	}
 
 	return { items: result, totalRows, skipped };

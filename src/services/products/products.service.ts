@@ -22,6 +22,15 @@ export function getProductCacheValues() {
   return Array.from(productCache.values());
 }
 
+// В норме у товара 1-2 rawNames (одно и то же название с разных прайсов,
+// с/без SIM-суффикса). Если их заметно больше — вероятно, под одним id
+// по ошибке схлопнулось несколько разных физических товаров.
+export function getProductsWithManyRawNames(minRawNames = 2): CachedProduct[] {
+  return [...productCache.values()]
+    .filter(p => (p.rawNames?.length ?? 0) > minRawNames)
+    .sort((a, b) => (b.rawNames?.length ?? 0) - (a.rawNames?.length ?? 0));
+}
+
 export function loadProductCache() {
   if (!fs.existsSync(PRODUCTS_CACHE_PATH)) return;
 

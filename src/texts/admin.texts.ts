@@ -36,5 +36,7 @@ export const ADMIN_TEXTS = {
   RENEW_PRICE_SUCCESS: "💸 Конфиг успешно обновился",
 	RENEW_PRICE_ERROR: "❌ Ошибка при обновлении конфига",
 
+	CHECK_RAWNAMES: "🔍 Товары с дублями rawNames",
+
 	CHECK: "Check"
 };

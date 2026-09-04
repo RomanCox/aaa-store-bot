@@ -1,10 +1,50 @@
 import TelegramBot from "node-telegram-bot-api";
-import { IngestSkippedGroup, LowConfidenceItem, ProductForUI } from "../types";
+import { CachedProduct, IngestSkippedGroup, LowConfidenceItem, ProductForUI } from "../types";
 import { ADMIN_TEXTS } from "../texts";
 import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
 import { resolveBrandFromName } from "../services/brands.service";
 
 const ADMIN_ID = Number(process.env.ADMIN_ID);
+
+// По кнопке в админ-панели — список товаров, у которых rawNames подозрительно много
+// (в норме 1-2, одно и то же название с разных прайсов). Много rawNames обычно значит,
+// что под одним id по ошибке схлопнулось несколько разных физических товаров.
+// В отличие от остальных отчётов шлём не на фиксированный ADMIN_ID, а тому, кто нажал кнопку.
+export async function sendRawNamesReport(
+  bot: TelegramBot,
+  chatId: number,
+  products: CachedProduct[],
+  minRawNames: number,
+) {
+  if (!products.length) {
+    await bot.sendMessage(
+      chatId,
+      `✅ Товаров с rawNames > ${minRawNames} не найдено.`
+    );
+    return;
+  }
+
+  let message = `🔍 Товаров с rawNames > ${minRawNames}: ${products.length}\n`;
+
+  for (const p of products) {
+    const lines = [
+      `\n[${p.category}] ${p.brand} ${p.model} — ${p.name} (${p.id})`,
+      `rawNames (${p.rawNames.length}):`,
+      ...p.rawNames.map(raw => `  • ${raw}`),
+    ];
+    const block = lines.join("\n") + "\n";
+
+    if ((message + block).length > TELEGRAM_MESSAGE_LIMIT) {
+      await bot.sendMessage(chatId, message);
+      message = "";
+    }
+    message += block;
+  }
+
+  if (message) {
+    await bot.sendMessage(chatId, message);
+  }
+}
 
 export async function sendUnknownProductsReport(
   bot: TelegramBot,

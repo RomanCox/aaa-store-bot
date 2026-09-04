@@ -15,7 +15,8 @@ import { renderScreen } from "../render/renderScreen";
 import { editRates } from "../services/price.service";
 import { loadBrandsFromConfig, loadColorsFromConfig, loadPricesFormats } from "../services/sheets.service";
 import { renderSection } from "../render/renderSection";
-import { sendHiddenProductsReport } from "../render/reports";
+import { sendHiddenProductsReport, sendRawNamesReport } from "../render/reports";
+import { getProductsWithManyRawNames } from "../services/products/products.service";
 import { generateRetailCsv, sendPriceList } from "./catalog.hanlder";
 import { getCatalogProductById, getCatalogUIProducts } from "../services/catalog/ui/catalog.ui";
 import { getCatalogProducts } from "../services/catalog/catalog.builder";
@@ -39,6 +40,7 @@ const ADMIN_ONLY_ACTIONS = new Set<string>([
 	CALLBACK_TYPE.EDIT_RUB_TO_USD,
 	CALLBACK_TYPE.EDIT_USD_TO_BYN,
 	CALLBACK_TYPE.RENEW_PRICE,
+	CALLBACK_TYPE.CHECK_RAWNAMES,
 ]);
 
 export function registerCallbacks(bot: TelegramBot) {
@@ -265,6 +267,13 @@ export function registerCallbacks(bot: TelegramBot) {
           await safeAnswerCallback(bot, query.id);
         }
 
+        return;
+      }
+
+      case CALLBACK_TYPE.CHECK_RAWNAMES: {
+        const suspicious = getProductsWithManyRawNames(2);
+        await sendRawNamesReport(bot, chatId, suspicious, 2);
+        await safeAnswerCallback(bot, query.id);
         return;
       }
 

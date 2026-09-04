@@ -23,6 +23,7 @@ export enum CALLBACK_TYPE {
 	EDIT_RUB_TO_USD = "edit_rub_to_usd",
 	EDIT_USD_TO_BYN = "edit_usd_to_byn",
   RENEW_PRICE = "renew_price",
+	CHECK_RAWNAMES = "check_rawnames",
 	SUBMIT_ORDER = "submit_order",
 	ADD_ITEM_TO_CART = "add_item_to_cart",
 	CLEAR_CART = "clear_cart",

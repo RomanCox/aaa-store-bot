@@ -27,18 +27,6 @@ export const CATEGORY_MAP = {
   unknown: "Другое",
 } as const;
 
-// Категории, для которых регион в id/rawName был включён первой миграцией
-// (см. scripts/purge-region-unaware-appliances.ts). Сейчас логика в xlsx.service.ts
-// учитывает регион для любой категории (кроме iPhone), где он указан в прайсе —
-// этот список больше не участвует в основной логике, оставлен только для скрипта-чистильщика.
-export const REGION_SENSITIVE_CATEGORIES: ReadonlySet<string> = new Set([
-  CATEGORY_MAP.vacuum,
-  CATEGORY_MAP.hair_dryer,
-  CATEGORY_MAP.styler,
-  CATEGORY_MAP.straightener,
-  CATEGORY_MAP.purifier,
-]);
-
 export const CATEGORY_REVERSE_MAP: Record<string, keyof typeof CATEGORY_MAP> = {
   "Смартфоны": "smartphone",
   "Ноутбуки": "laptop",

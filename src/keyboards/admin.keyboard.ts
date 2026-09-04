@@ -30,5 +30,11 @@ export function adminKeyboard(): InlineKeyboardButton[][] {
           callback_data: CALLBACK_TYPE.RENEW_PRICE
         },
       ],
+      [
+        {
+          text: ADMIN_TEXTS.CHECK_RAWNAMES,
+          callback_data: CALLBACK_TYPE.CHECK_RAWNAMES
+        },
+      ],
     ];
 }
