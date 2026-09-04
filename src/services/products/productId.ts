@@ -11,8 +11,8 @@ export function generateId(input: {
   model: string;
   storage?: string;
   color?: string;
-  // регион/вилка — только для REGION_SENSITIVE_CATEGORIES (бытовая техника),
-  // для остальных категорий не передаётся и на id не влияет
+  // регион/вилка — передаётся, если он указан в прайсе (кроме iPhone, где регион
+  // превращается в тип SIM, см. normalizeSimByRules); если не передан — на id не влияет
   country?: string;
   sim?: string;
   activated?: boolean;

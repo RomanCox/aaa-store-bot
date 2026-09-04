@@ -13,7 +13,6 @@ import {
 	// extractDisplayFinish,
 	normalizeModelForIPadMini,
 	normalizeStorageInName,
-	isRegionSensitiveCategory,
 } from "../utils";
 import { extractBrandFromStart, resolveBrandFromName } from "./brands.service";
 import {
@@ -438,10 +437,12 @@ export async function ingestAAAStorePrice(
 				const color = resolveColorFromName(name);
 				const isAppleSmartphone =
 					brand === "Apple" && category === "Смартфоны";
-				// Бытовая техника (пылесосы/фены/стайлеры/выпрямители/увлажнители) — у неё
-				// разные региональные версии (вилка) с разной ценой, их нельзя схлопывать
-				// в одну карточку каталога, поэтому регион участвует в rawName и id.
-				const isRegionSensitive = isRegionSensitiveCategory(category);
+				// Регион участвует в идентичности товара для ЛЮБОЙ категории, у которой
+				// он указан в прайсе — разные региональные версии (вилка/комплектация)
+				// нельзя схлопывать в одну карточку каталога с одной ценой. Исключение —
+				// iPhone: там регион уже превращается в тип SIM (см. normalizeSimByRules),
+				// отдельно как регион не хранится.
+				const hasRegion = Boolean(country) && !isAppleSmartphone;
 				const sim = normalizeSimByRules({
 					name,
 					category,
@@ -452,7 +453,7 @@ export async function ingestAAAStorePrice(
 				const rawNameForMatch = buildAAAStoreRawName({
 					name,
 					sim,
-					country: isRegionSensitive ? country : undefined,
+					country: hasRegion ? country : undefined,
 				});
 
 				// 1. Прямой поиск по rawName
@@ -474,14 +475,14 @@ export async function ingestAAAStorePrice(
 						const id = generateId({
 							brand, category, model: finalModel || model,
 							storage: storageRaw, color, sim, rawName: name,
-							country: isRegionSensitive ? country : undefined,
+							country: hasRegion ? country : undefined,
 						});
 						const newProduct: CachedProduct = {
 							id, brand, category, model: finalModel || "",
 							name,
 							attributes: {
 								storage: finalStorage, color, sim,
-								country: isRegionSensitive ? country : undefined,
+								country: hasRegion ? country : undefined,
 							},
 							rawNames: [rawNameForMatch]
 						};

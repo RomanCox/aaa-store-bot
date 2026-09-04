@@ -37,9 +37,8 @@ export interface CachedProduct {
 	attributes?: {
 		storage?: string;
 		color?: string;
-		// Регион/вилка — заполняется только для категорий бытовой техники
-		// (REGION_SENSITIVE_CATEGORIES), где цена и комплектация зависят от региона.
-		// Для остальных категорий не используется.
+		// Регион/вилка — заполняется, если он указан в прайсе, для любой категории,
+		// кроме iPhone (там регион превращается в тип SIM, см. normalizeSimByRules).
 		country?: string;
 		sim?: string;
 		activated?: boolean;

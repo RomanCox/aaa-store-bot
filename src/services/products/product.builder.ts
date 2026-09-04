@@ -12,7 +12,7 @@ export function normalize(str: string) {
 
 export function buildAAAStoreRawName(input: {
   name: string;
-  // передаётся только для REGION_SENSITIVE_CATEGORIES, чтобы разные региональные
+  // передаётся, если в прайсе указан регион (кроме iPhone), чтобы разные региональные
   // версии одного товара не схлопывались в один rawName при поиске по кешу
   country?: string;
   sim?: string;

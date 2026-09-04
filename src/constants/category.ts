@@ -27,8 +27,10 @@ export const CATEGORY_MAP = {
   unknown: "Другое",
 } as const;
 
-// Категории бытовой техники, где у товара разные региональные версии (вилка/комплектация)
-// с разной ценой — их нельзя схлопывать в одну карточку каталога, id должен учитывать регион.
+// Категории, для которых регион в id/rawName был включён первой миграцией
+// (см. scripts/purge-region-unaware-appliances.ts). Сейчас логика в xlsx.service.ts
+// учитывает регион для любой категории (кроме iPhone), где он указан в прайсе —
+// этот список больше не участвует в основной логике, оставлен только для скрипта-чистильщика.
 export const REGION_SENSITIVE_CATEGORIES: ReadonlySet<string> = new Set([
   CATEGORY_MAP.vacuum,
   CATEGORY_MAP.hair_dryer,
