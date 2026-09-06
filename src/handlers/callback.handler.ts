@@ -7,7 +7,7 @@ import { handleBack } from "./back.handler";
 import { addUser, deleteUser, editUser, startUserManagement, startPriceUpload } from "../services/admin.service";
 import { renderProductsList } from "../render/renderProductsList";
 import { showUsersList } from "./users/users.handler";
-import { ADMIN_TEXTS, CART_TEXTS, COMMON_TEXTS, PAGINATION_TEXTS, USERS_ERRORS, USERS_TEXTS } from "../texts";
+import { ADMIN_TEXTS, CART_TEXTS, CATALOG_TEXTS, ITEM_TEXTS, ORDER_TEXTS, PAGINATION_TEXTS, USERS_ERRORS, USERS_TEXTS } from "../texts";
 import { createUser, getUserRole, isAdmin, updateUserRole } from "../services/users.service";
 import { addOrder, buildOrderMessage, createOrder } from "../services/orders.service";
 import { orderHandler, ordersHandler } from "./orders.handler";
@@ -370,7 +370,7 @@ export function registerCallbacks(bot: TelegramBot) {
               });
               await renderScreen(bot, chatId, {
                 section: SECTION.CATALOG,
-                text: ADMIN_TEXTS.ERROR_CATALOG + "\n" + selectedModel,
+                text: ITEM_TEXTS.INCONSISTENT_DATA + "\n" + selectedModel,
               })
             }
           }
@@ -422,7 +422,7 @@ export function registerCallbacks(bot: TelegramBot) {
           if (!productsToExport.length) {
             await renderScreen(bot, chatId, {
               section: SECTION.CATALOG,
-              text: COMMON_TEXTS.NOT_ITEMS_FOR_EXPORT,
+              text: CATALOG_TEXTS.NOT_ITEMS_FOR_DOWNLOAD,
             });
             return;
           }
@@ -640,7 +640,7 @@ export function registerCallbacks(bot: TelegramBot) {
           if (!cartState?.currentOrder?.length || !cartState.selectedProductIdForCart) {
             await renderScreen(bot, chatId, {
               section: SECTION.ORDERS,
-              text: COMMON_TEXTS.CURRENT_ORDER_ERROR,
+              text: CART_TEXTS.CURRENT_ORDER_ERROR,
             });
             return;
           }
@@ -674,7 +674,7 @@ export function registerCallbacks(bot: TelegramBot) {
           if (!cartState?.currentOrder?.length || !cartState.selectedProductIdForCart) {
             await renderScreen(bot, chatId, {
               section: SECTION.ORDERS,
-              text: COMMON_TEXTS.CURRENT_ORDER_ERROR,
+              text: CART_TEXTS.CURRENT_ORDER_ERROR,
             });
             return;
           }
@@ -707,7 +707,7 @@ export function registerCallbacks(bot: TelegramBot) {
         if (!cartState?.currentOrder?.length || !cartState.selectedProductIdForCart) {
           await renderScreen(bot, chatId, {
             section: SECTION.ORDERS,
-            text: COMMON_TEXTS.CURRENT_ORDER_ERROR,
+            text: CART_TEXTS.CURRENT_ORDER_ERROR,
           });
           return;
         }
@@ -773,7 +773,7 @@ export function registerCallbacks(bot: TelegramBot) {
           // подтверждение пользователю
           await renderScreen(bot, chatId, {
             section: SECTION.CART,
-            text: COMMON_TEXTS.ORDER_SENT,
+            text: ORDER_TEXTS.ORDER_SENT,
           });
 
           return;

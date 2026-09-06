@@ -1,7 +1,7 @@
 import TelegramBot from "node-telegram-bot-api";
 import { buildDownloadCallback, buildMessagesForProducts } from "../utils";
 import { CatalogSectionState, ProductFilters, SECTION } from "../types";
-import { CATALOG_TEXTS } from "../texts";
+import { CATALOG_TEXTS, ITEM_TEXTS } from "../texts";
 import { getChatState, getSectionState, setChatState } from "../state/chat.state";
 import { renderScreen } from "./renderScreen";
 import { getUserRole } from "../services/users.service";
@@ -33,7 +33,7 @@ export async function renderProductsList(
 
     await renderScreen(bot, chatId, {
       section: SECTION.CATALOG,
-      text: CATALOG_TEXTS.UNAVAILABLE,
+      text: ITEM_TEXTS.UNAVAILABLE,
       withBackButton: true,
     });
     return;

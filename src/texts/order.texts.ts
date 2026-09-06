@@ -11,4 +11,5 @@ export const ORDER_TEXTS = {
   SUM: "Сумма: ",
   ORDER_DATE: "📅 Дата: ",
   FULL_SUM: "💰 Общая сумма: ",
+  ORDER_SENT: "✅ Заказ отправлен администратору!",
 }

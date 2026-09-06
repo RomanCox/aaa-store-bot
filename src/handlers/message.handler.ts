@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
-import { CART_TEXTS, COMMON_TEXTS, MENU_TEXTS, START_TEXTS, USERS_ERRORS } from "../texts";
+import { ADMIN_TEXTS, CART_TEXTS, COMMON_TEXTS, MENU_TEXTS, USERS_ERRORS } from "../texts";
 import { getChatState, setChatState } from "../state/chat.state";
 import { CatalogFlowStep, ProductForCart, SECTION } from "../types";
 import { deleteUserInputHandler } from "./users/deleteUser.handler";
@@ -137,7 +137,7 @@ export function registerMessages(bot: TelegramBot) {
 
         await renderScreen(bot, chatId, {
           section: SECTION.ADMIN_PANEL,
-          text: START_TEXTS.ADMIN_PANEL,
+          text: ADMIN_TEXTS.ADMIN_PANEL_TITLE,
           inlineKeyboard: adminKeyboard(),
           parse_mode: "HTML",
         });

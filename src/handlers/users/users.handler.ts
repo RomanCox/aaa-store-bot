@@ -4,7 +4,7 @@ import { paginate, paginationKeyboard } from "../../utils";
 import { getChatState, setChatState } from "../../state/chat.state";
 import { CALLBACK_TYPE, SECTION } from "../../types";
 import { renderScreen } from "../../render/renderScreen";
-import { ADMIN_TEXTS, USERS_TEXTS } from "../../texts";
+import { USERS_TEXTS } from "../../texts";
 import { USERS_PER_PAGE } from "../../constants";
 
 export async function showUsersList(
@@ -58,7 +58,7 @@ export async function showUsersList(
   }
 
   const text =
-    `<b>${ADMIN_TEXTS.USERS_LIST}</b>\n\n` +
+    `<b>${USERS_TEXTS.USERS_LIST}</b>\n\n` +
     items
       .map(
         (user) =>

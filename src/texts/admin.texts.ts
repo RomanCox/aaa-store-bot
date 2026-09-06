@@ -1,5 +1,5 @@
 export const ADMIN_TEXTS = {
-	ONLY_ADMINS: "⛔ Только для администраторов",
+	ADMIN_PANEL_TITLE: "⚙️ Админ-панель",
 	AAA_STORE_PRICE: "📤 Загрузить aaa-store прайс",
 	TODAY_THERE_TOMORROW_HERE_PRICE: "📤 Загрузить прайс сегодня там, завтра тут",
 	MANAGE_USERS: "👥 Управление пользователями",
@@ -14,12 +14,6 @@ export const ADMIN_TEXTS = {
   SKIPPED_ITEMS_REPORTED_ABOVE: " (список см. в сообщении выше)",
   ITEMS_WITHOUT_MARKUP: "\n\n⚠️ Товары без наценки  - ",
   ITEMS_WITH_UNKNOWN_BRAND: "⚠️ Не удалось определить бренд - ",
-  MANAGE_USERS_MESSAGE: "👨‍💼 *Управление пользователями*\n\nВыберите действие:",
-	ADD_USER_BTN: "➕ Добавить пользователя",
-	DELETE_USER_BTN: "➖ Удалить пользователя",
-  EDIT_USER_BTN: "🤖🔧Редактировать пользователя",
-	DELETE_USER_TEXT: "🗑 Введи ID пользователя, которого нужно удалить:",
-	USERS_LIST: "📋 Список пользователей",
 	EDIT_RUB_TO_BYN: "RUB/BYN: ",
 	EDIT_RUB_TO_USD: "RUB/USD: ",
 	EDIT_USD_TO_BYN: "USD/BYN: ",
@@ -30,13 +24,10 @@ export const ADMIN_TEXTS = {
 	DONT_RECOGNIZED: "❌ НЕ РАСПОЗНАНЫ",
 	CANT_FIND_FILE: "❌ Файл не найден",
 	ERROR_ITEMS: "❌ Файл не содержит валидных товаров",
-  ERROR_CATALOG: "❌ Неконсистентные данные: у модели часть товаров с памятью, часть без",
 	ERROR_XLSX: "❌ XLSX upload error: ",
 	FILE_ERROR: "❌ Ошибка при обработке файла",
   RENEW_PRICE_SUCCESS: "💸 Конфиг успешно обновился",
 	RENEW_PRICE_ERROR: "❌ Ошибка при обновлении конфига",
 
 	CHECK_RAWNAMES: "🔍 Товары с дублями rawNames",
-
-	CHECK: "Check"
 };
