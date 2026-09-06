@@ -11,7 +11,8 @@ export const CART_TEXTS = {
 	CHOSE_CATEGORY: "\n•<i>Категорию:</i> 📦",
 	CHOSE_MODEL: "\n•<i>Модель:</i> ",
 	CHOSE_STORAGE: "\n•<i>Память:</i> 💾",
-	CHOOSE_CATEGORY: "Выберите категорию:",
+	CHOOSE_BRAND: "👇 Выберите производителя",
+	CHOOSE_CATEGORY: "👇 Выберите категорию товаров бренда ",
 	CHOOSE_MODEL: "\n\nВыберите модель:",
 	CHOOSE_STORAGE: "\n\nВыберите объем памяти:",
 	CHOOSE_PRODUCT: "\n\nВыберите товар для добавления в корзину:\n\n",
@@ -29,5 +30,6 @@ export const CART_TEXTS = {
 	DECREASE_AMOUNT: "➖ -1 - убрать одну единицу",
 	CHANGE_AMOUNT: "\n\nИли просто отправьте новое кол-во сообщением в чат.",
 	DELETE_PRODUCT_FROM_CART: "\n\n🗑 Удалить позицию - убрать из корзины",
-	DELETE_POSITION: "🗑 Удалить позицию"
+	DELETE_POSITION: "🗑 Удалить позицию",
+	CURRENT_ORDER_ERROR: "Нет текущего заказа или выбранного продукта",
 };

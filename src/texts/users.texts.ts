@@ -17,6 +17,11 @@ export const USERS_ERRORS = {
 };
 
 export const USERS_TEXTS = {
+  MANAGE_USERS_MESSAGE: "👨‍💼 *Управление пользователями*\n\nВыберите действие:",
+  ADD_USER_BTN: "➕ Добавить пользователя",
+  DELETE_USER_BTN: "➖ Удалить пользователя",
+  EDIT_USER_BTN: "🤖🔧Редактировать пользователя",
+  USERS_LIST: "📋 Список пользователей",
   ENTER_ID_USER_ADD: "🆔 Введи ID пользователя, которого нужно добавить:",
   ENTER_ID_USER_DELETE: "🗑 Введи ID пользователя, которого нужно удалить:",
   ADD_SUCCESSFUL: "✅ Пользователь успешно добавлен",

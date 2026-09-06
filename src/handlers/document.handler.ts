@@ -7,7 +7,7 @@ import {
 } from "../services/xlsx.service";
 import { isAdmin } from "../services/users.service";
 import { getChatState, setChatState, updateSectionState } from "../state/chat.state";
-import { ADMIN_TEXTS, START_TEXTS } from "../texts";
+import { ADMIN_TEXTS } from "../texts";
 import { renderScreen } from "../render/renderScreen";
 import { IngestItem, IngestSkippedGroup, PriceListType, SECTION } from "../types";
 import { adminKeyboard } from "../keyboards";
@@ -140,7 +140,7 @@ export function registerDocumentHandler(bot: TelegramBot) {
 
       await renderScreen(bot, chatId, {
         section: SECTION.ADMIN_PANEL,
-        text: START_TEXTS.ADMIN_PANEL,
+        text: ADMIN_TEXTS.ADMIN_PANEL_TITLE,
         inlineKeyboard: adminKeyboard(),
         parse_mode: "HTML",
       });
@@ -152,7 +152,7 @@ export function registerDocumentHandler(bot: TelegramBot) {
 
       await renderScreen(bot, chatId, {
         section: SECTION.ADMIN_PANEL,
-        text: START_TEXTS.ADMIN_PANEL,
+        text: ADMIN_TEXTS.ADMIN_PANEL_TITLE,
         inlineKeyboard: adminKeyboard(),
         parse_mode: "HTML",
       });

@@ -10,7 +10,7 @@ import {
   modelsKeyboard,
   storageValuesKeyboard
 } from "../keyboards";
-import { CART_TEXTS, CATALOG_TEXTS } from "../texts";
+import { CART_TEXTS, ITEM_TEXTS } from "../texts";
 import {
 	CartSectionState,
 	CatalogSectionState,
@@ -161,7 +161,7 @@ export async function renderBrands(
 
     await renderScreen(bot, chatId, {
       section: section,
-      text: CATALOG_TEXTS.UNAVAILABLE,
+      text: ITEM_TEXTS.UNAVAILABLE,
 			withBackButton: true,
     });
     return;
@@ -169,7 +169,7 @@ export async function renderBrands(
 
   await renderScreen(bot, chatId, {
     section: section,
-    text: CATALOG_TEXTS.CHOOSE_BRAND,
+    text: CART_TEXTS.CHOOSE_BRAND,
     inlineKeyboard: brandsKeyboard(brands, {
       withAllBtn: section === SECTION.CATALOG,
       withDownloadBtn: section === SECTION.CATALOG,
@@ -201,7 +201,7 @@ export async function renderCategories(
 
     await renderScreen(bot, chatId, {
       section: section,
-      text: CATALOG_TEXTS.UNAVAILABLE,
+      text: ITEM_TEXTS.UNAVAILABLE,
 			withBackButton: true,
     });
     return;
@@ -221,7 +221,7 @@ export async function renderCategories(
 
     await renderScreen(bot, chatId, {
       section: section,
-      text: CATALOG_TEXTS.UNAVAILABLE,
+      text: ITEM_TEXTS.UNAVAILABLE,
 			withBackButton: true,
     });
     return;
@@ -229,7 +229,7 @@ export async function renderCategories(
 
   const text =
     section === SECTION.CATALOG
-      ? CATALOG_TEXTS.CHOOSE_CATEGORY + selectedBrand + ":"
+      ? CART_TEXTS.CHOOSE_CATEGORY + selectedBrand + ":"
       : CART_TEXTS.YOU_CHOOSE + CART_TEXTS.CHOSE_BRAND + selectedBrand;
 
   await renderScreen(bot, chatId, {
@@ -266,7 +266,7 @@ async function renderModels(bot: TelegramBot, chatId: number) {
 
     await renderScreen(bot, chatId, {
       section: SECTION.CART,
-      text: CATALOG_TEXTS.UNAVAILABLE,
+      text: ITEM_TEXTS.UNAVAILABLE,
 			withBackButton: true,
     });
 		return;
@@ -319,7 +319,7 @@ async function renderStorage(bot: TelegramBot, chatId: number) {
 
     await renderScreen(bot, chatId, {
       section: SECTION.CART,
-      text: CATALOG_TEXTS.UNAVAILABLE,
+      text: ITEM_TEXTS.UNAVAILABLE,
 			withBackButton: true,
     });
 		return;
@@ -371,7 +371,7 @@ async function renderChoosingProduct(bot: TelegramBot, chatId: number) {
 
     await renderScreen(bot, chatId, {
       section: SECTION.CART,
-      text: CATALOG_TEXTS.UNAVAILABLE,
+      text: ITEM_TEXTS.UNAVAILABLE,
 			withBackButton: true,
     });
 		return;
@@ -476,7 +476,7 @@ export async function renderFlow(bot: TelegramBot, chatId: number) {
 
     await renderScreen(bot, chatId, {
 			section: SECTION.CART,
-			text: CATALOG_TEXTS.UNAVAILABLE,
+			text: ITEM_TEXTS.UNAVAILABLE,
 			withBackButton: true,
 		});
 		return;

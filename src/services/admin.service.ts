@@ -49,12 +49,12 @@ export async function startUserManagement(bot: TelegramBot, chatId: number) {
 
   await renderScreen(bot, chatId, {
     section: SECTION.ADMIN_PANEL,
-    text: ADMIN_TEXTS.MANAGE_USERS_MESSAGE,
+    text: USERS_TEXTS.MANAGE_USERS_MESSAGE,
     inlineKeyboard: [
-      [{ text: ADMIN_TEXTS.ADD_USER_BTN, callback_data: CALLBACK_TYPE.ADD_USER }],
-      [{ text: ADMIN_TEXTS.DELETE_USER_BTN, callback_data: CALLBACK_TYPE.DELETE_USER }],
-      [{ text: ADMIN_TEXTS.EDIT_USER_BTN, callback_data: CALLBACK_TYPE.EDIT_USER }],
-      [{ text: ADMIN_TEXTS.USERS_LIST, callback_data: CALLBACK_TYPE.USERS_LIST }],
+      [{ text: USERS_TEXTS.ADD_USER_BTN, callback_data: CALLBACK_TYPE.ADD_USER }],
+      [{ text: USERS_TEXTS.DELETE_USER_BTN, callback_data: CALLBACK_TYPE.DELETE_USER }],
+      [{ text: USERS_TEXTS.EDIT_USER_BTN, callback_data: CALLBACK_TYPE.EDIT_USER }],
+      [{ text: USERS_TEXTS.USERS_LIST, callback_data: CALLBACK_TYPE.USERS_LIST }],
     ],
     parse_mode: "Markdown",
     withBackButton: true,
