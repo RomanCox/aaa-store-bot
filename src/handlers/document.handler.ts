@@ -9,10 +9,10 @@ import { isAdmin } from "../services/users.service";
 import { getChatState, setChatState, updateSectionState } from "../state/chat.state";
 import { ADMIN_TEXTS } from "../texts";
 import { renderScreen } from "../render/renderScreen";
-import { IngestItem, IngestSkippedGroup, PriceListType, SECTION } from "../types";
+import { IngestItem, PriceListType, SECTION } from "../types";
 import { adminKeyboard } from "../keyboards";
 import { safeDelete } from "../utils";
-import { onAiError, onCostReport, onUnresolvedItems, sendHiddenProductsReport, sendSkippedItemsReport, sendUnknownBrandsReport } from "../render/reports";
+import { onAiError, onCostReport, onUnresolvedItems, sendHiddenProductsReport, sendUnknownBrandsReport } from "../render/reports";
 import { clearCatalogSource, saveCatalog, upsertCatalog } from "../services/catalog/catalog.service";
 import { getCatalogProducts } from "../services/catalog/catalog.builder";
 import { generateRetailCsv } from "./catalog.hanlder";
@@ -23,7 +23,6 @@ async function handleIngestResult(
   items: IngestItem[],
   source: PriceListType,
   totalRows: number,
-  skipped: IngestSkippedGroup[],
 ) {
   if (!items.length) {
     await bot.sendMessage(chatId, ADMIN_TEXTS.ERROR_ITEMS);
@@ -52,10 +51,6 @@ async function handleIngestResult(
   ];
 
   await bot.sendMessage(chatId, summaryLines.join("\n"));
-
-  if (totalRows !== items.length) {
-    await sendSkippedItemsReport(bot, skipped);
-  }
 
   generateRetailCsv();
 }
@@ -90,7 +85,7 @@ export function registerDocumentHandler(bot: TelegramBot) {
 			const buffer = fs.readFileSync(filePath);
 
       if (flowStep === "upload_aaa_store_price") {
-        const { items, totalRows, skipped } = await ingestAAAStorePrice(buffer, {
+        const { items, totalRows } = await ingestAAAStorePrice(buffer, {
           onUnknownBrand: async (names) => {
             await sendUnknownBrandsReport(bot, names);
           },
@@ -105,11 +100,11 @@ export function registerDocumentHandler(bot: TelegramBot) {
           },
         });
 
-        await handleIngestResult(bot, chatId, items, "AAA-store", totalRows, skipped);
+        await handleIngestResult(bot, chatId, items, "AAA-store", totalRows);
       }
 
       if (flowStep === "upload_today_there_tomorrow_here_price") {
-        const { items, totalRows, skipped } = await ingestTodayThereTomorrowHerePrice(buffer, {
+        const { items, totalRows } = await ingestTodayThereTomorrowHerePrice(buffer, {
           onUnknownBrand: async (names) => {
             await sendUnknownBrandsReport(bot, names);
           },
@@ -124,7 +119,7 @@ export function registerDocumentHandler(bot: TelegramBot) {
           },
         });
 
-        await handleIngestResult(bot, chatId, items, "Today there tomorrow here", totalRows, skipped);
+        await handleIngestResult(bot, chatId, items, "Today there tomorrow here", totalRows);
       }
 
       const state = getChatState(userId);
