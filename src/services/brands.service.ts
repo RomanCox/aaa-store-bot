@@ -30,32 +30,6 @@ export async function saveBrands(update: Record<string, string[]>[]) {
   }
 }
 
-// export function resolveBrandFromName(name: string): string | undefined {
-//   if (!name || !name.trim()) return undefined;
-//
-//   // Нормализуем строку: заменяем все виды пробелов на один обычный
-//   const normalized = name
-//     .trim()
-//     .replace(/\s+/g, ' ')
-//     .toLowerCase();
-//
-//   for (const [brand, keyWords] of brands.entries()) {
-//     for (const kw of keyWords) {
-//       const lowerKw = kw.toLowerCase();
-//
-//       // Экранируем спецсимволы в ключевом слове
-//       const escapedKw = lowerKw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       const pattern = new RegExp(`^${escapedKw}(\\s|$)`);
-//
-//       if (pattern.test(normalized)) {
-//         return brand;
-//       }
-//     }
-//   }
-//
-//   return undefined;
-// }
-
 export function resolveBrandFromName(name: string): string | undefined {
   if (!name || !name.trim()) return undefined;
 
@@ -63,6 +37,13 @@ export function resolveBrandFromName(name: string): string | undefined {
     .trim()
     .replace(/\s+/g, ' ')
     .toLowerCase();
+
+  // Диск с игрой всегда маркируется как "📀(...)" в начале названия — это Sony
+  // независимо от того, что идёт дальше (без пробела после эмодзи стандартный
+  // разбор по ключевым словам не срабатывает).
+  if (normalized.startsWith('📀(')) {
+    return 'Sony';
+  }
 
   for (const [brand, keyWords] of brands.entries()) {
     for (const kw of keyWords) {
