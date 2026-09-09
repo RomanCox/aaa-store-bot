@@ -41,7 +41,7 @@ export function resolveBrandFromName(name: string): string | undefined {
   // Диск с игрой всегда маркируется как "📀(...)" в начале названия — это Sony
   // независимо от того, что идёт дальше (без пробела после эмодзи стандартный
   // разбор по ключевым словам не срабатывает).
-  if (normalized.startsWith('📀(')) {
+  if (normalized.startsWith('📀')) {
     return 'Sony';
   }
 
