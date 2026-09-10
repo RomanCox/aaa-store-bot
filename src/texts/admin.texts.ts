@@ -10,6 +10,7 @@ export const ADMIN_TEXTS = {
   PRICE_UPLOAD_TOTAL_ROWS: "Товаров в прайсе: ",
   PRICE_UPLOAD_TOTAL_ITEMS: "Всего товаров: ",
   PRICE_UPLOAD_NEW_ITEMS: "\nНовых товаров: ",
+  PRICE_UPLOAD_UPDATED_ITEMS: "\nОбновлено товаров в каталоге: ",
   ITEMS_WITHOUT_MARKUP: "\n\n⚠️ Товары без наценки  - ",
   ITEMS_WITH_UNKNOWN_BRAND: "⚠️ Не удалось определить бренд - ",
 	EDIT_RUB_TO_BYN: "RUB/BYN: ",

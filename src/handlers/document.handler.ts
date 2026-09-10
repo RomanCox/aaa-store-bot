@@ -42,12 +42,14 @@ async function handleIngestResult(
   await sendHiddenProductsReport(bot, result);
 
   const newItemsCount = items.filter(i => i.isNew).length;
+  const updatedItemsCount = items.length - newItemsCount;
 
   const summaryLines = [
     ADMIN_TEXTS.PRICE_UPLOAD_SUCCESS +
       ADMIN_TEXTS.PRICE_UPLOAD_TOTAL_ROWS + totalRows,
     ADMIN_TEXTS.PRICE_UPLOAD_TOTAL_ITEMS + items.length +
-      ADMIN_TEXTS.PRICE_UPLOAD_NEW_ITEMS + newItemsCount,
+      ADMIN_TEXTS.PRICE_UPLOAD_NEW_ITEMS + newItemsCount +
+      ADMIN_TEXTS.PRICE_UPLOAD_UPDATED_ITEMS + updatedItemsCount,
   ];
 
   await bot.sendMessage(chatId, summaryLines.join("\n"));

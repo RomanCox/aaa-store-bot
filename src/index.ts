@@ -14,7 +14,6 @@ import { TIME_LIMIT_DELETING_OLD_FILES, TMP_PATH } from "./constants";
 import { loadProductCache } from "./services/products/products.service";
 import { loadCatalog } from "./services/catalog/catalog.service";
 import { loadColorsFromFile } from "./services/colors.service";
-import "./services/backup.service";
 
 async function bootstrap() {
 	const bot = await createBot();
