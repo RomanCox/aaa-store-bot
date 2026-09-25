@@ -17,6 +17,10 @@ export interface PriceRule {
 export interface PriceFormat {
   category?: string;
   brand?: string;
+  // Ключевые слова из товара (по вхождению в name, без учёта регистра) —
+  // выделяют временные правила наценки, например для новых моделей,
+  // которые ещё не отличить от старых по категории+бренду+цене.
+  keywords?: string[];
   prices: PriceRule[];
 }
 

@@ -21,7 +21,7 @@ async function getSheet(range: string) {
 }
 
 export async function loadPricesFormats() {
-	const rows = await getSheet("'Ценообразование'!A:E");
+	const rows = await getSheet("'Ценообразование'!A:F");
 
 	if (rows.length < 2) return;
 
@@ -35,19 +35,27 @@ export async function loadPricesFormats() {
       brandRaw,
       maxRaw,
       wholesalePercentRaw,
-      retailPercentRaw
+      retailPercentRaw,
+      keywordsRaw
     ] = row;
 
     const category = categoryRaw?.trim() || undefined;
     const brand = brandRaw?.trim() || undefined;
     const max = maxRaw ? Number(maxRaw) : undefined;
+    const keywords = (keywordsRaw?.trim().split('\n') ?? [])
+      .map((k: string) => k.trim())
+      .filter((k: string) => k !== '');
 
-    const key = [category, brand].filter(Boolean).join("_");
+    // Ключевые слова выделяют строки в отдельную группу правил (например,
+    // временную наценку для новых моделей), чтобы они не смешивались
+    // с общими правилами категория+бренд и не задваивали диапазоны.
+    const key = [category, brand, ...keywords].filter(Boolean).join("_");
 
     if (!map.has(key)) {
       map.set(key, {
         category,
         brand,
+        ...(keywords.length && { keywords }),
         prices: []
       });
     }

@@ -1,4 +1,4 @@
-import { findPriceRule, normalizeOfferPrice, priceFormat, replaceStorageInName } from "../../utils";
+import { findPriceRule, normalizeOfferPrice, priceFormat, replaceStorageInName, toUsdPrice } from "../../utils";
 import { getProductFromCacheById } from "../products/products.service";
 import { getCatalog } from "./catalog.service";
 import { ProductForUI, UserRole } from "../../types";
@@ -47,12 +47,14 @@ export function getCatalogProducts(options?: {
         cached.category,
         cached.brand,
         source,
-        role
+        role,
+        cached.name
       );
 
+    const basePriceUSD = toUsdPrice(Number(basePrice), rates, source);
     const hidden =
-      !findPriceRule(Number(basePrice), cached.category, cached.brand, "wholesale", priceFormation) &&
-      !findPriceRule(Number(basePrice), cached.category, cached.brand, "retail", priceFormation);
+      !findPriceRule(basePriceUSD, cached.category, cached.brand, "wholesale", priceFormation, cached.name) &&
+      !findPriceRule(basePriceUSD, cached.category, cached.brand, "retail", priceFormation, cached.name);
 
     result.push({
       id: cached.id,
