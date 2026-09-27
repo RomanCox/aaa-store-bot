@@ -254,10 +254,13 @@ export function normalizeStorageInName(name: string): string {
 	let result = name;
 
 	// Для второго прайса: 1024 → 1TB, 2048 → 2TB, 3072 → 3TB, 4096 → 4TB
-	result = result.replace(/\b1024\s*(?:GB)?\b/gi, '1TB');
-	result = result.replace(/\b2048\s*(?:GB)?\b/gi, '2TB');
-	result = result.replace(/\b3072\s*(?:GB)?\b/gi, '3TB');
-	result = result.replace(/\b4096\s*(?:GB)?\b/gi, '4TB');
+	// \s* — внутри необязательной группы (?:...GB)?, а не снаружи неё: иначе при
+	// отсутствии "GB" группа всё равно матчится нулевой длины, а \s* жадно проглатывает
+	// пробел ПЕРЕД следующим словом (цветом) — "1024 Burgundy" превращалось в "1TBBurgundy".
+	result = result.replace(/\b1024(?:\s*GB)?\b/gi, '1TB');
+	result = result.replace(/\b2048(?:\s*GB)?\b/gi, '2TB');
+	result = result.replace(/\b3072(?:\s*GB)?\b/gi, '3TB');
+	result = result.replace(/\b4096(?:\s*GB)?\b/gi, '4TB');
 
 	// Для обоих прайсов: убираем пробел перед TB (1 TB → 1TB, 2 TB → 2TB)
 	result = result.replace(/(\d+)\s+TB\b/gi, '$1TB');
