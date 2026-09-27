@@ -51,6 +51,7 @@ pm2 logs aaa-store-bot
 
 ### Перезапуск или остановка бота
 ```bash
+pm2 start aaa-store-bot
 pm2 restart aaa-store-bot
 pm2 stop aaa-store-bot
 ```
