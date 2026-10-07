@@ -150,21 +150,24 @@ export function normalizeSimByRules(input: {
 
 	const isIn = (set: Set<string>) => country && set.has(country);
 
-	if (name.includes("iphone 17")) {
-		if (isIn(NEW_SIM_ONLY_COUNTRIES)) {
+	if (!name.includes("iphone")) {
+		return undefined;
+	}
+
+	// Правила по поколениям — по https://support.apple.com/ru-ru/118569.
+	// Старые поколения перечислены явно, а всё остальное (17, 18, 19…, Fold и любые
+	// будущие модели без номера) по умолчанию получает правила новых моделей —
+	// чтобы новинки не надо было руками добавлять сюда и они не уходили в Dual SIM для 🇭🇰/🇲🇴.
+	const generation = getIphoneGeneration(name);
+
+	if (generation === "legacy") {
+		if (isIn(OLD_SIM_ONLY_COUNTRIES)) {
 			return "Dual SIM";
-		}
-		if (isIn(NEW_ESIM_ONLY_COUNTRIES)) {
-			return "ESIM";
 		}
 		return "SIM + ESIM";
 	}
 
-	if (
-		name.includes("iphone 14") ||
-		name.includes("iphone 15") ||
-		name.includes("iphone 16")
-	) {
+	if (generation === "old") {
 		if (isIn(OLD_SIM_ONLY_COUNTRIES)) {
 			return "Dual SIM";
 		}
@@ -174,14 +177,32 @@ export function normalizeSimByRules(input: {
 		return "SIM + ESIM";
 	}
 
-	if (name.includes("iphone")) {
-		if (isIn(OLD_SIM_ONLY_COUNTRIES)) {
-			return "Dual SIM";
-		}
-		return "SIM + ESIM";
+	if (isIn(NEW_SIM_ONLY_COUNTRIES)) {
+		return "Dual SIM";
+	}
+	if (isIn(NEW_ESIM_ONLY_COUNTRIES)) {
+		return "ESIM";
+	}
+	return "SIM + ESIM";
+}
+
+// legacy — до iPhone 13 включительно, SE, X/XS/XR;
+// old — iPhone 14–16 (eSIM-only только в США);
+// new — iPhone 17 и новее, а также любая неизвестная модель (Fold и т.п.).
+function getIphoneGeneration(name: string): "legacy" | "old" | "new" {
+	const number = name.match(/iphone\s*(\d{1,2})(?!\d)/)?.[1];
+	if (number) {
+		const n = Number(number);
+		if (n <= 13) return "legacy";
+		if (n <= 16) return "old";
+		return "new";
 	}
 
-	return undefined;
+	if (/iphone\s*(se|x[sr]?)(?![a-z])/.test(name)) {
+		return "legacy";
+	}
+
+	return "new";
 }
 
 export function sortProducts(products: ProductForUI[]): ProductForUI[] {
