@@ -14,6 +14,7 @@ import { TIME_LIMIT_DELETING_OLD_FILES, TMP_PATH } from "./constants";
 import { loadProductCache } from "./services/products/products.service";
 import { loadCatalog } from "./services/catalog/catalog.service";
 import { loadColorsFromFile } from "./services/colors.service";
+import { startAppleSimWatcher } from "./services/appleSimWatcher.service";
 
 async function bootstrap() {
 	const bot = await createBot();
@@ -31,6 +32,8 @@ async function bootstrap() {
 	registerMessages(bot);
 	registerCallbacks(bot);
 	registerDocumentHandler(bot);
+
+  startAppleSimWatcher(bot);
 
   if (!fs.existsSync(TMP_PATH)) {
     fs.mkdirSync(TMP_PATH, { recursive: true });

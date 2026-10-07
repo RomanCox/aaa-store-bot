@@ -29,4 +29,10 @@ export const ADMIN_TEXTS = {
 	RENEW_PRICE_ERROR: "❌ Ошибка при обновлении конфига",
 
 	CHECK_RAWNAMES: "🔍 Товары с дублями rawNames",
+
+	APPLE_SIM_PAGE_CHANGED: "🍏 Apple обновила страницу про типы SIM в iPhone",
+	APPLE_SIM_PAGE_HINT: "Проверь, не нужно ли поправить normalizeSimByRules и списки стран в types/product.ts",
+	APPLE_SIM_PAGE_ADDED: "➕ Добавлено:",
+	APPLE_SIM_PAGE_REMOVED: "➖ Удалено:",
+	APPLE_SIM_PAGE_PARSE_ERROR: "⚠️ Не удалось разобрать страницу Apple про типы SIM — возможно, поменялась вёрстка. Проверь вручную:",
 };

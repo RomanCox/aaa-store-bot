@@ -35,6 +35,7 @@ export const RATES_PATH = path.join(DATA_PATH, "rates.json");
 export const PRICE_FORMATION_PATH = path.join(DATA_PATH, "price_formation.json");
 export const BRANDS_PATH = path.join(DATA_PATH, "brands.json");
 export const COLORS_PATH = path.join(DATA_PATH, "colors.json");
+export const APPLE_SIM_PAGE_PATH = path.join(DATA_PATH, "apple-sim-page.json");
 
 export const TODAY_THERE_TOMORROW_HERE_PRICE_DELIVERY = 5;
 export const SAVE_EVERY_NUMBER_ITEMS = 100;
