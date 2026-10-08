@@ -19,7 +19,6 @@ import {
 	addRawNameIfNeeded,
 	buildAAAStoreRawName,
 	buildTodayThereTomorrowHereRawName,
-	normalize,
 	upsertProduct,
 } from "./products/product.builder";
 import {
@@ -456,7 +455,9 @@ export async function ingestAAAStorePrice(
 				});
 
 				// 1. Прямой поиск по rawName
-				let match = findByRawName(rawNameForMatch);
+				// В этом прайсе нет активированных товаров, поэтому ищем только среди
+				// неактивированных — иначе строка может прилипнуть к "(Active)"-карточке.
+				let match = findByRawName(rawNameForMatch, { activated: false });
 				if (match) {
 					return {
 						product: match,
@@ -469,7 +470,7 @@ export async function ingestAAAStorePrice(
 
 				if (!isAppleSmartphone) {
 					const finalStorage = storageRaw || normalizeStorageForCatalog(name);
-					let existingProduct = findByRawName(rawNameForMatch);
+					let existingProduct = findByRawName(rawNameForMatch, { activated: false });
 					if (!existingProduct) {
 						const id = generateId({
 							brand, category, model: finalModel || model,
@@ -492,7 +493,7 @@ export async function ingestAAAStorePrice(
 				}
 
 				let matchedProduct: CachedProduct | null = null;
-				const rawMatch = findByRawName(rawNameForMatch);
+				const rawMatch = findByRawName(rawNameForMatch, { activated: false });
 				if (rawMatch) matchedProduct = rawMatch;
 
 				if (!matchedProduct) {
@@ -501,6 +502,7 @@ export async function ingestAAAStorePrice(
 					const candidates = [...cachedProducts.values()].filter(p => {
 						if (p.brand !== brand) return false;
 						if (p.category !== category) return false;
+						if (p.attributes?.activated === true) return false;
 						if (storage && normalizeStorageForCatalog(p.attributes?.storage || '') !== storage) return false;
 						if (sim && p.attributes?.sim !== sim) return false;
 						return !(color && p.attributes?.color && p.attributes.color !== color);
@@ -689,18 +691,8 @@ export async function ingestTodayThereTomorrowHerePrice(
 				});
 				
 				// 1. Поиск по rawName
-				let existingByRaw = null;
-
-				if (activated) {
-					// Ищем только среди активных продуктов
-					const cache = getProductCache();
-					existingByRaw = [...cache.values()].find(p =>
-						p.attributes?.activated === true &&
-						p.rawNames.some(raw => normalize(raw) === normalize(rawNameForMatch))
-					);
-				} else {
-					existingByRaw = findByRawName(rawNameForMatch);
-				}
+				// Активированные строки ищем только среди активированных товаров, остальные — среди неактивированных
+				const existingByRaw = findByRawName(rawNameForMatch, { activated: activated === true });
 
 				if (existingByRaw) {
 					addRawNameIfNeeded(existingByRaw, rawNameForMatch);
