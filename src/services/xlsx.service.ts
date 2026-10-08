@@ -433,6 +433,10 @@ export async function ingestAAAStorePrice(
 					finalModel = normalizeModelForIPadMini(finalModel, name);
 				}
 				const color = resolveColorFromName(name);
+				// В названии карточки синоним цвета меняем только по правилам с моделями
+				// ("iPhone 18 Pro Max 2TB Blue" → "... Glacier"), остальное — как в прайсе.
+				// Для rawName, AI-подбора и SIM по-прежнему используется исходный name.
+				const nameForCatalog = normalizeColorInProductName(name, { scopedOnly: true });
 				const isAppleSmartphone =
 					brand === "Apple" && category === "Смартфоны";
 				// Регион участвует в идентичности товара для ЛЮБОЙ категории, у которой
@@ -479,7 +483,7 @@ export async function ingestAAAStorePrice(
 						});
 						const newProduct: CachedProduct = {
 							id, brand, category, model: finalModel || "",
-							name,
+							name: nameForCatalog,
 							attributes: {
 								storage: finalStorage, color, sim,
 								country: hasRegion ? country : undefined,
@@ -530,7 +534,7 @@ export async function ingestAAAStorePrice(
 				const finalStorage = storageRaw.length ? storageRaw : normalizeStorageForCatalog(name);
 				const newProduct = upsertProduct({
 					rawName: rawNameForMatch, brand, category,
-					model: finalModel || model, name,
+					model: finalModel || model, name: nameForCatalog,
 					attributes: { storage: finalStorage, color, sim }
 				});
 

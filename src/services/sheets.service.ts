@@ -2,7 +2,7 @@ import { google } from "googleapis";
 import { PriceFormat } from "../types";
 import { savePriceFormation } from "./price.service";
 import { saveBrands } from "./brands.service";
-import { saveColors } from "./colors.service";
+import { ColorRule, saveColors } from "./colors.service";
 
 const auth = new google.auth.GoogleAuth({
 	keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS!,
@@ -135,28 +135,35 @@ export async function loadBrandsFromConfig() {
 }
 
 export async function loadColorsFromConfig() {
-  const rows = await getSheet("'Цвета'!A:B");
+  // C — "Модели": если заполнена, строка действует только для этих моделей
+  // и важнее общих строк (см. ColorRule в colors.service.ts).
+  const rows = await getSheet("'Цвета'!A:C");
 
   if (rows.length < 2) return;
 
   const [, ...data] = rows;
 
-  const result: Record<string, string[]>[] = [];
+  const result: ColorRule[] = [];
 
   for (const row of data) {
     const [
       colorRaw,
-      keyWordsRaw
+      keyWordsRaw,
+      modelsRaw
     ] = row;
 
     const color = colorRaw?.trim() || undefined;
     if (!color) continue;
 
-    const keyWords = (keyWordsRaw?.trim().split('\n') ?? [])
+    const keywords = (keyWordsRaw?.trim().split('\n') ?? [])
       .map((k: string) => k.trim())
       .filter((k: string) => k !== '');
 
-    result.push({ [color]: keyWords });
+    const models = (modelsRaw?.trim().split(/[\n,]/) ?? [])
+      .map((m: string) => m.trim())
+      .filter((m: string) => m !== '');
+
+    result.push(models.length ? { color, keywords, models } : { color, keywords });
   }
 
   await saveColors(result);
