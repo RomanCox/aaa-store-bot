@@ -48,9 +48,11 @@ function attributesKey(p: CachedProduct): string {
     .join("|");
 }
 
-// "Blue"-карточка — та, у которой в старом названии был цвет Blue, а не Glacier.
+// "Blue"-карточка — та, которую прайс хоть раз называл просто "Blue" (без Glacier).
+// Смотрим на rawNames, а не на name: name мог уже стать Glacier при прошлом запуске.
 function pickKept(group: Renamed[]): Renamed {
-  const isBlue = (r: Renamed) => /blue/i.test(r.oldName) && !/glacier/i.test(r.oldName);
+  const isBlue = (r: Renamed) =>
+    r.product.rawNames.some(raw => /\bblue\b/i.test(raw) && !/glacier/i.test(raw));
   return [...group].sort((a, b) =>
     Number(isBlue(b)) - Number(isBlue(a)) ||
     b.product.rawNames.length - a.product.rawNames.length
@@ -111,9 +113,10 @@ function main() {
 
   const removedIds = new Set(merges.flatMap(m => m.removed.map(r => r.product.id)));
 
-  // Отчёт
-  out(`=== Переименование: ${renamed.length} карточек (id не меняются) ===`);
-  for (const r of renamed) {
+  // Отчёт. Карточки, которые уже Glacier (скрипт запускали раньше), в списке не показываем.
+  const changed = renamed.filter(r => r.oldName !== r.product.name || r.oldColor !== NEW_COLOR);
+  out(`=== Переименование: ${changed.length} карточек (id не меняются), уже Glacier: ${renamed.length - changed.length} ===`);
+  for (const r of changed) {
     const mark = removedIds.has(r.product.id) ? "  ← удаляется при слиянии, см. ниже" : "";
     out(`${r.product.id}  ${r.oldName} [${r.oldColor}]  →  ${r.product.name} [${NEW_COLOR}]${mark}`);
   }
@@ -149,7 +152,7 @@ function main() {
     return;
   }
 
-  if (!renamed.length) {
+  if (!changed.length && !merges.length) {
     out("Менять нечего.");
     return;
   }
