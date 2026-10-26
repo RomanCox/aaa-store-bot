@@ -15,6 +15,10 @@ https://docs.google.com/spreadsheets/d/1FMiacxRrb3wQTMBL2q3lgaVoNSOrMbepSXK2ujTh
 ```bash
 ssh h99447@vh154.hoster.by -p22
 ```
+или
+```bash
+ssh mobile-time-hoster
+```
 
 ### 2. Перейти в директорию проекта
 ```bash

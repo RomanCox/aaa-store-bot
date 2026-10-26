@@ -83,6 +83,21 @@ function findColorMatch(productName: string): ColorMatch | null {
   return best;
 }
 
+// Копия текущего конфига цветов — для сравнения до/после обновления.
+export function getColorsConfig(): Record<string, string[]> {
+  // return Object.fromEntries(
+  //   Array.from(colors.entries(), ([color, keyWords]) => [color, [...keyWords]])
+  // );
+  const result: Record<string, string[]> = {};
+  for (const rule of colorRules) {
+    const name = rule.models?.length
+        ? `${rule.color} (${rule.models.join(", ")})`
+        : rule.color;
+    result[name] = [...(result[name] ?? []), ...rule.keywords];
+  }
+  return result;
+}
+
 export function resolveColorFromName(name: string): string | undefined {
   return findColorMatch(name)?.canonical;
 }

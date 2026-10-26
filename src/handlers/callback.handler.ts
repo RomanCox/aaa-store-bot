@@ -16,6 +16,7 @@ import { editRates } from "../services/price.service";
 import { loadBrandsFromConfig, loadColorsFromConfig, loadPricesFormats } from "../services/sheets.service";
 import { renderSection } from "../render/renderSection";
 import { sendHiddenProductsReport, sendRawNamesReport } from "../render/reports";
+import { sendConfigChangesReport, takeConfigSnapshot } from "../render/configChangesReport";
 import { getProductsWithManyRawNames } from "../services/products/products.service";
 import { generateRetailCsv, sendPriceList } from "./catalog.hanlder";
 import { getCatalogProductById, getCatalogUIProducts } from "../services/catalog/ui/catalog.ui";
@@ -247,18 +248,20 @@ export function registerCallbacks(bot: TelegramBot) {
 
       case CALLBACK_TYPE.RENEW_PRICE: {
         try {
+          const configBefore = takeConfigSnapshot();
+
           await loadPricesFormats();
           await loadBrandsFromConfig();
           await loadColorsFromConfig();
+
+          const configAfter = takeConfigSnapshot();
 
           const updatedProducts = getCatalogProducts({ role: "admin" });
           generateRetailCsv();
 
           await sendHiddenProductsReport(bot, updatedProducts);
 
-          await bot.sendMessage(chatId, ADMIN_TEXTS.RENEW_PRICE_SUCCESS, {
-            parse_mode: "HTML",
-          });
+          await sendConfigChangesReport(bot, chatId, configBefore, configAfter);
           await safeAnswerCallback(bot, query.id);
         } catch (error) {
           await bot.sendMessage(chatId, ADMIN_TEXTS.RENEW_PRICE_ERROR, {

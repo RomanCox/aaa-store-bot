@@ -145,7 +145,7 @@ export type MatchInput = {
 	sim?: string;
 	activated?: boolean;
 	// connectivity?: "WiFi" | "LTE";
-  // chip?: string; 
+  	// chip?: string;
 };
 
 export type SimType = "ESIM" | "SIM" | "Dual SIM" | "SIM + ESIM" | undefined;
@@ -155,7 +155,7 @@ export const OLD_ESIM_ONLY_COUNTRIES = new Set([
 ]);
 
 export const NEW_ESIM_ONLY_COUNTRIES = new Set([
-	"🇺🇸","🇵🇷","🇨🇦","🇯🇵","🇲🇽","🇶🇦","🇧🇭","🇰🇼","🇴🇲","🇸🇦","🇦🇪","🇬🇺","🇻🇮",
+	"🇺🇸","🇵🇷","🇨🇦","🇯🇵","🇲🇽","🇶🇦","🇧🇭","🇰🇼","🇴🇲","🇸🇦","🇦🇪","🇬🇺","🇻🇮","🇦🇺","🇪🇺"
 ]);
 
 export const OLD_SIM_ONLY_COUNTRIES = new Set([

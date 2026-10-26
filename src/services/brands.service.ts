@@ -64,6 +64,13 @@ export function brandsFromConfig() {
   return Array.from(brands.keys());
 }
 
+// Копия текущего конфига брендов (с сохранением порядка) — для сравнения до/после обновления.
+export function getBrandsConfig(): Record<string, string[]> {
+  return Object.fromEntries(
+    Array.from(brands.entries(), ([brand, keyWords]) => [brand, [...keyWords]])
+  );
+}
+
 export function extractBrandFromStart(name: string): {
   brand?: string;
   nameWithoutBrand: string;

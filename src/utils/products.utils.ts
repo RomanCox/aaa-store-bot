@@ -101,6 +101,7 @@ function normalizeSimString(input: string): SimType {
 		s.includes("esim+") ||
 		s.includes("+esim") ||
 		s.includes("sim+esim") ||
+		s.includes("sim+esim") ||
 		s.includes("esim+sim")
 	) {
 		return "SIM + ESIM";

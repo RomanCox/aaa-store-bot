@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd *)",
+      "Bash(npx tsc *)",
+      "Bash(npx ts-node *)",
+      "Bash(node -e ' *)",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(gh pr create --base main --head reorganize-texts --title 'refactor: reorganize src/texts by actual domain, remove dead/duplicate entries' --body ' *)",
+      "Bash(git pull *)",
+      "Bash(git commit -m 'fix: resolveBrandFromName распознаёт Sony по префиксу 📀 *)",
+      "Read(//tmp/**)",
+      "Bash(node scripts/_tmp_fix_name_spacing.js)",
+      "PowerShell(Get-Process *)",
+      "PowerShell(Get-CimInstance *)",
+      "Bash(node -e \"console.log\\(require\\('./data/products-cache.json'\\).length\\)\")",
+      "Bash(rm -f scripts/_tmp_fix_name_spacing.js scripts/fix-iphone18-color-contamination.ts)"
+    ]
+  }
+}

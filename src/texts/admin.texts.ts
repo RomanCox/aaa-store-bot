@@ -25,7 +25,6 @@ export const ADMIN_TEXTS = {
 	ERROR_ITEMS: "❌ Файл не содержит валидных товаров",
 	ERROR_XLSX: "❌ XLSX upload error: ",
 	FILE_ERROR: "❌ Ошибка при обработке файла",
-  RENEW_PRICE_SUCCESS: "💸 Конфиг успешно обновился",
 	RENEW_PRICE_ERROR: "❌ Ошибка при обновлении конфига",
 
 	CHECK_RAWNAMES: "🔍 Товары с дублями rawNames",
