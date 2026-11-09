@@ -4,7 +4,7 @@ import fs from "fs";
 import { ORDERS_PATH } from "../constants";
 import { ORDER_TEXTS } from "../texts";
 import { getUser } from "./users.service";
-import { writeJsonFileAtomic } from "../utils";
+import { escapeHtml, writeJsonFileAtomic } from "../utils";
 
 export let orders: Order[] = [];
 
@@ -97,12 +97,13 @@ export function buildOrderMessage(
 
   const userRole = (!isForOrdersList && user?.role) ? `${roleMap[user.role]}\n` : "";
 
-  // const userBlock = `${userLine}`
-
-  const items = order.items.map((product) =>
-    `🔹 ${product.name} ${product.country}
+  const items = order.items.map((product) => {
+    const country = product.country ? ` ${escapeHtml(product.country)}` : "";
+    const sim = product.sim ? ` ${escapeHtml(product.sim)}` : "";
+    const activated = product.activated ? " (active)" : "";
+    return `🔹 ${escapeHtml(product.name)}${country}${sim}${activated}
 		📦 ${product.amount}шт × ${product.price} = ${Number(product.price) * product.amount}`
-  ).join("\n\n");
+  }).join("\n\n");
 
   const total = order.items.reduce(
 		(sum, product) => sum + Number(product.price) * product.amount,

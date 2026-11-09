@@ -204,3 +204,7 @@ export function sanitizeTelegramText(text: string): string {
 			(_, a, b) => a + b // гарантируем, что флаг — это пара символов
 		);
 }
+
+// Экранирование текста в сообщение, на случай если в тексте будут символы "<" или "&" чтобы Telegram не отклонил сообщение
+export const escapeHtml = (s: string) =>
+    s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
