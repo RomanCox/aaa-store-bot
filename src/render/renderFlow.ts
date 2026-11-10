@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
-import { buildDownloadCallback, getBrands, getCategories, getModels, getStorageValues } from "../utils";
+import { buildDownloadCallback, escapeHtml, getBrands, getCategories, getModels, getStorageValues } from "../utils";
 import { getChatState, getSectionState, setChatState } from "../state/chat.state";
 import {
   brandsKeyboard,
@@ -44,15 +44,15 @@ async function renderRoot(bot: TelegramBot, chatId: number) {
 		const lines = order.map((item, index) => {
 			const price = Number(item.price);
 			const amount = item.amount;
-			const country = item.country ?? "";
-			const sim = item.sim ?? "";
-			const active = item.activated ? "Active" : ""
-
 			const itemTotal = price * amount;
 			totalSum += itemTotal;
 
+			const country = item.country ? ` ${escapeHtml(item.country)}` : "";
+			const sim = item.sim ? ` (${escapeHtml(item.sim)})` : "";
+			const active = item.activated ? " (Active)" : "";
+
 			return (
-				`${index + 1}. <i>${item.name} ${country} (${sim}) (${active})</i>\n` +
+				`${index + 1}. <i>${escapeHtml(item.name)}${country}${sim}${active}</i>\n` +
 				`  📦 ${amount} шт. × ${price} ${currency} = ${itemTotal} ${currency}`
 			);
 		});
