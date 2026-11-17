@@ -3,6 +3,7 @@ import { PriceFormat } from "../types";
 import { savePriceFormation } from "./price.service";
 import { saveBrands } from "./brands.service";
 import { ColorRule, saveColors } from "./colors.service";
+import { Spreadsheet, SPREADSHEET_IDS, SpreadsheetKey } from "../config/spreadsheets";
 
 const auth = new google.auth.GoogleAuth({
 	keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS!,
@@ -11,9 +12,9 @@ const auth = new google.auth.GoogleAuth({
 
 const sheetsService = google.sheets({ version: "v4", auth });
 
-async function getSheet(range: string) {
+async function getSheet(source: SpreadsheetKey, range: string) {
 	const res = await sheetsService.spreadsheets.values.get({
-		spreadsheetId: process.env.SPREADSHEET_ID!,
+		spreadsheetId: SPREADSHEET_IDS[source],
 		range,
 	});
 
@@ -21,7 +22,7 @@ async function getSheet(range: string) {
 }
 
 export async function loadPricesFormats() {
-	const rows = await getSheet("'Ценообразование'!A:F");
+	const rows = await getSheet(Spreadsheet.Config,"'Ценообразование'!A:F");
 
 	if (rows.length < 2) return;
 
@@ -91,7 +92,7 @@ export async function loadPricesFormats() {
 }
 
 export async function loadBrandsFromConfig() {
-  const rows = await getSheet("'Брендообразование'!A:C");
+  const rows = await getSheet(Spreadsheet.Config, "'Брендообразование'!A:C");
 
   if (rows.length < 2) return;
 
@@ -137,7 +138,7 @@ export async function loadBrandsFromConfig() {
 export async function loadColorsFromConfig() {
   // C — "Модели": если заполнена, строка действует только для этих моделей
   // и важнее общих строк (см. ColorRule в colors.service.ts).
-  const rows = await getSheet("'Цвета'!A:C");
+  const rows = await getSheet(Spreadsheet.Config, "'Цвета'!A:C");
 
   if (rows.length < 2) return;
 
@@ -167,4 +168,14 @@ export async function loadColorsFromConfig() {
   }
 
   await saveColors(result);
+}
+
+export async  function loadWareHouse() {
+  const rows = await getSheet(Spreadsheet.Warehouse, "'склад'!A:H");
+
+  console.log("Загрузка склада")
+  const filteredRows = rows
+      .filter(row => row.length > 0 && Number(row[2]) > 0)
+      .map(row => row[0])
+  console.log(filteredRows);
 }

@@ -7,13 +7,27 @@ import { handleBack } from "./back.handler";
 import { addUser, deleteUser, editUser, startUserManagement, startPriceUpload } from "../services/admin.service";
 import { renderProductsList } from "../render/renderProductsList";
 import { showUsersList } from "./users/users.handler";
-import { ADMIN_TEXTS, CART_TEXTS, CATALOG_TEXTS, ITEM_TEXTS, ORDER_TEXTS, PAGINATION_TEXTS, USERS_ERRORS, USERS_TEXTS } from "../texts";
+import {
+  ADMIN_TEXTS,
+  CART_TEXTS,
+  CATALOG_TEXTS,
+  ITEM_TEXTS,
+  ORDER_TEXTS,
+  PAGINATION_TEXTS,
+  USERS_ERRORS,
+  USERS_TEXTS
+} from "../texts";
 import { createUser, getUserRole, isAdmin, updateUserRole } from "../services/users.service";
 import { addOrder, buildOrderMessage, createOrder } from "../services/orders.service";
 import { orderHandler, ordersHandler } from "./orders.handler";
 import { renderScreen } from "../render/renderScreen";
 import { editRates } from "../services/price.service";
-import { loadBrandsFromConfig, loadColorsFromConfig, loadPricesFormats } from "../services/sheets.service";
+import {
+  loadBrandsFromConfig,
+  loadColorsFromConfig,
+  loadPricesFormats,
+  loadWareHouse
+} from "../services/sheets.service";
 import { renderSection } from "../render/renderSection";
 import { sendHiddenProductsReport, sendRawNamesReport } from "../render/reports";
 import { sendConfigChangesReport, takeConfigSnapshot } from "../render/configChangesReport";
