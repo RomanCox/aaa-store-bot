@@ -13,3 +13,4 @@ export * from "./priceFormat";
 export * from "./products.utils";
 export * from "./safeDeletingMessages";
 export * from "./workingHours";
+export * from "./roles";

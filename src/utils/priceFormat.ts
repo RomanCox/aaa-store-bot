@@ -1,4 +1,5 @@
 import { Rates, PriceFormat, UserRole, PriceListType } from "../types";
+import { getPricingRole } from "./roles";
 
 export function findPriceRule(
   priceUSD: number,
@@ -34,7 +35,7 @@ export function findPriceRule(
 
   for (const format of candidates) {
     const rules = format.prices
-      .filter((p) => p.type === type)
+      .filter((p) => p.type === getPricingRole(type))
       .sort((a, b) => (a.max ?? Infinity) - (b.max ?? Infinity));
 
     for (const rule of rules) {
@@ -87,6 +88,7 @@ export function priceFormat(
 		return price;
 	}
 
+  clientType = getPricingRole(clientType);
   if (!clientType) return price;
 
   const priceUSD = toUsdPrice(numberPrice, rates, source);

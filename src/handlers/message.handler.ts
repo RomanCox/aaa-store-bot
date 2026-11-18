@@ -10,7 +10,7 @@ import { renderFlow } from "../render/renderFlow";
 import { ordersHandler, ordersPageInputHandler } from "./orders.handler";
 import { getUser, getUserRole, isAdmin, usersPageInputHandler } from "../services/users.service";
 import { renderScreen } from "../render/renderScreen";
-import { guardWorkingHours, safeDelete } from "../utils";
+import { guardWorkingHours, safeDelete, getPricingRole } from "../utils";
 import { adminKeyboard, mainKeyboard } from "../keyboards";
 import { UI_VERSION } from "../constants";
 import { ENV } from "../config/env";
@@ -147,7 +147,7 @@ export function registerMessages(bot: TelegramBot) {
 
       [MENU_TEXTS.MANAGER]: async () => {
         const managerUrl =
-          user.role === "retail"
+          getPricingRole(user.role) === "retail"
             ? ENV.RETAIL_MANAGER_URL
             : ENV.WHOLESALE_MANAGER_URL;
 

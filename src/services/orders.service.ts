@@ -87,6 +87,8 @@ export function buildOrderMessage(
   const roleMap: Record<string, string> = {
     retail: "Розница",
     wholesale: "Опт",
+    manager_retail: "Менеджер розницы",
+    manager_wholesale: "Менеджер опта",
   };
 
   const userLine = (!isForOrdersList || isAdmin)

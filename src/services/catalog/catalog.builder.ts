@@ -1,4 +1,11 @@
-import { findPriceRule, normalizeOfferPrice, priceFormat, replaceStorageInName, toUsdPrice } from "../../utils";
+import {
+  findPriceRule,
+  normalizeOfferPrice,
+  priceFormat,
+  replaceStorageInName,
+  toUsdPrice,
+  canSeeWarehouse
+} from "../../utils";
 import { getProductFromCacheById } from "../products/products.service";
 import { getCatalog } from "./catalog.service";
 import { ProductForUI, UserRole } from "../../types";
@@ -76,6 +83,8 @@ export function getCatalogProducts(options?: {
       price,
       source,
       hidden,
+
+      ...(canSeeWarehouse(role) && { inWarehouse: validOffers.some(offer => offer.source === "warehouse") }),
 
       ...(includeOffers && { offers: item.offers }),
     });

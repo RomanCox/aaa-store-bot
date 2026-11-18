@@ -6,7 +6,7 @@ import { PRICE_TEXTS } from "../texts";
 import { getUserRole } from "./users.service";
 import { renderScreen } from "../render/renderScreen";
 import { PRICE_FORMATION_PATH, RATES_PATH } from "../constants";
-import { writeJsonFileAtomic } from "../utils";
+import { getPricingRole, writeJsonFileAtomic } from "../utils";
 
 const DEFAULT_RATES: Rates = {
   rub_to_byn: 0,
@@ -118,7 +118,7 @@ export async function savePriceFormation(update: PriceFormat[]) {
 }
 
 export function getCurrency(userId: number) {
-	const userRole = getUserRole(userId);
+	const userRole = getPricingRole(getUserRole(userId));
 
 	return userRole === "retail" ? "BYN" : userRole === "wholesale" ? "USD" : "₽";
 }

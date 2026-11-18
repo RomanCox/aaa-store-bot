@@ -116,6 +116,8 @@ export interface ProductCore {
 
 export interface Product extends ProductCore {
 	offers?: OfferType[];
+	// Признак для разрешённых ролей; не зависит от выбранного источника цены.
+	inWarehouse?: boolean;
 }
 
 export interface ProductForUI extends Product {

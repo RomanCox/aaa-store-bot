@@ -1,5 +1,14 @@
 import TelegramBot from "node-telegram-bot-api";
-import { buildDownloadCallback, escapeHtml, getBrands, getCategories, getModels, getStorageValues } from "../utils";
+import {
+	buildDownloadCallback,
+	escapeHtml,
+	getBrands,
+	getCategories,
+	getModels,
+	getStorageValues,
+	getPricingRole,
+	getWarehouseMarker
+} from "../utils";
 import { getChatState, getSectionState, setChatState } from "../state/chat.state";
 import {
   brandsKeyboard,
@@ -25,6 +34,12 @@ import { editProductInCartKeyboard } from "../keyboards/editProductInCart.keyboa
 import { renderScreen } from "./renderScreen";
 import { getCatalogProductById, getCatalogUIProducts } from "../services/catalog/ui/catalog.ui";
 import { getUserRole } from "../services/users.service";
+
+// В корзине цена остаётся зафиксированной, а наличие берётся из актуального каталога.
+function currentWarehouseMarker(product: Product, chatId: number): string {
+  const role = getUserRole(chatId);
+  return getWarehouseMarker(getCatalogProductById(product.id, role) ?? {}, role);
+}
 
 async function renderRoot(bot: TelegramBot, chatId: number) {
 	const state = getChatState(chatId);
@@ -52,7 +67,7 @@ async function renderRoot(bot: TelegramBot, chatId: number) {
 			const active = item.activated ? " (Active)" : "";
 
 			return (
-				`${index + 1}. <i>${escapeHtml(item.name)}${country}${sim}${active}</i>\n` +
+				`${index + 1}. <i>${escapeHtml(item.name)}${country}${sim}${active}</i>${currentWarehouseMarker(item, chatId)}\n` +
 				`  📦 ${amount} шт. × ${price} ${currency} = ${itemTotal} ${currency}`
 			);
 		});
@@ -85,7 +100,7 @@ async function renderEditCart (bot: TelegramBot, chatId: number) {
 		const lines = order.map((item, index) => {
 			const amount = item.amount;
 
-			return `🔷 ${index + 1}. ${item.name} × ${amount}`;
+			return `🔷 ${index + 1}. ${item.name} × ${amount}${currentWarehouseMarker(item, chatId)}`;
 		});
 
 		return (
@@ -119,7 +134,7 @@ async function renderEditProductInCart (bot: TelegramBot, chatId: number) {
 		const currency = getCurrency(chatId);
 
 		return (
-			`🛍 <b>${product.name}</b>\n` +
+			`🛍 <b>${product.name}</b>${currentWarehouseMarker(product, chatId)}\n` +
 			CART_TEXTS.CART_PRICE + product.price + " " + currency +
 			CART_TEXTS.PRODUCT_AMOUNT + product.amount +
 			CART_TEXTS.EDIT_PRODUCT_IN_CART +
@@ -380,7 +395,7 @@ async function renderChoosingProduct(bot: TelegramBot, chatId: number) {
 	const buildText = (products: Product[], userRole?: UserRole) => {
 		const lines = products.map((item, index) => {
 			const price = Number(item.price);
-			const currency = userRole === "retail" ? "р." : "";
+			const currency = getPricingRole(userRole) === "retail" ? "р." : "";
 			const country = item.country ?? "";
 			const sim = item.sim ?? "";
 			const active = item.activated ? "Active" : ""
@@ -399,7 +414,7 @@ async function renderChoosingProduct(bot: TelegramBot, chatId: number) {
 				line += ` ✅ ${active}`;
 			}
 
-			return line;
+			return line + getWarehouseMarker(item, userRole);
 		});
 
 		return (
@@ -438,14 +453,14 @@ async function renderAmount(bot: TelegramBot, chatId: number) {
 		return;
 	}
 
-	const currency = userRole === "retail" ? "р." : "";
+	const currency = getPricingRole(userRole) === "retail" ? "р." : "";
 
 	let header = product.name;
 	if (product.country) header += ` ${product.country}`;
 	if (product.sim) header += ` (${product.sim})`;
 	if (product.activated) header += ' (Active)';
 
-	const text = `${header}\n${CART_TEXTS.CART_PRICE}${product.price}${currency}\n${CART_TEXTS.CHOOSE_AMOUNT}`;
+	const text = `${header}${getWarehouseMarker(product, userRole)}\n${CART_TEXTS.CART_PRICE}${product.price}${currency}\n${CART_TEXTS.CHOOSE_AMOUNT}`;
 
   await renderScreen(bot, chatId, {
     section: SECTION.CART,
