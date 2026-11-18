@@ -1,5 +1,5 @@
-import type { UserRole } from "../types/user";
-import { ITEM_TEXTS } from "../texts/item.texts";
+import type { UserRole } from "../types";
+import { ITEM_TEXTS } from "../texts";
 
 // Роли менеджеров наследуют клиентские цены и сценарии, но не права админа.
 export function getPricingRole(role?: UserRole) {

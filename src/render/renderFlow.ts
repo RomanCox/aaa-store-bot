@@ -1,5 +1,14 @@
 import TelegramBot from "node-telegram-bot-api";
-import { buildDownloadCallback, escapeHtml, getBrands, getCategories, getModels, getStorageValues } from "../utils";
+import {
+	buildDownloadCallback,
+	escapeHtml,
+	getBrands,
+	getCategories,
+	getModels,
+	getStorageValues,
+	getPricingRole,
+	getWarehouseMarker
+} from "../utils";
 import { getChatState, getSectionState, setChatState } from "../state/chat.state";
 import {
   brandsKeyboard,
@@ -25,7 +34,6 @@ import { editProductInCartKeyboard } from "../keyboards/editProductInCart.keyboa
 import { renderScreen } from "./renderScreen";
 import { getCatalogProductById, getCatalogUIProducts } from "../services/catalog/ui/catalog.ui";
 import { getUserRole } from "../services/users.service";
-import { getPricingRole, getWarehouseMarker } from "../utils/roles";
 
 // В корзине цена остаётся зафиксированной, а наличие берётся из актуального каталога.
 function currentWarehouseMarker(product: Product, chatId: number): string {

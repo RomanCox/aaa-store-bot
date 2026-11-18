@@ -3,8 +3,7 @@ import { getUser, isAdmin, isSuperAdmin } from "../../services/users.service";
 import { ROLE_LABELS, USERS_ERRORS, USERS_TEXTS } from "../../texts";
 import { getChatState, setChatState } from "../../state/chat.state";
 import { CALLBACK_TYPE, SECTION } from "../../types";
-import { getAssignableRoles } from "../../utils/roles";
-import { buildCallbackData } from "../../utils";
+import { getAssignableRoles, buildCallbackData } from "../../utils";
 import { renderScreen } from "../../render/renderScreen";
 
 export function editUserRoleKeyboard(isSuperAdmin: boolean) {

@@ -10,12 +10,11 @@ import { renderFlow } from "../render/renderFlow";
 import { ordersHandler, ordersPageInputHandler } from "./orders.handler";
 import { getUser, getUserRole, isAdmin, usersPageInputHandler } from "../services/users.service";
 import { renderScreen } from "../render/renderScreen";
-import { guardWorkingHours, safeDelete } from "../utils";
+import { guardWorkingHours, safeDelete, getPricingRole } from "../utils";
 import { adminKeyboard, mainKeyboard } from "../keyboards";
 import { UI_VERSION } from "../constants";
 import { ENV } from "../config/env";
 import { getCatalogProductById } from "../services/catalog/ui/catalog.ui";
-import { getPricingRole } from "../utils/roles";
 
 export function registerMessages(bot: TelegramBot) {
   bot.on("message", async (msg) => {

@@ -1,9 +1,15 @@
-import { findPriceRule, normalizeOfferPrice, priceFormat, replaceStorageInName, toUsdPrice } from "../../utils";
+import {
+  findPriceRule,
+  normalizeOfferPrice,
+  priceFormat,
+  replaceStorageInName,
+  toUsdPrice,
+  canSeeWarehouse
+} from "../../utils";
 import { getProductFromCacheById } from "../products/products.service";
 import { getCatalog } from "./catalog.service";
 import { ProductForUI, UserRole } from "../../types";
 import { getPriceFormation, getRates } from "../price.service";
-import { canSeeWarehouse } from "../../utils/roles";
 
 export function getCatalogProducts(options?: {
   role?: UserRole | "retail";

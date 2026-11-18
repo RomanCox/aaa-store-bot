@@ -2,7 +2,14 @@ import TelegramBot from "node-telegram-bot-api";
 import { CALLBACK_TYPE, CATALOG_VALUE, ProductFilters, SECTION } from "../types";
 import { getChatState, setChatState } from "../state/chat.state";
 import { renderFlow } from "../render/renderFlow";
-import { downloadCatalogHelpers, guardWorkingHours, parseCallbackData, safeAnswerCallback } from "../utils";
+import {
+  downloadCatalogHelpers,
+  guardWorkingHours,
+  parseCallbackData,
+  safeAnswerCallback,
+  stripCategoryEmoji,
+  isAssignableRole
+} from "../utils";
 import { handleBack } from "./back.handler";
 import { addUser, deleteUser, editUser, startUserManagement, startPriceUpload } from "../services/admin.service";
 import { renderProductsList } from "../render/renderProductsList";
@@ -35,10 +42,8 @@ import { getProductsWithManyRawNames } from "../services/products/products.servi
 import { generateRetailCsv, sendPriceList } from "./catalog.hanlder";
 import { getCatalogProductById, getCatalogUIProducts } from "../services/catalog/ui/catalog.ui";
 import { getCatalogProducts } from "../services/catalog/catalog.builder";
-import { stripCategoryEmoji } from "../utils";
 import { getWarehouseIngestResult } from "../services/warehouse.service";
 import { takeWarehouseSnapshot, sendWarehouseChangesReport } from "../render/warehouseChangesReport";
-import { isAssignableRole } from "../utils/roles";
 
 const ADMIN_CHAT_ID = Number(process.env.ADMIN_CHAT_ID);
 
