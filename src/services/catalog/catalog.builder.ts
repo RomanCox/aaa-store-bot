@@ -25,9 +25,14 @@ export function getCatalogProducts(options?: {
   for (const item of catalogItems) {
     const cached = getProductFromCacheById(item.productId);
     if (!cached) continue;
-    if (!item.offers.length) continue;
+    const validOffers = item.offers.filter(offer => {
+      const price = Number(offer.price);
+      const priceUSD = normalizeOfferPrice(offer, rates);
+      return Number.isFinite(price) && price > 0 && Number.isFinite(priceUSD) && priceUSD > 0;
+    });
+    if (!validOffers.length) continue;
 
-    const minOffer = item.offers.reduce((min, o) =>
+    const minOffer = validOffers.reduce((min, o) =>
       normalizeOfferPrice(o, rates) < normalizeOfferPrice(min, rates) ? o : min
     );
 

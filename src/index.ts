@@ -15,7 +15,7 @@ import { loadProductCache } from "./services/products/products.service";
 import { loadCatalog } from "./services/catalog/catalog.service";
 import { loadColorsFromFile } from "./services/colors.service";
 import { startAppleSimWatcher } from "./services/appleSimWatcher.service";
-import { loadWareHouse } from "./services/sheets.service";
+import { loadWarehouseFromFile } from "./services/warehouse.service";
 
 async function bootstrap() {
 	const bot = await createBot();
@@ -28,9 +28,7 @@ async function bootstrap() {
   loadOrdersFromFile();
   loadBrandsFromFile();
   loadColorsFromFile();
-
-
-  await loadWareHouse();
+  loadWarehouseFromFile();
 
 	registerStart(bot);
 	registerMessages(bot);

@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx";
-import { CachedProduct, IngestItem, IngestResult, IngestSkippedGroup } from "../types";
+import { CachedProduct, IngestItem, IngestResult, IngestSkippedGroup, WarehousePriceRow } from "../types";
 import { callAIForProductMatch, extractModelOnly } from "../ai/productAI";
 import {
 	cleanProductName,
@@ -32,6 +32,73 @@ import {
 import { SAVE_EVERY_NUMBER_ITEMS, TODAY_THERE_TOMORROW_HERE_PRICE_DELIVERY } from "../constants";
 import { resolveColorFromName, normalizeColorInProductName, removeColorFromName } from "./colors.service";
 import { generateId } from "./products/productId";
+
+const WAREHOUSE_SIM_TOKEN = "(?:dual\\s*sim|sim\\s*\\+\\s*esim|esim\\s*\\+\\s*sim|[12]?sim|esim)";
+const WAREHOUSE_SIM_SUFFIX = new RegExp(`\\s+(\\(${WAREHOUSE_SIM_TOKEN}\\)|${WAREHOUSE_SIM_TOKEN})$`, "i");
+
+function normalizeWarehouseSimSuffix(name: string): string {
+  if (!/^(?:apple\s+)?iphone\b/i.test(name)) return name;
+  const activeSuffix = name.match(/\s+\(active\)\s*$/i);
+  const withoutActive = activeSuffix ? name.slice(0, activeSuffix.index) : name;
+  const match = withoutActive.match(WAREHOUSE_SIM_SUFFIX);
+  if (!match) return name;
+
+  // Передаём явно указанный SIM как колонку прайса: не выводим его из региона
+  // или модели. Остальное название, включая цвет и память, не меняется.
+  const sim = normalizeSimByRules({
+    name,
+    category: "Смартфоны",
+    country: "",
+    simTypeRaw: match[1],
+  });
+  if (!sim) return name;
+  return buildAAAStoreRawName({ name: withoutActive.slice(0, match.index), sim }) + (activeSuffix?.[0] ?? "");
+}
+
+// Получает только строки с положительным остатком. Никаких новых карточек,
+// AI-запросов, записи в кеш или эвристик поиска для складского источника.
+export function ingestWarehousePrices(rows: WarehousePriceRow[]): IngestResult {
+  const items = new Map<string, IngestItem>();
+  const unmatched: string[] = [];
+  const invalid: string[] = [];
+
+  for (const row of rows) {
+    const name = normalizeStorageInName(row.name.trim());
+    const price = Number(row.price);
+    if (!name || !row.price.trim() || !Number.isFinite(price) || price <= 0) {
+      invalid.push(row.name || "(без названия)");
+      continue;
+    }
+
+    const matchOptions = { activated: extractActivated(name) };
+    let rawNameForMatch = name;
+    let product = findByRawName(rawNameForMatch, matchOptions);
+    if (!product) {
+      rawNameForMatch = normalizeWarehouseSimSuffix(name);
+      if (rawNameForMatch !== name) product = findByRawName(rawNameForMatch, matchOptions);
+    }
+    if (!product) {
+      unmatched.push(row.name);
+      continue;
+    }
+
+    const existing = items.get(product.id);
+    if (!existing || price < Number(existing.price)) {
+      items.set(product.id, {
+        product,
+        price: String(price),
+        rawNameForMatch,
+        isNew: false,
+        country: product.attributes?.country,
+      });
+    }
+  }
+
+  const skipped: IngestSkippedGroup[] = [];
+  if (unmatched.length) skipped.push({ title: "Склад: товары не найдены в кеше", names: [...new Set(unmatched)] });
+  if (invalid.length) skipped.push({ title: "Склад: строки без названия или корректной цены", names: invalid });
+  return { items: [...items.values()], totalRows: rows.length, skipped };
+}
 
 function hasRequiredColumns(row: Record<string, unknown>): boolean {
 	return ["SKU", "Категория", "Название", "Модель", "Цена"]

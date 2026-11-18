@@ -1,4 +1,10 @@
-export type PriceListType = "AAA-store" | "Today there tomorrow here"
+export type PriceListType = "AAA-store" | "Today there tomorrow here" | "warehouse"
+
+// Только доступные складские позиции: количество не хранится в каталоге.
+export interface WarehousePriceRow {
+	name: string;
+	price: string;
+}
 
 export interface IngestItem {
 	product: CachedProduct;
@@ -119,6 +125,8 @@ export interface ProductForUI extends Product {
 
 export interface ProductForCart extends Product {
 	amount: number;
+	// Старые сохранённые заказы могут не содержать источник.
+	source?: PriceListType;
 }
 
 export const PRODUCT_XLSX_HEADERS: Record<keyof ProductCore, string> = {

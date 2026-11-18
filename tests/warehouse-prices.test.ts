@@ -1,0 +1,456 @@
+import { test, beforeEach, afterEach, mock } from "node:test";
+import assert from "node:assert/strict";
+import type { CachedProduct, Order, Rates } from "../src/types";
+
+// Не загружаем .env и bootstrap. Все значения фиктивные и живут только в тестовом процессе.
+for (const key of ["RETAIL_MANAGER_URL", "WHOLESALE_MANAGER_URL", "GOOGLE_APPLICATION_CREDENTIALS", "SPREADSHEET_CONFIG_ID", "SPREADSHEET_WAREHOUSE_ID"]) {
+  process.env[key] = "warehouse-test-only";
+}
+process.env.ADMIN_ID = "1";
+process.env.ADMIN_CHAT_ID = "2";
+process.env.DEV = "1";
+
+// Google client изолируется до загрузки sheets.service; ключи никогда не читаются.
+const { google } = require("googleapis");
+let sheetRows: unknown[][] = [];
+let sheetCalls: any[] = [];
+let sheetError: Error | undefined;
+const sheetsStub = mock.method(google, "sheets", () => ({ spreadsheets: { values: {
+  get: async (request: unknown) => {
+    if (sheetError) throw sheetError;
+    sheetCalls.push(request);
+    return { data: { values: sheetRows } };
+  },
+} } }));
+const sheets = require("../src/services/sheets.service") as typeof import("../src/services/sheets.service");
+sheetsStub.mock.restore();
+const warehouseService = require("../src/services/warehouse.service") as typeof import("../src/services/warehouse.service");
+const warehouseReport = require("../src/render/warehouseChangesReport") as typeof import("../src/render/warehouseChangesReport");
+const atomic = require("../src/utils/atomicWrite") as typeof import("../src/utils/atomicWrite");
+
+const products = require("../src/services/products/products.service") as typeof import("../src/services/products/products.service");
+const catalog = require("../src/services/catalog/catalog.service") as typeof import("../src/services/catalog/catalog.service");
+const priceService = require("../src/services/price.service") as typeof import("../src/services/price.service");
+const brands = require("../src/services/brands.service") as typeof import("../src/services/brands.service");
+const ai = require("../src/ai/productAI") as typeof import("../src/ai/productAI");
+const imports = require("../src/services/xlsx.service") as typeof import("../src/services/xlsx.service");
+const { getCatalogProducts } = require("../src/services/catalog/catalog.builder") as typeof import("../src/services/catalog/catalog.builder");
+const { getCatalogProductById } = require("../src/services/catalog/ui/catalog.ui") as typeof import("../src/services/catalog/ui/catalog.ui");
+const formatting = require("../src/utils/priceFormat") as typeof import("../src/utils/priceFormat");
+const reports = require("../src/render/reports") as typeof import("../src/render/reports");
+const exportHandler = require("../src/handlers/catalog.hanlder") as typeof import("../src/handlers/catalog.hanlder");
+const { handleIngestResult } = require("../src/handlers/document.handler") as typeof import("../src/handlers/document.handler");
+const { registerCallbacks } = require("../src/handlers/callback.handler") as typeof import("../src/handlers/callback.handler");
+const { registerMessages } = require("../src/handlers/message.handler") as typeof import("../src/handlers/message.handler");
+const users = require("../src/services/users.service") as typeof import("../src/services/users.service");
+const orders = require("../src/services/orders.service") as typeof import("../src/services/orders.service");
+const rendering = require("../src/render/renderFlow") as typeof import("../src/render/renderFlow");
+const screens = require("../src/render/renderScreen") as typeof import("../src/render/renderScreen");
+const configReport = require("../src/render/configChangesReport") as typeof import("../src/render/configChangesReport");
+const { getChatState, setChatState } = require("../src/state/chat.state") as typeof import("../src/state/chat.state");
+const { CALLBACK_TYPE, SECTION } = require("../src/types") as typeof import("../src/types");
+const { TELEGRAM_MESSAGE_LIMIT, WAREHOUSE_PATH } = require("../src/constants") as typeof import("../src/constants");
+const XLSX = require("xlsx") as typeof import("xlsx");
+const fs = require("node:fs") as typeof import("node:fs");
+
+const rates: Rates = { rub_to_usd: 100, rub_to_byn: 4, usd_to_byn: 3 };
+const product: CachedProduct = {
+  id: "iphone", brand: "Apple", category: "Смартфоны", model: "iPhone 17",
+  name: "iPhone 17 256GB Black", attributes: { storage: "256GB", color: "Black", sim: "ESIM" },
+  rawNames: ["iPhone 17 256GB Black (ESIM)"],
+};
+let messages: string[];
+let handlers: Record<string, (query: any) => Promise<void>>;
+let bot: any;
+let saveCatalog: any;
+let saveWarehouseFile: any;
+
+beforeEach(() => {
+  messages = [];
+  handlers = {};
+  sheetRows = [];
+  sheetCalls = [];
+  sheetError = undefined;
+  bot = {
+    on: (event: string, handler: any) => { handlers[event] = handler; },
+    sendMessage: async (_id: number, text: string) => { messages.push(text); return { message_id: 1 }; },
+    answerCallbackQuery: async () => {}, deleteMessage: async () => {},
+  };
+  products.getProductCache().clear();
+  products.setProductToCache(product.id, structuredClone(product));
+  for (const source of ["AAA-store", "Today there tomorrow here", "warehouse"] as const) catalog.clearCatalogSource(source);
+  mock.method(globalThis, "fetch", async () => { throw new Error("Network forbidden in tests"); });
+  mock.method(fs, "writeFileSync", () => { throw new Error("Filesystem writes forbidden in tests"); });
+  saveWarehouseFile = mock.method(atomic, "writeJsonFileAtomic", () => {});
+  const missingWarehouse = mock.method(fs, "existsSync", () => false);
+  warehouseService.loadWarehouseFromFile();
+  missingWarehouse.mock.restore();
+  mock.method(products, "saveProductCache", () => {});
+  saveCatalog = mock.method(catalog, "saveCatalog", () => {});
+  mock.method(exportHandler, "generateRetailCsv", () => {});
+  mock.method(priceService, "getRates", () => rates);
+  mock.method(priceService, "getPriceFormation", () => [{ prices: [
+    { type: "wholesale", value: 10 }, { type: "retail", value: 20 },
+  ] }]);
+  mock.method(users, "getUserRole", () => "wholesale");
+  mock.method(users, "getUser", () => ({ id: 10, role: "wholesale" } as any));
+  mock.method(users, "isAdmin", () => true);
+  mock.method(rendering, "renderFlow", async () => {});
+  mock.method(screens, "renderScreen", async () => {});
+  mock.method(ai, "callAIForProductMatch", async () => { throw new Error("AI forbidden in tests"); });
+  mock.method(ai, "extractModelOnly", async () => { throw new Error("AI forbidden in tests"); });
+  setChatState(10, { mode: "idle", sections: { [SECTION.CART]: { flowStep: "main", currentOrder: [] } } as any });
+});
+afterEach(() => mock.restoreAll());
+
+test("Google loader keeps only positive stock and returns A/D without quantity", async () => {
+  sheetRows = [["Название", "", "Остаток", "Цена"], ["item", "", 2, 123.45], ["zero", "", 0, 100], ["negative", "", -1, 100], ["bad", "", "?", 100]];
+  assert.deepEqual(await sheets.loadWareHouse(), [{ name: "item", price: "123.45" }]);
+  assert.equal(sheetCalls.length, 1);
+  assert.equal(sheetCalls[0].range, "'склад'!A:H");
+});
+
+test("matches normalized rawNames, reports unknown names, never creates cache entries", () => {
+  const result = imports.ingestWarehousePrices([
+    { name: "  iphone 17 256GB black (ESIM)  ", price: "250.75" },
+    { name: "unknown", price: "100" },
+    { name: "iPhone 17 256GB Black", price: "100" }, // нет эвристики для отсутствующего SIM
+  ]);
+  assert.equal(result.items.length, 1);
+  assert.equal(result.items[0].product.id, product.id);
+  assert.equal(result.items[0].price, "250.75");
+  assert.deepEqual(result.skipped[0].names, ["unknown", "iPhone 17 256GB Black"]);
+  assert.equal(products.getProductCache().size, 1);
+});
+
+test("separates activation, SIM, color and regional aliases", () => {
+  const variants = [
+    { id: "active", raw: "iPhone 17 256GB Black (ESIM) (Active)", activated: true },
+    { id: "dual", raw: "iPhone 17 256GB Black (Dual SIM)", activated: false },
+    { id: "white", raw: "iPhone 17 256GB White (ESIM)", activated: false },
+    { id: "region", raw: "MacBook Air EU", activated: false },
+  ];
+  for (const item of variants) products.setProductToCache(item.id, { ...product, id: item.id, rawNames: [item.raw], attributes: { activated: item.activated } });
+  const result = imports.ingestWarehousePrices(variants.map(item => ({ name: item.raw, price: "200" })));
+  assert.deepEqual(result.items.map(item => item.product.id), variants.map(item => item.id));
+});
+
+for (const [name, rawName] of [
+  ["iPhone 17 Pro 256 Orange Esim", "iPhone 17 Pro 256 Orange (ESIM)"],
+  ["iPhone 16 Pro 128 White Dual Sim", "iPhone 16 Pro 128 White (Dual SIM)"],
+  ["iPhone 18 Pro 256 Glacier Sim+esim", "iPhone 18 Pro 256 Glacier (SIM + ESIM)"],
+  ["iPhone 18 Pro 512 Burgundy Sim+Esim", "iPhone 18 Pro 512 Burgundy (SIM + ESIM)"],
+  ["iPhone 18 Pro 256 Glacier (Sim+esim)", "iPhone 18 Pro 256 Glacier (SIM + ESIM)"],
+  ["iPhone 18 Pro 256 Glacier Esim + Sim", "iPhone 18 Pro 256 Glacier (SIM + ESIM)"],
+  ["iPhone 17 Pro 256 Orange Esim (Active)", "iPhone 17 Pro 256 Orange (ESIM) (Active)"],
+] as const) test(`warehouse SIM suffix matches rawNames: ${name}`, () => {
+  products.getProductCache().clear();
+  const cached = { ...product, rawNames: [rawName], attributes: { activated: rawName.includes("(Active)") } };
+  products.setProductToCache(product.id, cached);
+  const before = structuredClone(cached);
+  const result = imports.ingestWarehousePrices([{ name, price: "250" }]);
+  assert.equal(result.items.length, 1);
+  assert.equal(result.items[0].product.id, product.id);
+  assert.equal(result.items[0].rawNameForMatch, rawName);
+  assert.deepEqual(cached, before);
+  assert.deepEqual(result.skipped, []);
+});
+
+test("warehouse SIM normalization does not guess other attributes or alter other products", () => {
+  products.getProductCache().clear();
+  products.setProductToCache(product.id, { ...product, rawNames: ["iPhone 17 Pro 256 Orange (ESIM)"] });
+  const names = [
+    "AirTag 2 (4pcs)", "MacBook Air 13 M5 24/512 Starlight",
+    "iPhone 17 Pro 256 Orange Dual Sim", "iPhone 17 Pro 256 Orange",
+    "iPhone 17 Pro 512 Orange Esim", "iPhone 17 Pro 256 White Esim",
+    "iPhone 17 Pro 256 Orange Esim (Active)", "iPhone 17 Pro 256 Orange Esim unknown",
+  ];
+  const result = imports.ingestWarehousePrices(names.map(name => ({ name, price: "250" })));
+  assert.deepEqual(result.items, []);
+  assert.deepEqual(result.skipped[0].names, names);
+  assert.equal(products.getProductCache().size, 1);
+});
+
+test("warehouse preserves direct rawName matches and merges equivalent SIM suffixes", () => {
+  const name = product.rawNames[0].replace("(ESIM)", "Esim");
+  const result = imports.ingestWarehousePrices([
+    { name: product.rawNames[0], price: "250" }, { name, price: "240" },
+  ]);
+  assert.equal(result.items.length, 1);
+  assert.equal(result.items[0].price, "240");
+  products.setProductToCache("direct", { ...product, id: "direct", rawNames: [name] });
+  assert.equal(imports.ingestWarehousePrices([{ name, price: "200" }]).items[0].product.id, "direct");
+});
+
+test("keeps the smallest duplicate price and rejects missing/nonpositive/nonfinite prices", () => {
+  const name = product.rawNames[0];
+  const result = imports.ingestWarehousePrices([
+    ...["", " ", "0", "-1", "NaN", "Infinity", "oops"].map(price => ({ name, price })),
+    { name, price: "201.9" }, { name, price: "199.5" }, { name, price: "205" },
+  ]);
+  assert.equal(result.items.length, 1);
+  assert.equal(result.items[0].price, "199.5");
+  assert.equal(result.skipped[0].names.length, 7);
+});
+
+test("warehouse snapshot preserves suppliers, is idempotent and clears disappeared items", async () => {
+  catalog.upsertCatalog(product.id, "30000", "AAA-store");
+  catalog.upsertCatalog(product.id, "290", "Today there tomorrow here");
+  const result = imports.ingestWarehousePrices([{ name: product.rawNames[0], price: "250" }]);
+  for (let i = 0; i < 2; i++) await handleIngestResult(bot, 10, result.items, "warehouse", 1);
+  assert.equal(catalog.getCatalogItem(product.id)?.offers.length, 3);
+  const updated = imports.ingestWarehousePrices([{ name: product.rawNames[0], price: "240" }]);
+  await handleIngestResult(bot, 10, updated.items, "warehouse", 1);
+  assert.equal(catalog.getCatalogItem(product.id)?.offers.find(o => o.source === "warehouse")?.price, "240");
+  await handleIngestResult(bot, 10, [], "warehouse", 0);
+  assert.deepEqual(catalog.getCatalogItem(product.id)?.offers.map(o => o.source), ["AAA-store", "Today there tomorrow here"]);
+  assert.equal(saveCatalog.mock.callCount(), 4);
+});
+
+test("invalid and unmatched rows remove old warehouse offers without blocking good rows", async () => {
+  products.setProductToCache("other", { ...product, id: "other", rawNames: ["other"] });
+  catalog.upsertCatalog(product.id, "100", "warehouse");
+  catalog.upsertCatalog("other", "120", "warehouse");
+  const result = imports.ingestWarehousePrices([{ name: product.rawNames[0], price: "?" }, { name: "other", price: "110" }, { name: "unknown", price: "100" }]);
+  await handleIngestResult(bot, 10, result.items, "warehouse", result.totalRows, { skipped: result.skipped });
+  assert.equal(catalog.getCatalogItem(product.id), undefined);
+  assert.equal(catalog.getCatalogItem("other")?.offers[0].price, "110");
+  assert.ok(messages.some(text => text.includes("unknown")));
+});
+
+test("empty XLSX result retains its previous offers", async () => {
+  catalog.upsertCatalog(product.id, "30000", "AAA-store");
+  await handleIngestResult(bot, 10, [], "AAA-store", 0);
+  assert.equal(catalog.getCatalogItem(product.id)?.offers[0].price, "30000");
+  assert.equal(saveCatalog.mock.callCount(), 0);
+});
+
+test("saved warehouse offers load locally with the existing JSON schema", () => {
+  catalog.upsertCatalog(product.id, "250.75", "warehouse");
+  catalog.upsertCatalog(product.id, "30000", "AAA-store");
+  saveCatalog.mock.restore();
+  let saved = "";
+  mock.method(fs, "writeFileSync", (path: any, data: any) => {
+    assert.equal(path, "./data/catalog.json");
+    saved = String(data);
+  });
+  catalog.saveCatalog();
+  catalog.clearCatalogSource("warehouse");
+  catalog.clearCatalogSource("AAA-store");
+  mock.method(fs, "existsSync", (path: any) => {
+    assert.equal(path, "./data/catalog.json");
+    return true;
+  });
+  mock.method(fs, "readFileSync", (path: any) => {
+    assert.equal(path, "./data/catalog.json");
+    return saved;
+  });
+  catalog.loadCatalog();
+  assert.deepEqual(catalog.getCatalogItem(product.id)?.offers, [
+    { price: "250.75", source: "warehouse" }, { price: "30000", source: "AAA-store" },
+  ]);
+  assert.equal(getCatalogProductById(product.id, "wholesale")?.price, "261");
+  assert.equal(sheetCalls.length, 0);
+});
+
+for (const [rub, usd, warehouse, source, price] of [
+  [30000, 290, 250, "warehouse", "260"],
+  [20000, 290, 250, "AAA-store", "210"],
+  [30000, 190, 250, "Today there tomorrow here", "200"],
+  [25000, 250, 250, "AAA-store", "260"],
+] as const) test(`minimum RUB=${rub}, USD=${usd}, warehouse=${warehouse}: ${source}`, () => {
+  catalog.upsertCatalog(product.id, String(rub), "AAA-store");
+  catalog.upsertCatalog(product.id, String(usd), "Today there tomorrow here");
+  catalog.upsertCatalog(product.id, String(warehouse), "warehouse");
+  const selected = getCatalogProducts({ role: "wholesale" })[0];
+  assert.equal(selected.source, source);
+  assert.equal(selected.price, price);
+});
+
+test("warehouse USD is not converted twice and uses existing client rounding", () => {
+  assert.equal(formatting.normalizeOfferPrice({ price: "250.4", source: "warehouse" }, rates), 250.4);
+  assert.equal(formatting.toUsdPrice(250.4, rates, "warehouse"), 250.4);
+  catalog.upsertCatalog(product.id, "250.4", "warehouse");
+  assert.equal(getCatalogProducts({ role: "wholesale" })[0].price, "260");
+  assert.equal(getCatalogProducts({ role: "retail" })[0].price, "810");
+  assert.equal(getCatalogProducts({ role: "admin" })[0].price, "250.4");
+});
+
+test("invalid offers and unusable RUB conversion cannot win minimum selection", () => {
+  catalog.upsertCatalog(product.id, "NaN", "Today there tomorrow here");
+  catalog.upsertCatalog(product.id, "250", "warehouse");
+  catalog.upsertCatalog(product.id, "10000", "AAA-store");
+  mock.method(priceService, "getRates", () => ({ ...rates, rub_to_usd: 0 }));
+  assert.equal(getCatalogProducts({ role: "wholesale" })[0].source, "warehouse");
+});
+
+test("skipped report includes every name and respects Telegram limit", async () => {
+  const names = Array.from({ length: 150 }, (_, i) => `missing-${i}: ${"x".repeat(70)}`);
+  names.push("z".repeat(TELEGRAM_MESSAGE_LIMIT * 2 + 20));
+  names.push("a".repeat(TELEGRAM_MESSAGE_LIMIT - 3)); // строка ровно в лимит
+  names.push("b".repeat(TELEGRAM_MESSAGE_LIMIT + 20)); // после неё нельзя слать пустое сообщение
+  await reports.sendIngestSkippedReport(bot, 10, [{ title: "Склад: не найдены", names }]);
+  assert.ok(messages.length > 2);
+  assert.ok(messages.every(text => text.length > 0 && text.length <= TELEGRAM_MESSAGE_LIMIT));
+  const joined = messages.join("");
+  for (const name of names) assert.ok(joined.includes(name));
+});
+
+test("warehouse reports show USD instead of unknown currency", async () => {
+  catalog.upsertCatalog(product.id, "250", "warehouse");
+  await reports.sendHiddenProductsReport(bot, [{ ...getCatalogProducts()[0], hidden: true }]);
+  assert.ok(messages.some(text => text.includes("250 USD")));
+});
+
+test("update button loads warehouse; failed read keeps saved warehouse prices", async () => {
+  mock.method(sheets, "loadPricesFormats", async () => {});
+  mock.method(sheets, "loadBrandsFromConfig", async () => {});
+  mock.method(sheets, "loadColorsFromConfig", async () => {});
+  mock.method(configReport, "sendConfigChangesReport", async () => {});
+  sheetRows = [[product.rawNames[0], "", 1, 250]];
+  registerCallbacks(bot);
+  const query = { id: "q", data: CALLBACK_TYPE.RENEW_PRICE, from: { id: 10 }, message: { chat: { id: 10 } } };
+  await handlers.callback_query(query);
+  assert.equal(catalog.getCatalogItem(product.id)?.offers[0].price, "250");
+  assert.ok(messages.some(text => text.includes("➕") && text.includes(product.name)));
+  assert.equal(warehouseService.getWarehouse()[0].price, "250");
+  const storedRows = warehouseService.getWarehouse();
+  sheetError = new Error("Google unavailable");
+  await handlers.callback_query(query);
+  assert.equal(catalog.getCatalogItem(product.id)?.offers[0].price, "250");
+  assert.deepEqual(warehouseService.getWarehouse(), storedRows);
+  assert.equal(saveWarehouseFile.mock.callCount(), 1);
+});
+
+test("config loader persists filtered warehouse rows in memory/JSON including unmatched names", async () => {
+  sheetRows = [[product.rawNames[0], "", 1, 250], ["unknown", "", 2, 100], ["zero", "", 0, 1]];
+  await sheets.loadWarehouseFromConfig();
+  const expected = [{ name: product.rawNames[0], price: "250" }, { name: "unknown", price: "100" }];
+  assert.deepEqual(warehouseService.getWarehouse(), expected);
+  assert.deepEqual(saveWarehouseFile.mock.calls[0].arguments, [WAREHOUSE_PATH, expected]);
+  assert.equal(catalog.getCatalogItem(product.id)?.offers[0].price, "250");
+  assert.deepEqual(warehouseService.getWarehouseIngestResult().skipped[0].names, ["unknown"]);
+  const copy = warehouseService.getWarehouse();
+  copy[0].price = "1";
+  assert.equal(warehouseService.getWarehouse()[0].price, "250");
+});
+
+test("failed warehouse file write preserves previous memory and offers", async () => {
+  await warehouseService.saveWarehouse([{ name: product.rawNames[0], price: "250" }]);
+  mock.method(atomic, "writeJsonFileAtomic", () => { throw new Error("disk full"); });
+  await assert.rejects(() => warehouseService.saveWarehouse([{ name: product.rawNames[0], price: "100" }]), /disk full/);
+  assert.equal(warehouseService.getWarehouse()[0].price, "250");
+  assert.equal(catalog.getCatalogItem(product.id)?.offers[0].price, "250");
+});
+
+test("startup restores warehouse JSON into memory and catalog without Google or writes", () => {
+  catalog.upsertCatalog(product.id, "30000", "AAA-store");
+  catalog.upsertCatalog(product.id, "500", "warehouse");
+  mock.method(fs, "existsSync", (path: any) => { assert.equal(path, WAREHOUSE_PATH); return true; });
+  mock.method(fs, "readFileSync", (path: any) => {
+    assert.equal(path, WAREHOUSE_PATH);
+    return JSON.stringify([{ name: product.rawNames[0], price: "250" }, { name: "unknown", price: "100" }]);
+  });
+  warehouseService.loadWarehouseFromFile();
+  assert.equal(warehouseService.getWarehouse().length, 2);
+  assert.equal(catalog.getCatalogItem(product.id)?.offers.find(o => o.source === "warehouse")?.price, "250");
+  assert.equal(catalog.getCatalogItem(product.id)?.offers.length, 2);
+  assert.equal(sheetCalls.length, 0);
+  assert.equal(saveWarehouseFile.mock.callCount(), 0);
+  assert.equal(saveCatalog.mock.callCount(), 0);
+});
+
+test("missing or corrupt warehouse file retains catalog; valid empty snapshot clears only warehouse", async () => {
+  catalog.upsertCatalog(product.id, "250", "warehouse");
+  catalog.upsertCatalog(product.id, "30000", "AAA-store");
+  const missing = mock.method(fs, "existsSync", () => false);
+  warehouseService.loadWarehouseFromFile();
+  assert.equal(catalog.getCatalogItem(product.id)?.offers.length, 2);
+  missing.mock.restore();
+  await warehouseService.saveWarehouse([{ name: product.rawNames[0], price: "250" }]);
+  mock.method(fs, "existsSync", () => true);
+  const errors = mock.method(console, "error", () => {});
+  const corrupted = mock.method(fs, "readFileSync", () => '[{"name": 3}]');
+  warehouseService.loadWarehouseFromFile();
+  assert.equal(errors.mock.callCount(), 1);
+  assert.equal(warehouseService.getWarehouse()[0].price, "250");
+  assert.equal(catalog.getCatalogItem(product.id)?.offers.length, 2);
+  corrupted.mock.restore();
+  mock.method(fs, "readFileSync", () => "[]");
+  warehouseService.loadWarehouseFromFile();
+  assert.deepEqual(catalog.getCatalogItem(product.id)?.offers.map(o => o.source), ["AAA-store"]);
+});
+
+test("warehouse change report shows additions, changed prices, removals and unchanged state", () => {
+  const before = [{ productId: "a", name: "A", price: "250" }, { productId: "b", name: "B", price: "100" }];
+  const after = [{ productId: "a", name: "A", price: "240" }, { productId: "c", name: "C", price: "150" }];
+  const text = warehouseReport.buildWarehouseChangesMessages(before, after).join("\n");
+  assert.ok(text.includes("➕ C — 150 USD"));
+  assert.ok(text.includes("✏️ A — 250 → 240 USD"));
+  assert.ok(text.includes("➖ B — 100 USD"));
+  assert.ok(warehouseReport.buildWarehouseChangesMessages(after, after)[0].includes("Изменений нет"));
+  const messages = warehouseReport.buildWarehouseChangesMessages([], Array.from({ length: 100 }, (_, i) => ({
+    productId: String(i), name: `Product ${i} ${"📦".repeat(4000)}`, price: "250",
+  })));
+  assert.ok(messages.length > 1);
+  assert.ok(messages.every(text => text.length > 0 && text.length <= TELEGRAM_MESSAGE_LIMIT));
+});
+
+for (const input of ["button", "text"]) test(`catalog → cart (${input}) → order retains price/source without recalculation`, async () => {
+  catalog.upsertCatalog(product.id, "250", "warehouse");
+  const selected = getCatalogProductById(product.id, "wholesale")!;
+  assert.equal(selected.price, "260");
+  setChatState(10, { mode: "amount_product_for_cart", sections: { [SECTION.CART]: { flowStep: "amount", selectedProductId: product.id, currentOrder: [] } } as any });
+  registerCallbacks(bot);
+  if (input === "button") {
+    await handlers.callback_query({ id: "q", data: `${CALLBACK_TYPE.CHOOSING_AMOUNT}::2`, from: { id: 10 }, message: { chat: { id: 10 } } });
+  } else {
+    registerMessages(bot);
+    await handlers.message({ chat: { id: 10 }, text: "2", message_id: 99 });
+  }
+  const cart = getChatState(10).sections.cart!.currentOrder!;
+  assert.equal(cart[0].price, "260");
+  assert.equal(cart[0].source, "warehouse");
+  catalog.upsertCatalog(product.id, "500", "warehouse");
+  let saved: any;
+  mock.method(orders, "addOrder", (order: Order) => { saved = order; });
+  await handlers.callback_query({ id: "q2", data: CALLBACK_TYPE.SUBMIT_ORDER, from: { id: 10, first_name: "Test" }, message: { chat: { id: 10 } } });
+  assert.equal(saved.total, 520);
+  assert.equal(saved.items[0].source, "warehouse");
+  assert.ok(messages.some(text => text.includes("260 = 520")));
+});
+
+function workbook(rows: unknown[][]): Buffer {
+  const book = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(book, XLSX.utils.aoa_to_sheet(rows), "test");
+  return XLSX.write(book, { type: "buffer", bookType: "xlsx" });
+}
+
+test("AAA XLSX regression: cached rawName and RUB price remain unchanged", async () => {
+  catalog.upsertCatalog(product.id, "500", "warehouse");
+  catalog.upsertCatalog(product.id, "510", "Today there tomorrow here");
+  mock.method(brands, "resolveBrandFromName", () => "Apple");
+  const result = await imports.ingestAAAStorePrice(workbook([
+    ["SKU", "Категория", "Название", "Модель", "Цена", "Тип SIM"],
+    ["sku", "Смартфоны", product.name, product.model, 30000, "ESIM"],
+  ]));
+  assert.equal(result.items[0].product.id, product.id);
+  assert.equal(result.items[0].price, "30000");
+  await handleIngestResult(bot, 10, result.items, "AAA-store", result.totalRows);
+  assert.equal(getCatalogProducts({ role: "wholesale" })[0].price, "310");
+  assert.equal(catalog.getCatalogItem(product.id)?.offers.length, 3);
+});
+
+test("second XLSX regression: cached rawName, USD rounding and +5 delivery", async () => {
+  catalog.upsertCatalog(product.id, "500", "warehouse");
+  catalog.upsertCatalog(product.id, "51000", "AAA-store");
+  mock.method(brands, "extractBrandFromStart", () => ({ brand: "Apple", nameWithoutBrand: product.rawNames[0] }));
+  const result = await imports.ingestTodayThereTomorrowHerePrice(workbook([
+    ["Название", "Цена"], [product.rawNames[0], 250.4],
+  ]));
+  assert.equal(result.items[0].product.id, product.id);
+  assert.equal(result.items[0].price, "255");
+  await handleIngestResult(bot, 10, result.items, "Today there tomorrow here", result.totalRows);
+  assert.equal(getCatalogProducts({ role: "wholesale" })[0].price, "265");
+  assert.equal(catalog.getCatalogItem(product.id)?.offers.length, 3);
+});

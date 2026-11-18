@@ -1,9 +1,10 @@
 import { google } from "googleapis";
-import { PriceFormat } from "../types";
+import { PriceFormat, WarehousePriceRow } from "../types";
 import { savePriceFormation } from "./price.service";
 import { saveBrands } from "./brands.service";
 import { ColorRule, saveColors } from "./colors.service";
 import { Spreadsheet, SPREADSHEET_IDS, SpreadsheetKey } from "../config/spreadsheets";
+import { saveWarehouse } from "./warehouse.service";
 
 const auth = new google.auth.GoogleAuth({
 	keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS!,
@@ -170,12 +171,17 @@ export async function loadColorsFromConfig() {
   await saveColors(result);
 }
 
-export async  function loadWareHouse() {
+export async function loadWareHouse(): Promise<WarehousePriceRow[]> {
   const rows = await getSheet(Spreadsheet.Warehouse, "'склад'!A:H");
+  return rows
+    .filter(row => Number(row[2]) > 0)
+    .map(row => ({
+      name: String(row[0] ?? "").trim(),
+      price: String(row[3] ?? "").trim(),
+    }));
+}
 
-  console.log("Загрузка склада")
-  const filteredRows = rows
-      .filter(row => row.length > 0 && Number(row[2]) > 0)
-      .map(row => row[0])
-  console.log(filteredRows);
+export async function loadWarehouseFromConfig(): Promise<void> {
+  const rows = await loadWareHouse();
+  await saveWarehouse(rows);
 }

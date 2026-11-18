@@ -1,10 +1,34 @@
 import TelegramBot from "node-telegram-bot-api";
-import { CachedProduct, LowConfidenceItem, ProductForUI } from "../types";
+import { CachedProduct, IngestSkippedGroup, LowConfidenceItem, ProductForUI } from "../types";
 import { ADMIN_TEXTS } from "../texts";
 import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
 import { resolveBrandFromName } from "../services/brands.service";
 
 const ADMIN_ID = Number(process.env.ADMIN_ID);
+
+export async function sendIngestSkippedReport(
+  bot: TelegramBot,
+  chatId: number,
+  groups: IngestSkippedGroup[],
+) {
+  for (const group of groups) {
+    let message = `⚠️ ${group.title}: ${group.names.length}\n\n`;
+    for (const name of group.names) {
+      const line = `• ${name}\n`;
+      if (message && (message + line).length > TELEGRAM_MESSAGE_LIMIT) {
+        await bot.sendMessage(chatId, message);
+        message = "";
+      }
+      // Даже одиночное очень длинное название не превышает лимит сообщения.
+      for (let offset = 0; offset < line.length; offset += TELEGRAM_MESSAGE_LIMIT) {
+        const part = line.slice(offset, offset + TELEGRAM_MESSAGE_LIMIT);
+        if (part.length === TELEGRAM_MESSAGE_LIMIT) await bot.sendMessage(chatId, part);
+        else message += part;
+      }
+    }
+    if (message) await bot.sendMessage(chatId, message);
+  }
+}
 
 // По кнопке в админ-панели — список товаров, у которых rawNames подозрительно много
 // (в норме 1-2, одно и то же название с разных прайсов). Много rawNames обычно значит,
@@ -82,7 +106,7 @@ export async function sendHiddenProductsReport(bot: TelegramBot, products: Produ
     p => {
       const currency = p.source === "AAA-store"
         ? "RUB"
-        : p.source === "Today there tomorrow here"
+        : p.source === "Today there tomorrow here" || p.source === "warehouse"
           ? "USD"
           : "*"
       return `• ${p.category} | ${p.name} — ${p.price} ${currency}`
@@ -117,7 +141,7 @@ export async function sendHiddenProductsReport(bot: TelegramBot, products: Produ
       p => {
         const currency = p.source === "AAA-store"
           ? "RUB"
-          : p.source === "Today there tomorrow here"
+          : p.source === "Today there tomorrow here" || p.source === "warehouse"
             ? "USD"
             : "*"
         return `• ${p.category} | ${p.name} — ${p.price} ${currency}`

@@ -6,6 +6,7 @@ google-service-account.json
 /data/*.json
 /backups/*.json
 /data
+/csv
 /backups
 /tmp
 /tmp/*.xlsx

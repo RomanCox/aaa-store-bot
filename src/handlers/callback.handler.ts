@@ -26,16 +26,18 @@ import {
   loadBrandsFromConfig,
   loadColorsFromConfig,
   loadPricesFormats,
-  loadWareHouse
+  loadWarehouseFromConfig
 } from "../services/sheets.service";
 import { renderSection } from "../render/renderSection";
-import { sendHiddenProductsReport, sendRawNamesReport } from "../render/reports";
+import { sendHiddenProductsReport, sendRawNamesReport, sendIngestSkippedReport } from "../render/reports";
 import { sendConfigChangesReport, takeConfigSnapshot } from "../render/configChangesReport";
 import { getProductsWithManyRawNames } from "../services/products/products.service";
 import { generateRetailCsv, sendPriceList } from "./catalog.hanlder";
 import { getCatalogProductById, getCatalogUIProducts } from "../services/catalog/ui/catalog.ui";
 import { getCatalogProducts } from "../services/catalog/catalog.builder";
 import { stripCategoryEmoji } from "../utils";
+import { getWarehouseIngestResult } from "../services/warehouse.service";
+import { takeWarehouseSnapshot, sendWarehouseChangesReport } from "../render/warehouseChangesReport";
 
 const ADMIN_CHAT_ID = Number(process.env.ADMIN_CHAT_ID);
 
@@ -263,10 +265,13 @@ export function registerCallbacks(bot: TelegramBot) {
       case CALLBACK_TYPE.RENEW_PRICE: {
         try {
           const configBefore = takeConfigSnapshot();
+          const warehouseBefore = takeWarehouseSnapshot();
 
           await loadPricesFormats();
           await loadBrandsFromConfig();
           await loadColorsFromConfig();
+
+          await loadWarehouseFromConfig();
 
           const configAfter = takeConfigSnapshot();
 
@@ -276,6 +281,8 @@ export function registerCallbacks(bot: TelegramBot) {
           await sendHiddenProductsReport(bot, updatedProducts);
 
           await sendConfigChangesReport(bot, chatId, configBefore, configAfter);
+          await sendWarehouseChangesReport(bot, chatId, warehouseBefore, takeWarehouseSnapshot());
+          await sendIngestSkippedReport(bot, chatId, getWarehouseIngestResult().skipped);
           await safeAnswerCallback(bot, query.id);
         } catch (error) {
           await bot.sendMessage(chatId, ADMIN_TEXTS.RENEW_PRICE_ERROR, {

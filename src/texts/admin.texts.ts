@@ -7,6 +7,7 @@ export const ADMIN_TEXTS = {
 		"Пожалуйста, отправьте файл в формате `.xlsx`.\n" +
 		"После загрузки я обработаю данные.",
   PRICE_UPLOAD_SUCCESS: "✅ Прайс успешно загружен\n",
+  WAREHOUSE_UPLOAD_SUCCESS: "✅ Складские цены обновлены\n",
   PRICE_UPLOAD_TOTAL_ROWS: "Товаров в прайсе: ",
   PRICE_UPLOAD_TOTAL_ITEMS: "Всего товаров: ",
   PRICE_UPLOAD_NEW_ITEMS: "\nНовых товаров: ",

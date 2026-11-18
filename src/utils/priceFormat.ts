@@ -58,7 +58,7 @@ export function normalizeOfferPrice(
   return Number(offer.price);
 }
 
-// AAA-store отдаёт цены в рублях, "Today there tomorrow here" — уже в USD.
+// AAA-store отдаёт цены в рублях, второй прайс и warehouse — уже в USD.
 // Диапазоны в price_formation.json заданы в USD, поэтому перед сравнением
 // с ними цену нужно приводить сюда же — и здесь, и в findPriceRule.
 export function toUsdPrice(
@@ -66,7 +66,7 @@ export function toUsdPrice(
   rates: Rates,
   source?: PriceListType
 ) {
-  return source === "Today there tomorrow here"
+  return source === "Today there tomorrow here" || source === "warehouse"
     ? numberPrice
     : numberPrice / rates.rub_to_usd;
 }
@@ -104,7 +104,7 @@ export function priceFormat(
 
   // WHOLESALE
   if (clientType === "wholesale") {
-    const resultUSD = source === "Today there tomorrow here"
+    const resultUSD = source === "Today there tomorrow here" || source === "warehouse"
       ? (numberPrice + value)
       : (numberPrice + valueInRub) / rates.rub_to_usd;
 
@@ -113,7 +113,7 @@ export function priceFormat(
 
   // RETAIL
   if (clientType === "retail") {
-    const resultBYN = source === "Today there tomorrow here"
+    const resultBYN = source === "Today there tomorrow here" || source === "warehouse"
       ? (numberPrice + value) * rates.usd_to_byn
       : (numberPrice + valueInRub) / 100 * rates.rub_to_byn;
 

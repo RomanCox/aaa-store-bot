@@ -1,5 +1,5 @@
 import fs from "fs";
-import { CatalogItem, PriceListType} from "../../types";
+import { CatalogItem, IngestItem, PriceListType} from "../../types";
 
 const CATALOG_PATH = "./data/catalog.json";
 
@@ -42,6 +42,14 @@ export function clearCatalogSource(source: PriceListType) {
     if (item.offers.length === 0) {
       catalog.delete(id);
     }
+  }
+}
+
+// Общая замена снимка одного источника для импорта и локального восстановления.
+export function replaceCatalogSource(source: PriceListType, items: IngestItem[]) {
+  clearCatalogSource(source);
+  for (const item of items) {
+    upsertCatalog(item.product.id, item.price, source, item.country);
   }
 }
 

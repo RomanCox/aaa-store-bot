@@ -9,43 +9,40 @@ import { isAdmin } from "../services/users.service";
 import { getChatState, setChatState, updateSectionState } from "../state/chat.state";
 import { ADMIN_TEXTS } from "../texts";
 import { renderScreen } from "../render/renderScreen";
-import { IngestItem, PriceListType, SECTION } from "../types";
+import { IngestItem, IngestSkippedGroup, PriceListType, SECTION } from "../types";
 import { adminKeyboard } from "../keyboards";
 import { safeDelete } from "../utils";
-import { onAiError, onCostReport, onUnresolvedItems, sendHiddenProductsReport, sendUnknownBrandsReport } from "../render/reports";
-import { clearCatalogSource, saveCatalog, upsertCatalog } from "../services/catalog/catalog.service";
+import { onAiError, onCostReport, onUnresolvedItems, sendHiddenProductsReport, sendUnknownBrandsReport, sendIngestSkippedReport } from "../render/reports";
+import { replaceCatalogSource, saveCatalog } from "../services/catalog/catalog.service";
 import { getCatalogProducts } from "../services/catalog/catalog.builder";
 import { generateRetailCsv } from "./catalog.hanlder";
 
-async function handleIngestResult(
+export async function handleIngestResult(
   bot: TelegramBot,
   chatId: number,
   items: IngestItem[],
   source: PriceListType,
   totalRows: number,
+  options?: { skipped?: IngestSkippedGroup[]; reportHidden?: boolean; exportCsv?: boolean },
 ) {
-  if (!items.length) {
+  if (!items.length && source !== "warehouse") {
     await bot.sendMessage(chatId, ADMIN_TEXTS.ERROR_ITEMS);
     return;
   }
 
-  clearCatalogSource(source);
-
-  for (const item of items) {
-    upsertCatalog(item.product.id, item.price, source, item.country);
-  }
+  replaceCatalogSource(source, items);
 
   saveCatalog();
 
   const result = getCatalogProducts();
 
-  await sendHiddenProductsReport(bot, result);
+  if (options?.reportHidden !== false) await sendHiddenProductsReport(bot, result);
 
   const newItemsCount = items.filter(i => i.isNew).length;
   const updatedItemsCount = items.length - newItemsCount;
 
   const summaryLines = [
-    ADMIN_TEXTS.PRICE_UPLOAD_SUCCESS +
+    (source === "warehouse" ? ADMIN_TEXTS.WAREHOUSE_UPLOAD_SUCCESS : ADMIN_TEXTS.PRICE_UPLOAD_SUCCESS) +
       ADMIN_TEXTS.PRICE_UPLOAD_TOTAL_ROWS + totalRows,
     ADMIN_TEXTS.PRICE_UPLOAD_TOTAL_ITEMS + items.length +
       ADMIN_TEXTS.PRICE_UPLOAD_NEW_ITEMS + newItemsCount +
@@ -53,8 +50,9 @@ async function handleIngestResult(
   ];
 
   await bot.sendMessage(chatId, summaryLines.join("\n"));
+  if (options?.skipped) await sendIngestSkippedReport(bot, chatId, options.skipped);
 
-  generateRetailCsv();
+  if (options?.exportCsv !== false) generateRetailCsv();
 }
 
 export function registerDocumentHandler(bot: TelegramBot) {
