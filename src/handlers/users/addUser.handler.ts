@@ -2,14 +2,12 @@ import TelegramBot from "node-telegram-bot-api";
 import { getUser, isAdmin, isSuperAdmin } from "../../services/users.service";
 import { ROLE_LABELS, USERS_ERRORS, USERS_TEXTS } from "../../texts";
 import { getChatState, setChatState } from "../../state/chat.state";
-import { CALLBACK_TYPE, SECTION, UserRole } from "../../types";
-import { buildCallbackData } from "../../utils";
+import { CALLBACK_TYPE, SECTION } from "../../types";
+import { getAssignableRoles, buildCallbackData } from "../../utils";
 import { renderScreen } from "../../render/renderScreen";
 
 export function addUserRoleKeyboard(isSuperAdmin: boolean) {
-  const buttons: UserRole[] = isSuperAdmin
-    ? ["retail", "wholesale", "admin", "superadmin"]
-    : ["retail", "wholesale"];
+  const buttons = getAssignableRoles(isSuperAdmin);
 
   return [
     ...buttons.map(role => [

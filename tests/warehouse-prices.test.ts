@@ -1,6 +1,6 @@
 import { test, beforeEach, afterEach, mock } from "node:test";
 import assert from "node:assert/strict";
-import type { CachedProduct, Order, Rates } from "../src/types";
+import type { CachedProduct, Order, Rates, UserRole } from "../src/types";
 
 // Не загружаем .env и bootstrap. Все значения фиктивные и живут только в тестовом процессе.
 for (const key of ["RETAIL_MANAGER_URL", "WHOLESALE_MANAGER_URL", "GOOGLE_APPLICATION_CREDENTIALS", "SPREADSHEET_CONFIG_ID", "SPREADSHEET_WAREHOUSE_ID"]) {
@@ -9,6 +9,8 @@ for (const key of ["RETAIL_MANAGER_URL", "WHOLESALE_MANAGER_URL", "GOOGLE_APPLIC
 process.env.ADMIN_ID = "1";
 process.env.ADMIN_CHAT_ID = "2";
 process.env.DEV = "1";
+process.env.RETAIL_MANAGER_URL = "https://retail.example";
+process.env.WHOLESALE_MANAGER_URL = "https://wholesale.example";
 
 // Google client изолируется до загрузки sheets.service; ключи никогда не читаются.
 const { google } = require("googleapis");
@@ -43,8 +45,10 @@ const { handleIngestResult } = require("../src/handlers/document.handler") as ty
 const { registerCallbacks } = require("../src/handlers/callback.handler") as typeof import("../src/handlers/callback.handler");
 const { registerMessages } = require("../src/handlers/message.handler") as typeof import("../src/handlers/message.handler");
 const users = require("../src/services/users.service") as typeof import("../src/services/users.service");
+const actualUsers = { getUser: users.getUser, getUserRole: users.getUserRole, isAdmin: users.isAdmin };
 const orders = require("../src/services/orders.service") as typeof import("../src/services/orders.service");
 const rendering = require("../src/render/renderFlow") as typeof import("../src/render/renderFlow");
+const actualRenderFlow = rendering.renderFlow;
 const screens = require("../src/render/renderScreen") as typeof import("../src/render/renderScreen");
 const configReport = require("../src/render/configChangesReport") as typeof import("../src/render/configChangesReport");
 const { getChatState, setChatState } = require("../src/state/chat.state") as typeof import("../src/state/chat.state");
@@ -52,6 +56,12 @@ const { CALLBACK_TYPE, SECTION } = require("../src/types") as typeof import("../
 const { TELEGRAM_MESSAGE_LIMIT, WAREHOUSE_PATH } = require("../src/constants") as typeof import("../src/constants");
 const XLSX = require("xlsx") as typeof import("xlsx");
 const fs = require("node:fs") as typeof import("node:fs");
+const roleUtils = require("../src/utils/roles") as typeof import("../src/utils/roles");
+const messageUtils = require("../src/utils/message.utils") as typeof import("../src/utils/message.utils");
+const adminService = require("../src/services/admin.service") as typeof import("../src/services/admin.service");
+const addUsers = require("../src/handlers/users/addUser.handler") as typeof import("../src/handlers/users/addUser.handler");
+const editUsers = require("../src/handlers/users/editUser.handler") as typeof import("../src/handlers/users/editUser.handler");
+const { MENU_TEXTS, ITEM_TEXTS } = require("../src/texts") as typeof import("../src/texts");
 
 const rates: Rates = { rub_to_usd: 100, rub_to_byn: 4, usd_to_byn: 3 };
 const product: CachedProduct = {
@@ -84,6 +94,7 @@ beforeEach(() => {
   saveWarehouseFile = mock.method(atomic, "writeJsonFileAtomic", () => {});
   const missingWarehouse = mock.method(fs, "existsSync", () => false);
   warehouseService.loadWarehouseFromFile();
+  users.loadUsers();
   missingWarehouse.mock.restore();
   mock.method(products, "saveProductCache", () => {});
   saveCatalog = mock.method(catalog, "saveCatalog", () => {});
@@ -424,6 +435,146 @@ function workbook(rows: unknown[][]): Buffer {
   const book = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(book, XLSX.utils.aoa_to_sheet(rows), "test");
   return XLSX.write(book, { type: "buffer", bookType: "xlsx" });
+}
+
+for (const manager of ["manager_retail", "manager_wholesale"] as const) {
+  for (const source of ["AAA-store", "Today there tomorrow here", "warehouse"] as const) {
+    test(`${manager} inherits client pricing for ${source}`, () => {
+      catalog.upsertCatalog(product.id, source === "AAA-store" ? "25040" : "250.4", source);
+      const parent = roleUtils.getPricingRole(manager);
+      assert.equal(getCatalogProducts({ role: manager })[0].price, getCatalogProducts({ role: parent })[0].price);
+      mock.method(users, "getUserRole", () => manager);
+      assert.equal(priceService.getCurrency(10), manager === "manager_retail" ? "BYN" : "USD");
+      assert.equal(formatting.findPriceRule(250.4, product.category, product.brand, manager, priceService.getPriceFormation()), manager === "manager_retail" ? 20 : 10);
+    });
+  }
+}
+
+for (const role of ["retail", "wholesale", "manager_retail", "manager_wholesale", "admin", "superadmin", undefined] as const) {
+  test(`warehouse indication for ${role} uses availability independently of cheapest source`, () => {
+    catalog.upsertCatalog(product.id, "20000", "AAA-store");
+    catalog.upsertCatalog(product.id, "250", "warehouse");
+    const selected = getCatalogProducts({ role })[0];
+    const visible = role !== "retail" && role !== undefined;
+    assert.equal(selected.source, "AAA-store");
+    assert.equal(selected.inWarehouse === true, visible);
+    const text = messageUtils.buildMessagesForProducts([selected], role).map(m => m.text).join("\n");
+    assert.equal(text.includes(ITEM_TEXTS.IN_WAREHOUSE), visible);
+    if (role === "retail" || role === "manager_retail") assert.ok(text.includes(`${selected.price}р.`));
+    // Даже переданный извне флаг не должен раскрывать склад розничному клиенту.
+    assert.equal(roleUtils.getWarehouseMarker({ inWarehouse: true }, role).length > 0, visible);
+    catalog.clearCatalogSource("warehouse");
+    const absent = getCatalogProducts({ role })[0];
+    assert.equal(messageUtils.buildMessagesForProducts([absent], role)[0].text.includes(ITEM_TEXTS.IN_WAREHOUSE), false);
+  });
+}
+
+function loadTestUsers(list: { id: number; role: UserRole }[]) {
+  const exists = mock.method(fs, "existsSync", () => true);
+  const read = mock.method(fs, "readFileSync", () => JSON.stringify(list));
+  users.loadUsers();
+  read.mock.restore();
+  exists.mock.restore();
+}
+
+function lastArgs(spy: any): any[] {
+  return spy.mock.calls[spy.mock.calls.length - 1].arguments;
+}
+
+for (const superAdmin of [false, true]) {
+  test(`manager roles are offered by add/edit keyboards for ${superAdmin ? "superadmin" : "admin"}`, () => {
+    for (const keyboard of [addUsers.addUserRoleKeyboard(superAdmin), editUsers.editUserRoleKeyboard(superAdmin)]) {
+      const values = keyboard.flat().map(button => button.callback_data!);
+      assert.ok(values.some(value => value.endsWith("::manager_retail")));
+      assert.ok(values.some(value => value.endsWith("::manager_wholesale")));
+      assert.equal(values.some(value => value.endsWith("::superadmin")), superAdmin);
+    }
+  });
+  for (const role of ["manager_retail", "manager_wholesale"] as const) {
+    for (const mode of ["add", "edit"] as const) {
+      test(`${superAdmin ? "superadmin" : "admin"} can ${mode} ${role} via user workflow and persist role`, async () => {
+        loadTestUsers([{ id: 10, role: superAdmin ? "superadmin" : "admin" }, ...(mode === "edit" ? [{ id: 20, role: "retail" as const }] : [])]);
+        mock.method(users, "getUser", actualUsers.getUser);
+        mock.method(users, "isSuperAdmin", () => superAdmin);
+        if (mode === "add") {
+          await adminService.addUser(bot, 10);
+          await addUsers.addUserInputHandler(bot, 10, "20");
+        } else {
+          await adminService.editUser(bot, 10);
+          await editUsers.editUserInputHandler(bot, 10, "20");
+        }
+        registerCallbacks(bot);
+        const action = mode === "add" ? CALLBACK_TYPE.ROLE_FOR_NEW_USER : CALLBACK_TYPE.NEW_ROLE_FOR_EXIST_USER;
+        await handlers.callback_query({ id: "q", data: `${action}::${role}`, from: { id: 10 }, message: { chat: { id: 10 } } });
+        assert.equal(actualUsers.getUserRole(20), role);
+        assert.equal(actualUsers.isAdmin(20), false);
+        const persisted = lastArgs(saveWarehouseFile)[1];
+        assert.equal(persisted.find((user: any) => user.id === 20).role, role);
+        loadTestUsers(persisted);
+        assert.equal(actualUsers.getUserRole(20), role);
+      });
+    }
+  }
+}
+
+for (const action of [CALLBACK_TYPE.ROLE_FOR_NEW_USER, CALLBACK_TYPE.NEW_ROLE_FOR_EXIST_USER]) {
+  test(`manager cannot forge user role change: ${action}`, async () => {
+    loadTestUsers([{ id: 10, role: "manager_wholesale" }, { id: 20, role: "retail" }]);
+    mock.method(users, "isAdmin", actualUsers.isAdmin);
+    setChatState(10, { sections: { [SECTION.ADMIN_PANEL]: { flowStep: action === CALLBACK_TYPE.ROLE_FOR_NEW_USER ? "add_user" : "edit_user", users: { newUserId: 30, editingUserId: 20 } } } as any });
+    registerCallbacks(bot);
+    await handlers.callback_query({ id: "q", data: `${action}::manager_retail`, from: { id: 10 }, message: { chat: { id: 10 } } });
+    assert.equal(actualUsers.getUserRole(20), "retail");
+    assert.equal(actualUsers.getUserRole(30), undefined);
+    assert.equal(saveWarehouseFile.mock.callCount(), 0);
+  });
+  test(`unknown/admin roles cannot bypass admin role picker: ${action}`, async () => {
+    loadTestUsers([{ id: 10, role: "admin" }, { id: 20, role: "retail" }]);
+    setChatState(10, { sections: { [SECTION.ADMIN_PANEL]: { flowStep: action === CALLBACK_TYPE.ROLE_FOR_NEW_USER ? "add_user" : "edit_user", users: { newUserId: 30, editingUserId: 20 } } } as any });
+    registerCallbacks(bot);
+    for (const role of ["admin", "superadmin", "not-a-role"]) {
+      await handlers.callback_query({ id: "q", data: `${action}::${role}`, from: { id: 10 }, message: { chat: { id: 10 } } });
+    }
+    assert.equal(actualUsers.getUserRole(20), "retail");
+    assert.equal(actualUsers.getUserRole(30), undefined);
+    assert.equal(saveWarehouseFile.mock.callCount(), 0);
+  });
+}
+
+for (const role of ["manager_retail", "manager_wholesale"] as const) {
+  test(`${role} sees warehouse in product/cart screens without changing stored cart price`, async () => {
+    mock.method(users, "getUserRole", () => role);
+    catalog.upsertCatalog(product.id, "20000", "AAA-store");
+    catalog.upsertCatalog(product.id, "250", "warehouse");
+    const entry = { ...getCatalogProductById(product.id, role)!, price: "123", amount: 1 };
+    const screen = mock.method(screens, "renderScreen", async () => {});
+    for (const step of ["products_for_cart", "amount", "main", "edit_cart", "edit_product_in_cart"] as const) {
+      setChatState(10, { section: SECTION.CART, sections: { [SECTION.CART]: {
+        flowStep: step, currentOrder: [entry], selectedProductId: product.id, selectedProductIdForCart: product.id,
+        selectedBrand: product.brand, selectedCategory: product.category, selectedModel: product.model, selectedStorage: product.attributes?.storage,
+      } } as any });
+      await actualRenderFlow(bot, 10);
+      assert.ok(lastArgs(screen)[2].text.includes(ITEM_TEXTS.IN_WAREHOUSE));
+    }
+    catalog.clearCatalogSource("warehouse");
+    setChatState(10, { sections: { [SECTION.CART]: { flowStep: "main", currentOrder: [entry] } } as any });
+    await actualRenderFlow(bot, 10);
+    const text = lastArgs(screen)[2].text;
+    assert.equal(text.includes(ITEM_TEXTS.IN_WAREHOUSE), false);
+    assert.ok(text.includes("123"));
+    assert.equal(getChatState(10).sections.cart?.currentOrder?.[0].price, "123");
+  });
+  test(`${role} inherits manager contact link and has a readable order label`, async () => {
+    mock.method(users, "getUser", () => ({ id: 10, role }));
+    mock.method(users, "getUserRole", () => role);
+    const send = mock.method(bot, "sendMessage", async () => ({}));
+    registerMessages(bot);
+    await handlers.message({ chat: { id: 10 }, text: MENU_TEXTS.MANAGER, message_id: 1 });
+    assert.equal(lastArgs(send)[2].reply_markup.inline_keyboard[0][0].url,
+      role === "manager_retail" ? "https://retail.example" : "https://wholesale.example");
+    const order = orders.createOrder({ id: 10, first_name: "Manager", is_bot: false }, []);
+    assert.ok(orders.buildOrderMessage(order, 10).includes(role === "manager_retail" ? "Менеджер розницы" : "Менеджер опта"));
+  });
 }
 
 test("AAA XLSX regression: cached rawName and RUB price remain unchanged", async () => {

@@ -15,6 +15,7 @@ import { adminKeyboard, mainKeyboard } from "../keyboards";
 import { UI_VERSION } from "../constants";
 import { ENV } from "../config/env";
 import { getCatalogProductById } from "../services/catalog/ui/catalog.ui";
+import { getPricingRole } from "../utils/roles";
 
 export function registerMessages(bot: TelegramBot) {
   bot.on("message", async (msg) => {
@@ -147,7 +148,7 @@ export function registerMessages(bot: TelegramBot) {
 
       [MENU_TEXTS.MANAGER]: async () => {
         const managerUrl =
-          user.role === "retail"
+          getPricingRole(user.role) === "retail"
             ? ENV.RETAIL_MANAGER_URL
             : ENV.WHOLESALE_MANAGER_URL;
 

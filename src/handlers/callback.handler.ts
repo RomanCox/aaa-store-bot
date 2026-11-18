@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
-import { CALLBACK_TYPE, CATALOG_VALUE, ProductFilters, SECTION, UserRole } from "../types";
+import { CALLBACK_TYPE, CATALOG_VALUE, ProductFilters, SECTION } from "../types";
 import { getChatState, setChatState } from "../state/chat.state";
 import { renderFlow } from "../render/renderFlow";
 import { downloadCatalogHelpers, guardWorkingHours, parseCallbackData, safeAnswerCallback } from "../utils";
@@ -17,7 +17,7 @@ import {
   USERS_ERRORS,
   USERS_TEXTS
 } from "../texts";
-import { createUser, getUserRole, isAdmin, updateUserRole } from "../services/users.service";
+import { createUser, getUserRole, isAdmin, isSuperAdmin, updateUserRole } from "../services/users.service";
 import { addOrder, buildOrderMessage, createOrder } from "../services/orders.service";
 import { orderHandler, ordersHandler } from "./orders.handler";
 import { renderScreen } from "../render/renderScreen";
@@ -38,6 +38,7 @@ import { getCatalogProducts } from "../services/catalog/catalog.builder";
 import { stripCategoryEmoji } from "../utils";
 import { getWarehouseIngestResult } from "../services/warehouse.service";
 import { takeWarehouseSnapshot, sendWarehouseChangesReport } from "../render/warehouseChangesReport";
+import { isAssignableRole } from "../utils/roles";
 
 const ADMIN_CHAT_ID = Number(process.env.ADMIN_CHAT_ID);
 
@@ -172,7 +173,11 @@ export function registerCallbacks(bot: TelegramBot) {
       }
 
       case CALLBACK_TYPE.ROLE_FOR_NEW_USER: {
-        const role = params[0] as UserRole;
+        const role = params[0];
+        if (!isAssignableRole(role, isSuperAdmin(chatId))) {
+          await renderScreen(bot, chatId, { section: SECTION.ADMIN_PANEL, text: USERS_ERRORS.ROLE_NOT_ALLOWED });
+          return;
+        }
         const state = getChatState(chatId);
         const mainState = state.sections?.[SECTION.ADMIN_PANEL];
 
@@ -210,7 +215,11 @@ export function registerCallbacks(bot: TelegramBot) {
       }
 
       case CALLBACK_TYPE.NEW_ROLE_FOR_EXIST_USER: {
-        const role = params[0] as UserRole;
+        const role = params[0];
+        if (!isAssignableRole(role, isSuperAdmin(chatId))) {
+          await renderScreen(bot, chatId, { section: SECTION.ADMIN_PANEL, text: USERS_ERRORS.ROLE_NOT_ALLOWED });
+          return;
+        }
         const state = getChatState(chatId);
         const mainState = state.sections?.[SECTION.ADMIN_PANEL];
 

@@ -1,11 +1,12 @@
 import { Product, UserRole } from "../types";
 import { compareSpecs, extractMemorySubstring } from "./catalog.utils";
 import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
+import { getPricingRole, getWarehouseMarker } from "./roles";
 
 function formatProductLine(product: Product, userRole?: UserRole): string {
   const name = product.name;
 	const price = product.price;
-  const currency = userRole === "retail" ? "р." : "";
+  const currency = getPricingRole(userRole) === "retail" ? "р." : "";
 	const country = product.country ?? "";
   const sim = product.sim ?? "";
   const active = product.activated ? "Active" : ""
@@ -30,7 +31,7 @@ function formatProductLine(product: Product, userRole?: UserRole): string {
     line += ` ✅ ${active}`;
   }
 
-	return line;
+	return line + getWarehouseMarker(product, userRole);
 }
 
 function getProductGroupKey(product: Product): string | null {

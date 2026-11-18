@@ -14,6 +14,7 @@ export const USERS_ERRORS = {
   CANT_EDIT_USER: "❌ Не удалось обновить роль пользователя",
   EDIT_MYSELF: "❌ Нельзя редактировать самого себя",
   ONLY_ADMIN: "❌ Только администратор может редактировать пользователей",
+  ROLE_NOT_ALLOWED: "❌ Эта роль недоступна для назначения",
 };
 
 export const USERS_TEXTS = {
@@ -36,6 +37,8 @@ export const USERS_TEXTS = {
 export const ROLE_LABELS: Record<UserRole, string> = {
 	retail: "🛒 Розничный клиент",
 	wholesale: "📦 Оптовый клиент",
+	manager_retail: "👨‍💼 Менеджер розницы",
+	manager_wholesale: "👨‍💼 Менеджер опта",
 	admin: "🛠 Админ",
 	superadmin: "👑 Суперадмин",
 };

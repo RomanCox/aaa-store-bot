@@ -3,6 +3,7 @@ import { getProductFromCacheById } from "../products/products.service";
 import { getCatalog } from "./catalog.service";
 import { ProductForUI, UserRole } from "../../types";
 import { getPriceFormation, getRates } from "../price.service";
+import { canSeeWarehouse } from "../../utils/roles";
 
 export function getCatalogProducts(options?: {
   role?: UserRole | "retail";
@@ -76,6 +77,8 @@ export function getCatalogProducts(options?: {
       price,
       source,
       hidden,
+
+      ...(canSeeWarehouse(role) && { inWarehouse: validOffers.some(offer => offer.source === "warehouse") }),
 
       ...(includeOffers && { offers: item.offers }),
     });
