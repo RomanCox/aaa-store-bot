@@ -189,13 +189,13 @@ export async function sendUnknownBrandsReport(bot: TelegramBot, names: string[])
   }
 }
 
-export async function onAiError(bot: TelegramBot, names: string[]) {
+async function sendNamesReport(bot: TelegramBot, names: string[], title: string) {
   if (!names.length) return;
 
-  let message = `${ADMIN_TEXTS.AI_ERROR} (${names.length})\n\n`;
+  let message = ADMIN_TEXTS.COUNTED_REPORT_HEADER(title, names.length);
 
   for (const name of names) {
-    const line = `• ${name}\n`;
+    const line = ADMIN_TEXTS.REPORT_NAME_LINE(name);
 
     if ((message + line).length > TELEGRAM_MESSAGE_LIMIT) {
       await bot.sendMessage(ADMIN_ID, message);
@@ -210,25 +210,12 @@ export async function onAiError(bot: TelegramBot, names: string[]) {
   }
 }
 
+export async function onAiError(bot: TelegramBot, names: string[]) {
+  await sendNamesReport(bot, names, ADMIN_TEXTS.AI_ERROR);
+}
+
 export async function onUnresolvedItems(bot: TelegramBot, names: string[]) {
-  if (!names.length) return;
-
-  let message = `${ADMIN_TEXTS.DONT_RECOGNIZED} (${names.length})\n\n`;
-
-  for (const name of names) {
-    const line = `• ${name}\n`;
-
-    if ((message + line).length > TELEGRAM_MESSAGE_LIMIT) {
-      await bot.sendMessage(ADMIN_ID, message);
-      message = "";
-    }
-
-    message += line;
-  }
-
-  if (message) {
-    await bot.sendMessage(ADMIN_ID, message);
-  }
+  await sendNamesReport(bot, names, ADMIN_TEXTS.DONT_RECOGNIZED);
 }
 
 export async function onCostReport(bot: TelegramBot, totalCost: number) {

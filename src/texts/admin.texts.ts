@@ -22,6 +22,8 @@ export const ADMIN_TEXTS = {
 	AI_ERROR: "⚠️ ОШИБКА ИИ",
 	AI_COST: "💰 Стоимость AI-запросов: $",
 	DONT_RECOGNIZED: "❌ НЕ РАСПОЗНАНЫ",
+  COUNTED_REPORT_HEADER: (title: string, count: number) => `${title} (${count})\n\n`,
+  REPORT_NAME_LINE: (name: string) => `• ${name}\n`,
 	CANT_FIND_FILE: "❌ Файл не найден",
 	ERROR_ITEMS: "❌ Файл не содержит валидных товаров",
 	ERROR_XLSX: "❌ XLSX upload error: ",

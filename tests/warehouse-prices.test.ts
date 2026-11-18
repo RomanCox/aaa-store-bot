@@ -61,7 +61,7 @@ const messageUtils = require("../src/utils/message.utils") as typeof import("../
 const adminService = require("../src/services/admin.service") as typeof import("../src/services/admin.service");
 const addUsers = require("../src/handlers/users/addUser.handler") as typeof import("../src/handlers/users/addUser.handler");
 const editUsers = require("../src/handlers/users/editUser.handler") as typeof import("../src/handlers/users/editUser.handler");
-const { MENU_TEXTS, ITEM_TEXTS } = require("../src/texts") as typeof import("../src/texts");
+const { MENU_TEXTS, ITEM_TEXTS, ADMIN_TEXTS } = require("../src/texts") as typeof import("../src/texts");
 
 const rates: Rates = { rub_to_usd: 100, rub_to_byn: 4, usd_to_byn: 3 };
 const product: CachedProduct = {
@@ -311,6 +311,28 @@ test("warehouse reports show USD instead of unknown currency", async () => {
   catalog.upsertCatalog(product.id, "250", "warehouse");
   await reports.sendHiddenProductsReport(bot, [{ ...getCatalogProducts()[0], hidden: true }]);
   assert.ok(messages.some(text => text.includes("250 USD")));
+});
+
+for (const [send, title] of [
+  [reports.onAiError, ADMIN_TEXTS.AI_ERROR],
+  [reports.onUnresolvedItems, ADMIN_TEXTS.DONT_RECOGNIZED],
+] as const) test(`named admin report preserves heading, items, recipient and chunking: ${title}`, async () => {
+  const sent = mock.method(bot, "sendMessage", async () => ({}));
+  await send(bot, []);
+  assert.equal(sent.mock.callCount(), 0);
+  const names = Array.from({ length: 100 }, (_, i) => `item-${i} ${"x".repeat(100)}`);
+  await send(bot, names);
+  const calls = sent.mock.calls.map((call: any) => call.arguments);
+  assert.ok(calls.length > 1);
+  assert.ok(calls.every((args: any[]) => args[0] === 1 && args[1].length <= TELEGRAM_MESSAGE_LIMIT));
+  assert.equal(calls.map((args: any[]) => args[1]).join(""),
+    ADMIN_TEXTS.COUNTED_REPORT_HEADER(title, names.length) + names.map(ADMIN_TEXTS.REPORT_NAME_LINE).join(""));
+});
+
+test("AI cost report keeps four-decimal formatting and admin recipient", async () => {
+  const sent = mock.method(bot, "sendMessage", async () => ({}));
+  await reports.onCostReport(bot, 0.123456);
+  assert.deepEqual(sent.mock.calls[0].arguments, [1, `${ADMIN_TEXTS.AI_COST}0.1235`]);
 });
 
 test("update button loads warehouse; failed read keeps saved warehouse prices", async () => {
