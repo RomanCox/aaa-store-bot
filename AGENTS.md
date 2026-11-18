@@ -8,7 +8,7 @@
 - `src/handlers/document.handler.ts`, `src/services/xlsx.service.ts` — импорт прайсов.
 - `src/services/products/`, `src/services/catalog/`, `src/utils/priceFormat.ts` — идентификация товаров, предложения, каталог и цены.
 - `src/handlers/callback.handler.ts`, `src/state/chat.state.ts`, `src/services/orders.service.ts` — корзина и отправка заказа.
-- `src/services/sheets.service.ts`, `src/services/warehouse.service.ts`, `ingestWarehousePrices` в `src/services/xlsx.service.ts` — складские USD-предложения: `loadWarehouseFromConfig` по кнопке «Обновить конфиг», кеш в памяти и `warehouse.json`, `loadWarehouseFromFile` при старте без Google-запроса. Правила — [warehouse-prices.md](docs/tasks/warehouse-prices.md).
+- `src/services/sheets.service.ts`, `src/services/warehouse.service.ts`, `ingestWarehousePrices` в `src/services/xlsx.service.ts` — складские USD-предложения: `loadWarehouseFromConfig` по кнопке «Обновить конфиг», кеш в памяти и `warehouse.json`, `loadWarehouseFromFile` при старте без Google-запроса. Текущее поведение — [складские цены в архитектуре](docs/architecture.md#подтверждено-кодом-складские-цены).
 - Подробности: [архитектура](docs/architecture.md). Задачи ведутся в Git issues; [docs/tasks/](docs/tasks/README.md) — только для дополнительного контекста при необходимости. Читать только документы, относящиеся к задаче.
 
 ## Команды и проверки
@@ -21,7 +21,7 @@ Package manager: `pnpm@11.5.2` из `package.json`, lock-файл — `pnpm-lock
 | --- | --- |
 | `pnpm install --frozen-lockfile` | Обычная установка по имеющемуся lock-файлу; отдельного install-script нет. Не выполнялась. Требует разрешённой установки зависимостей. |
 | `pnpm exec tsc --noEmit` | Проверка по `tsconfig.json`, отдельного script нет. Эквивалент `node node_modules/typescript/bin/tsc --noEmit` выполнен успешно. Сам `pnpm exec` не проверялся. |
-| `node -r ts-node/register --test tests/warehouse-prices.test.ts` | Тесты склада, менеджерских ролей и регрессии XLSX/корзины; без внешних сервисов и рабочих файлов. Проверки — в архитектуре и документе складской задачи. |
+| `node -r ts-node/register --test tests/warehouse-prices.test.ts` | Тесты склада, менеджерских ролей и регрессии XLSX/корзины; без внешних сервисов и рабочих файлов. Результаты — в архитектуре. |
 | `pnpm run build` | Script `build`: `tsc && cpx` с шаблоном `src/**/*.json` и целью `dist`; не выполнялся, корректность shell-экранирования шаблона не проверена. |
 | `pnpm run dev`, `pnpm start` | Scripts запуска через `ts-node src/index.ts` и `node dist/index.js`; не выполнялись. Они подключаются к рабочим сервисам. |
 
