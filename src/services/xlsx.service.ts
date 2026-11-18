@@ -763,7 +763,7 @@ export async function ingestTodayThereTomorrowHerePrice(
 				
 				// 1. Поиск по rawName
 				// Активированные строки ищем только среди активированных товаров, остальные — среди неактивированных
-				const existingByRaw = findByRawName(rawNameForMatch, { activated: activated === true });
+				const existingByRaw = findByRawName(rawNameForMatch, { activated: activated });
 
 				if (existingByRaw) {
 					addRawNameIfNeeded(existingByRaw, rawNameForMatch);

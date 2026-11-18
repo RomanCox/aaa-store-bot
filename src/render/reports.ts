@@ -1,8 +1,8 @@
 import TelegramBot from "node-telegram-bot-api";
-import { CachedProduct, IngestSkippedGroup, LowConfidenceItem, ProductForUI } from "../types";
-import { ADMIN_TEXTS } from "../texts";
-import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
-import { resolveBrandFromName } from "../services/brands.service";
+import {CachedProduct, IngestSkippedGroup, LowConfidenceItem, ProductForUI} from "../types";
+import {ADMIN_TEXTS} from "../texts";
+import {TELEGRAM_MESSAGE_LIMIT} from "../constants";
+import {resolveBrandFromName} from "../services/brands.service";
 
 const ADMIN_ID = Number(process.env.ADMIN_ID);
 
@@ -169,12 +169,9 @@ export async function sendUnknownBrandsReport(bot: TelegramBot, names: string[])
 
   const unique = [...new Set(names)];
 
-  const header =
-    ADMIN_TEXTS.ITEMS_WITH_UNKNOWN_BRAND +
-    unique.length +
-    "\n\n";
-
-  let message = header;
+  let message = ADMIN_TEXTS.ITEMS_WITH_UNKNOWN_BRAND +
+      unique.length +
+      "\n\n";
 
   for (const name of unique) {
     const line = `• ${name}`;
