@@ -1,6 +1,5 @@
 // По умолчанию — просмотр. --apply делает бэкап и атомарно записывает кеш.
-// При ручном --apply бот должен быть остановлен. При старте эта же миграция
-// вызывается автоматически до загрузки кеша и подключения к Telegram.
+// При ручном --apply бот должен быть остановлен.
 import { migrateIphoneDuoCache } from "../src/migrations";
 import { loadColorsFromFile } from "../src/services/colors.service";
 

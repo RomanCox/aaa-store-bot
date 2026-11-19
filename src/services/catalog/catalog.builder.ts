@@ -36,14 +36,15 @@ export function getCatalogProducts(options?: {
     const namedModel = cached.brand === "Apple" ? getNamedIphoneDeviceModel(cached.name) : undefined;
     const category = namedModel ? "Смартфоны" : cached.category;
     const model = namedModel ?? cached.model;
-    const validOffers = item.offers.filter(offer => {
+    const priceListOffers = item.offers.filter(offer => {
+      if (offer.source === "warehouse") return false;
       const price = Number(offer.price);
       const priceUSD = normalizeOfferPrice(offer, rates);
       return Number.isFinite(price) && price > 0 && Number.isFinite(priceUSD) && priceUSD > 0;
     });
-    if (!validOffers.length) continue;
+    if (!priceListOffers.length) continue;
 
-    const minOffer = validOffers.reduce((min, o) =>
+    const minOffer = priceListOffers.reduce((min, o) =>
       normalizeOfferPrice(o, rates) < normalizeOfferPrice(min, rates) ? o : min
     );
 
@@ -88,7 +89,7 @@ export function getCatalogProducts(options?: {
       source,
       hidden,
 
-      ...(canSeeWarehouse(role) && { inWarehouse: validOffers.some(offer => offer.source === "warehouse") }),
+      ...(canSeeWarehouse(role) && { inWarehouse: item.offers.some(offer => offer.source === "warehouse") }),
 
       ...(includeOffers && { offers: item.offers }),
     });

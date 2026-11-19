@@ -117,9 +117,24 @@ beforeEach(() => {
 });
 afterEach(() => mock.restoreAll());
 
-test("Google loader keeps only positive stock and returns A/D without quantity", async () => {
-  sheetRows = [["Название", "", "Остаток", "Цена"], ["item", "", 2, 123.45], ["zero", "", 0, 100], ["negative", "", -1, 100], ["bad", "", "?", 100]];
-  assert.deepEqual(await sheets.loadWareHouse(), [{ name: "item", price: "123.45" }]);
+test("Google loader keeps positive stock in either column and returns A/D without quantity", async () => {
+  sheetRows = [
+    ["Название", "", "ЕД", "Цена", "NE"],
+    ["ed-only", "", 2, 123.45],
+    ["ne-only", "", "", 234.56, "3"],
+    ["positive-ne", "", -5, 345.67, 1],
+    ["both", "", 1, 456.78, 2],
+    ["zero", "", 0, 100, 0],
+    ["negative", "", -1, 100],
+    ["bad", "", "?", 100, "?"],
+    ["empty", "", "", 100, ""],
+  ];
+  assert.deepEqual(await sheets.loadWareHouse(), [
+    { name: "ed-only", price: "123.45" },
+    { name: "ne-only", price: "234.56" },
+    { name: "positive-ne", price: "345.67" },
+    { name: "both", price: "456.78" },
+  ]);
   assert.equal(sheetCalls.length, 1);
   assert.equal(sheetCalls[0].range, "'склад'!A:H");
 });
@@ -263,12 +278,12 @@ test("saved warehouse offers load locally with the existing JSON schema", () => 
   assert.deepEqual(catalog.getCatalogItem(product.id)?.offers, [
     { price: "250.75", source: "warehouse" }, { price: "30000", source: "AAA-store" },
   ]);
-  assert.equal(getCatalogProductById(product.id, "wholesale")?.price, "261");
+  assert.equal(getCatalogProductById(product.id, "wholesale")?.price, "310");
   assert.equal(sheetCalls.length, 0);
 });
 
 for (const [rub, usd, warehouse, source, price] of [
-  [30000, 290, 250, "warehouse", "260"],
+  [30000, 290, 250, "Today there tomorrow here", "300"],
   [20000, 290, 250, "AAA-store", "210"],
   [30000, 190, 250, "Today there tomorrow here", "200"],
   [25000, 250, 250, "AAA-store", "260"],
@@ -281,13 +296,14 @@ for (const [rub, usd, warehouse, source, price] of [
   assert.equal(selected.price, price);
 });
 
-test("warehouse USD is not converted twice and uses existing client rounding", () => {
+test("warehouse-only offers are retained in storage and excluded from priced views", () => {
   assert.equal(formatting.normalizeOfferPrice({ price: "250.4", source: "warehouse" }, rates), 250.4);
   assert.equal(formatting.toUsdPrice(250.4, rates, "warehouse"), 250.4);
   catalog.upsertCatalog(product.id, "250.4", "warehouse");
-  assert.equal(getCatalogProducts({ role: "wholesale" })[0].price, "260");
-  assert.equal(getCatalogProducts({ role: "retail" })[0].price, "810");
-  assert.equal(getCatalogProducts({ role: "admin" })[0].price, "250.4");
+  assert.equal(catalog.getCatalogItem(product.id)?.offers[0].price, "250.4");
+  for (const role of ["wholesale", "retail", "admin"] as const) {
+    assert.equal(getCatalogProductById(product.id, role), undefined);
+  }
 });
 
 test("invalid offers and unusable RUB conversion cannot win minimum selection", () => {
@@ -295,7 +311,7 @@ test("invalid offers and unusable RUB conversion cannot win minimum selection", 
   catalog.upsertCatalog(product.id, "250", "warehouse");
   catalog.upsertCatalog(product.id, "10000", "AAA-store");
   mock.method(priceService, "getRates", () => ({ ...rates, rub_to_usd: 0 }));
-  assert.equal(getCatalogProducts({ role: "wholesale" })[0].source, "warehouse");
+  assert.deepEqual(getCatalogProducts({ role: "wholesale" }), []);
 });
 
 test("skipped report includes every name and respects Telegram limit", async () => {
@@ -311,8 +327,8 @@ test("skipped report includes every name and respects Telegram limit", async () 
 });
 
 test("warehouse reports show USD instead of unknown currency", async () => {
-  catalog.upsertCatalog(product.id, "250", "warehouse");
-  await reports.sendHiddenProductsReport(bot, [{ ...getCatalogProducts()[0], hidden: true }]);
+  catalog.upsertCatalog(product.id, "250", "Today there tomorrow here");
+  await reports.sendHiddenProductsReport(bot, [{ ...getCatalogProducts()[0], source: "warehouse", hidden: true }]);
   assert.ok(messages.some(text => text.includes("250 USD")));
 });
 
@@ -433,7 +449,8 @@ test("warehouse change report shows additions, changed prices, removals and unch
 });
 
 for (const input of ["button", "text"]) test(`catalog → cart (${input}) → order retains price/source without recalculation`, async () => {
-  catalog.upsertCatalog(product.id, "250", "warehouse");
+  catalog.upsertCatalog(product.id, "200", "warehouse");
+  catalog.upsertCatalog(product.id, "250", "Today there tomorrow here");
   const selected = getCatalogProductById(product.id, "wholesale")!;
   assert.equal(selected.price, "260");
   setChatState(10, { mode: "amount_product_for_cart", sections: { [SECTION.CART]: { flowStep: "amount", selectedProductId: product.id, currentOrder: [] } } as any });
@@ -446,13 +463,13 @@ for (const input of ["button", "text"]) test(`catalog → cart (${input}) → or
   }
   const cart = getChatState(10).sections.cart!.currentOrder!;
   assert.equal(cart[0].price, "260");
-  assert.equal(cart[0].source, "warehouse");
-  catalog.upsertCatalog(product.id, "500", "warehouse");
+  assert.equal(cart[0].source, "Today there tomorrow here");
+  catalog.upsertCatalog(product.id, "500", "Today there tomorrow here");
   let saved: any;
   mock.method(orders, "addOrder", (order: Order) => { saved = order; });
   await handlers.callback_query({ id: "q2", data: CALLBACK_TYPE.SUBMIT_ORDER, from: { id: 10, first_name: "Test" }, message: { chat: { id: 10 } } });
   assert.equal(saved.total, 520);
-  assert.equal(saved.items[0].source, "warehouse");
+  assert.equal(saved.items[0].source, "Today there tomorrow here");
   assert.ok(messages.some(text => text.includes("260 = 520")));
 });
 
@@ -463,7 +480,7 @@ function workbook(rows: unknown[][]): Buffer {
 }
 
 for (const manager of ["manager_retail", "manager_wholesale"] as const) {
-  for (const source of ["AAA-store", "Today there tomorrow here", "warehouse"] as const) {
+  for (const source of ["AAA-store", "Today there tomorrow here"] as const) {
     test(`${manager} inherits client pricing for ${source}`, () => {
       catalog.upsertCatalog(product.id, source === "AAA-store" ? "25040" : "250.4", source);
       const parent = roleUtils.getPricingRole(manager);
@@ -477,11 +494,13 @@ for (const manager of ["manager_retail", "manager_wholesale"] as const) {
 
 for (const role of ["retail", "wholesale", "manager_retail", "manager_wholesale", "admin", "superadmin", undefined] as const) {
   test(`warehouse indication for ${role} uses availability independently of cheapest source`, () => {
-    catalog.upsertCatalog(product.id, "20000", "AAA-store");
-    catalog.upsertCatalog(product.id, "250", "warehouse");
+    catalog.upsertCatalog(product.id, "250", "Today there tomorrow here");
+    catalog.upsertCatalog(product.id, "200", "warehouse");
     const selected = getCatalogProducts({ role })[0];
     const visible = role !== "retail" && role !== undefined;
-    assert.equal(selected.source, "AAA-store");
+    assert.equal(selected.source, "Today there tomorrow here");
+    assert.equal(selected.price, role === "retail" || role === "manager_retail" ? "810" :
+      role === "wholesale" || role === "manager_wholesale" ? "260" : "250");
     assert.equal(selected.inWarehouse === true, visible);
     const text = messageUtils.buildMessagesForProducts([selected], role).map(m => m.text).join("\n");
     assert.equal(text.includes(ITEM_TEXTS.IN_WAREHOUSE), visible);
@@ -645,7 +664,7 @@ test("iPhone Air/Duo sort together and form separate messages despite legacy mod
   ];
   for (const item of fixtures) {
     products.setProductToCache(item.id, { ...product, ...item });
-    catalog.upsertCatalog(item.id, "250", "warehouse");
+    catalog.upsertCatalog(item.id, "250", "Today there tomorrow here");
   }
   const sorted = getCatalogUIProducts({ brand: "Apple", category: "Смартфоны" }, "wholesale");
   const parts = messageUtils.buildMessagesForProducts(sorted, "wholesale");
@@ -804,7 +823,7 @@ test("new warehouse phones do not merge SIM, colors or activation", async () => 
     { name: "iPhone 17 Pro 256 Black Esim (Active)", price: "490" },
   ]);
   assert.equal(products.getProductCache().size, 4);
-  assert.equal(getCatalogProducts({ role: "admin" }).length, 4);
+  assert.equal(catalog.getCatalog().length, 4);
   assert.equal(products.getProductCacheValues().filter(p => p.attributes?.activated).length, 1);
 });
 

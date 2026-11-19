@@ -5,7 +5,7 @@
 ## Ориентиры
 
 - `src/index.ts` — bootstrap; `src/bot.ts` — подключение Telegram.
-- `src/migrations/` — идемпотентные исправления данных до подключения Telegram. Миграция Duo с резервной копией включена в стартовый поток; ручной просмотр и проверки — [iphone-duo.md](docs/migrations/iphone-duo.md).
+- `scripts/` — разовые скрипты для исправления ошибочно созданных записей в кеше товаров и других данных. После применения автоматический вызов можно убрать из точки запуска, сохранив скрипт для истории и ручного запуска. Миграции Duo и Glacier запускаются вручную. Реализация Duo находится в `src/migrations/`, порядок запуска — в [iphone-duo.md](docs/migrations/iphone-duo.md).
 - `src/handlers/document.handler.ts`, `src/services/xlsx.service.ts` — импорт прайсов.
 - `src/services/products/`, `src/services/catalog/`, `src/utils/priceFormat.ts` — идентификация товаров, предложения, каталог и цены.
 - `src/handlers/callback.handler.ts`, `src/state/chat.state.ts`, `src/services/orders.service.ts` — корзина и отправка заказа.
