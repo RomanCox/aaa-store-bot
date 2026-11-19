@@ -1,8 +1,8 @@
-import { Product, UserRole } from "../types";
-import { compareSpecs, extractMemorySubstring } from "./catalog.utils";
-import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
-import { getPricingRole, getWarehouseMarker } from "./roles";
-import { getIphoneGroupKey } from "../services/products/iphone.models";
+import {Product, UserRole} from "../types";
+import {compareSpecs, extractMemorySubstring} from "./catalog.utils";
+import {TELEGRAM_MESSAGE_LIMIT} from "../constants";
+import {getPricingRole, getWarehouseMarker} from "./roles";
+import {getIphoneGroupKey} from "../services/products/iphone.models";
 
 function formatProductLine(product: Product, userRole?: UserRole): string {
   const name = product.name;
@@ -145,9 +145,7 @@ export function buildMessagesForProducts(
     currentMessage += safeLine + "\n";
 
     currentProducts.push(product);
-
-    const currentGroupKey = getProductGroupKey(product);
-    prevGroupKey = currentGroupKey;
+    prevGroupKey = getProductGroupKey(product);
 
     prevModel = model;
     prevStorage = storage;
