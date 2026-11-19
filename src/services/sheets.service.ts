@@ -174,7 +174,7 @@ export async function loadColorsFromConfig() {
 export async function loadWareHouse(): Promise<WarehousePriceRow[]> {
   const rows = await getSheet(Spreadsheet.Warehouse, "'склад'!A:H");
   return rows
-    .filter(row => Number(row[2]) > 0)
+    .filter(row => Number(row[2]) > 0 || Number(row[4]) > 0)
     .map(row => ({
       name: String(row[0] ?? "").trim(),
       price: String(row[3] ?? "").trim(),
