@@ -32,6 +32,7 @@ import {
 import { SAVE_EVERY_NUMBER_ITEMS, TODAY_THERE_TOMORROW_HERE_PRICE_DELIVERY } from "../constants";
 import { resolveColorFromName, normalizeColorInProductName, removeColorFromName } from "./colors.service";
 import { generateId } from "./products/productId";
+import { getNamedIphoneDeviceModel } from "./products/iphone.models";
 
 const WAREHOUSE_SIM_TOKEN = "(?:dual\\s*sim|sim\\s*\\+\\s*esim|esim\\s*\\+\\s*sim|[12]?sim|esim)";
 const WAREHOUSE_SIM_SUFFIX = new RegExp(`\\s+(\\(${WAREHOUSE_SIM_TOKEN}\\)|${WAREHOUSE_SIM_TOKEN})$`, "i");
@@ -106,7 +107,7 @@ function hasRequiredColumns(row: Record<string, unknown>): boolean {
 }
 
 // Токен модели iPhone: "iPhone 17 Pro Max", "iPhone SE", "iPhone Air" и т.п.
-const IPHONE_MODEL_TOKEN = /iphone\s*(se|air|xr|xs|x)\b|iphone\s*\d{1,2}\s*(pro\s*max|pro|max|plus|mini|e)?/gi;
+const IPHONE_MODEL_TOKEN = /iphone\s*(se|air|duo|xr|xs|x)\b|iphone\s*\d{1,2}\s*(pro\s*max|pro|max|plus|mini|e)?/gi;
 
 // Вычитаем из названия все токены, которые умеем распознавать у "чистого" iPhone
 // (модель, память, цвет, sim/(active), флаги стран) — чтобы посмотреть, что останется.
@@ -137,6 +138,7 @@ function isIphoneAccessoryName(name: string): boolean {
 }
 
 function getCategory(name: string) {
+	if (getNamedIphoneDeviceModel(name)) return "Смартфоны";
 	const normalizeString = name.toLowerCase()
 	if (normalizeString.includes("iphone")) {
 		return isIphoneAccessoryName(name) ? "Аксессуары" : "Смартфоны";
@@ -473,7 +475,7 @@ export async function ingestAAAStorePrice(
 
 		const chunkResults = await Promise.all(
 			chunk.map(async (row, idx): Promise<IngestItem | undefined> => {
-				const category = String(row["Категория"] ?? "").trim();
+				const sourceCategory = String(row["Категория"] ?? "").trim();
 				const nameRaw = String(row["Название"] ?? "").trim();
 				const model = String(row["Модель"] ?? "").trim();
 				const storageRaw = String(row["Хранилище"] ?? "").trim();
@@ -482,6 +484,8 @@ export async function ingestAAAStorePrice(
 				const simTypeRaw = String(row["Тип SIM"] ?? "");
 
 				const name = normalizeStorageInName(nameRaw);
+				const namedModel = getNamedIphoneDeviceModel(name);
+				const category = namedModel ? "Смартфоны" : sourceCategory;
 
 				if (!name || !price) {
 					// +2: строка 1 — заголовки, sheet_to_json 0-индексирует данные с 0
@@ -495,7 +499,7 @@ export async function ingestAAAStorePrice(
 					return;
 				}
 
-				let finalModel = model;
+				let finalModel = namedModel ?? model;
 				if (brand === "Apple" && category === "Планшеты") {
 					finalModel = normalizeModelForIPadMini(finalModel, name);
 				}
@@ -819,7 +823,7 @@ export async function ingestTodayThereTomorrowHerePrice(
 					unresolvedItems.add(name);
 					return;
 				}
-				const model = extracted.model;
+				const model = getNamedIphoneDeviceModel(name) ?? extracted.model;
 				if (extracted.cost !== null) totalAICost += extracted.cost;
 
 				const candidates = [...cachedProducts.values()].filter(p => {

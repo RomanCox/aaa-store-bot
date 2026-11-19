@@ -10,6 +10,7 @@ import { getProductFromCacheById } from "../products/products.service";
 import { getCatalog } from "./catalog.service";
 import { ProductForUI, UserRole } from "../../types";
 import { getPriceFormation, getRates } from "../price.service";
+import { getNamedIphoneDeviceModel } from "../products/iphone.models";
 
 export function getCatalogProducts(options?: {
   role?: UserRole | "retail";
@@ -32,6 +33,9 @@ export function getCatalogProducts(options?: {
   for (const item of catalogItems) {
     const cached = getProductFromCacheById(item.productId);
     if (!cached) continue;
+    const namedModel = cached.brand === "Apple" ? getNamedIphoneDeviceModel(cached.name) : undefined;
+    const category = namedModel ? "Смартфоны" : cached.category;
+    const model = namedModel ?? cached.model;
     const validOffers = item.offers.filter(offer => {
       const price = Number(offer.price);
       const priceUSD = normalizeOfferPrice(offer, rates);
@@ -46,7 +50,7 @@ export function getCatalogProducts(options?: {
     const basePrice = minOffer.price;
     const source = minOffer.source;
     let country = minOffer.country;
-    if (cached.brand === 'Apple' && cached.category === 'Смартфоны') {
+    if (cached.brand === 'Apple' && category === 'Смартфоны') {
       country = undefined;
     }
 
@@ -56,7 +60,7 @@ export function getCatalogProducts(options?: {
         basePrice,
         rates,
         priceFormation,
-        cached.category,
+        category,
         cached.brand,
         source,
         role,
@@ -65,15 +69,15 @@ export function getCatalogProducts(options?: {
 
     const basePriceUSD = toUsdPrice(Number(basePrice), rates, source);
     const hidden =
-      !findPriceRule(basePriceUSD, cached.category, cached.brand, "wholesale", priceFormation, cached.name) &&
-      !findPriceRule(basePriceUSD, cached.category, cached.brand, "retail", priceFormation, cached.name);
+      !findPriceRule(basePriceUSD, category, cached.brand, "wholesale", priceFormation, cached.name) &&
+      !findPriceRule(basePriceUSD, category, cached.brand, "retail", priceFormation, cached.name);
 
     result.push({
       id: cached.id,
-      category: cached.category,
+      category,
       name: replaceStorageInName(cached.name),
       brand: cached.brand,
-      model: cached.model,
+      model,
 
       storage: cached.attributes?.storage,
       country,

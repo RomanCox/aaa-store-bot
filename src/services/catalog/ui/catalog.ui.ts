@@ -1,6 +1,7 @@
 import { ProductFilters, ProductForUI, UserRole } from "../../../types";
 import { compareSpecs, extractMemorySubstring } from "../../../utils";
 import { getCatalogProducts } from "../catalog.builder";
+import { getIphoneGroupKey } from "../../products/iphone.models";
 
 /**
  * UI ONLY: фильтрация + сортировка каталога для отображения
@@ -46,6 +47,13 @@ function sortProducts(products: ProductForUI[]): ProductForUI[] {
       sensitivity: "base",
     });
     if (categoryCompare !== 0) return categoryCompare;
+
+    // Отдельные семейства iPhone должны идти подряд до разбивки на сообщения.
+    const groupA = getIphoneGroupKey(a);
+    const groupB = getIphoneGroupKey(b);
+    if (groupA && groupB && groupA !== groupB) {
+      return groupA.localeCompare(groupB, "en", { numeric: true });
+    }
 
     // 3. Модель (с поддержкой чисел)
     const nameCompare = (a.model ?? "").localeCompare(b.model ?? "", "ru", {

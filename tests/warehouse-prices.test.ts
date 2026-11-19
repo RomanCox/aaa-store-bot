@@ -37,7 +37,7 @@ const brands = require("../src/services/brands.service") as typeof import("../sr
 const ai = require("../src/ai/productAI") as typeof import("../src/ai/productAI");
 const imports = require("../src/services/xlsx.service") as typeof import("../src/services/xlsx.service");
 const { getCatalogProducts } = require("../src/services/catalog/catalog.builder") as typeof import("../src/services/catalog/catalog.builder");
-const { getCatalogProductById } = require("../src/services/catalog/ui/catalog.ui") as typeof import("../src/services/catalog/ui/catalog.ui");
+const { getCatalogProductById, getCatalogUIProducts } = require("../src/services/catalog/ui/catalog.ui") as typeof import("../src/services/catalog/ui/catalog.ui");
 const formatting = require("../src/utils/priceFormat") as typeof import("../src/utils/priceFormat");
 const reports = require("../src/render/reports") as typeof import("../src/render/reports");
 const exportHandler = require("../src/handlers/catalog.hanlder") as typeof import("../src/handlers/catalog.hanlder");
@@ -62,6 +62,8 @@ const adminService = require("../src/services/admin.service") as typeof import("
 const addUsers = require("../src/handlers/users/addUser.handler") as typeof import("../src/handlers/users/addUser.handler");
 const editUsers = require("../src/handlers/users/editUser.handler") as typeof import("../src/handlers/users/editUser.handler");
 const { MENU_TEXTS, ITEM_TEXTS, ADMIN_TEXTS } = require("../src/texts") as typeof import("../src/texts");
+const iphoneModels = require("../src/services/products/iphone.models") as typeof import("../src/services/products/iphone.models");
+const colors = require("../src/services/colors.service") as typeof import("../src/services/colors.service");
 
 const rates: Rates = { rub_to_usd: 100, rub_to_byn: 4, usd_to_byn: 3 };
 const product: CachedProduct = {
@@ -626,4 +628,112 @@ test("second XLSX regression: cached rawName, USD rounding and +5 delivery", asy
   await handleIngestResult(bot, 10, result.items, "Today there tomorrow here", result.totalRows);
   assert.equal(getCatalogProducts({ role: "wholesale" })[0].price, "265");
   assert.equal(catalog.getCatalogItem(product.id)?.offers.length, 3);
+});
+
+test("iPhone Air/Duo sort together and form separate messages despite legacy model strings", () => {
+  products.getProductCache().clear();
+  mock.method(colors, "removeColorFromName", (name: string) => name.replace(/\bblack\b/gi, ""));
+  const fixtures = [
+    { id: "duo-short", name: "iPhone Duo 256 NightSky", model: "Duo", category: "Смартфоны" },
+    { id: "air-short", name: "iPhone Air 512 Black", model: "Air", category: "Смартфоны" },
+    { id: "14", name: "iPhone 14 128 Black", model: "iPhone 14", category: "Смартфоны" },
+    { id: "duo-old", name: "iPhone Duo 512 Star White", model: "iPhone Duo 512 Star White", category: "Аксессуары" },
+    { id: "18", name: "iPhone 18 256 Black", model: "iPhone 18", category: "Смартфоны" },
+    { id: "air", name: "iPhone Air 256 Black", model: "iPhone Air", category: "Смартфоны" },
+    { id: "duo", name: "iPhone Duo 256 Night Sky", model: "iPhone Duo", category: "Смартфоны" },
+  ];
+  for (const item of fixtures) {
+    products.setProductToCache(item.id, { ...product, ...item });
+    catalog.upsertCatalog(item.id, "250", "warehouse");
+  }
+  const sorted = getCatalogUIProducts({ brand: "Apple", category: "Смартфоны" }, "wholesale");
+  const parts = messageUtils.buildMessagesForProducts(sorted, "wholesale");
+  assert.deepEqual(parts.map(part => iphoneModels.getIphoneGroupKey(part.products[0])), ["14", "18", "air", "duo"]);
+  for (const part of parts) assert.equal(new Set(part.products.map(iphoneModels.getIphoneGroupKey)).size, 1);
+  assert.equal(parts.flatMap(part => part.products).length, fixtures.length);
+  assert.equal(getCatalogUIProducts({ category: "Аксессуары" }, "wholesale").length, 0);
+});
+
+test("named family boundaries remain correct at message length splits and unknown models", () => {
+  const air = { ...product, price: "250", model: "Air", name: "iPhone Air 256 Black" };
+  const duo = { ...air, model: "Duo", name: "iPhone Duo 256 Night Sky" };
+  const entries = [...Array.from({ length: 200 }, (_, i) => ({ ...air, id: `air-${i}` })), duo];
+  const parts = messageUtils.buildMessagesForProducts(entries, "wholesale");
+  assert.ok(parts.length > 2);
+  assert.ok(parts.every(part => part.text.length <= TELEGRAM_MESSAGE_LIMIT));
+  assert.ok(parts.every(part => new Set(part.products.map(iphoneModels.getIphoneGroupKey)).size === 1));
+  assert.equal(parts.flatMap(part => part.products).length, entries.length);
+  const unknown = { ...air, name: "Unknown", model: "Unknown" };
+  assert.equal(messageUtils.buildMessagesForProducts([air, unknown, duo]).length, 3);
+});
+
+test("numeric iPhone generations and Samsung letter groups retain previous grouping", () => {
+  const entries = [
+    { ...product, price: "250", name: "iPhone 16e 128 Black", model: "iPhone 16e" },
+    { ...product, price: "250", name: "iPhone 16 Pro 128 Black", model: "iPhone 16 Pro" },
+    { ...product, price: "250", name: "iPhone 17 256 Black", model: "iPhone 17" },
+  ];
+  assert.deepEqual(messageUtils.buildMessagesForProducts(entries).map(part => part.products.length), [2, 1]);
+  const samsung = entries.map((item, index) => ({ ...item, brand: "Samsung", model: index < 2 ? `A${index + 25}` : "S25" }));
+  assert.deepEqual(messageUtils.buildMessagesForProducts(samsung).map(part => part.products.length), [2, 1]);
+});
+
+test("old Duo accessory card is corrected in catalog without changing cache, ID or offers", () => {
+  const cached = { ...product, category: "Аксессуары", model: "iPhone Duo 256 Star White", name: "iPhone Duo 256 Star White" };
+  products.setProductToCache(product.id, cached);
+  catalog.upsertCatalog(product.id, "30000", "AAA-store");
+  mock.method(priceService, "getPriceFormation", () => [
+    { category: "Смартфоны", prices: [{ type: "wholesale", value: 10 }] },
+    { category: "Аксессуары", prices: [{ type: "wholesale", value: 99 }] },
+  ]);
+  const displayed = getCatalogProducts({ role: "wholesale" })[0];
+  assert.equal(displayed.category, "Смартфоны");
+  assert.equal(displayed.model, "iPhone Duo");
+  assert.equal(displayed.price, "310");
+  assert.equal(displayed.id, product.id);
+  assert.equal(cached.category, "Аксессуары");
+  assert.equal(catalog.getCatalogItem(product.id)?.offers[0].price, "30000");
+});
+
+for (const name of ["Apple iPhone Duo 256 Night Sky", "Apple iPhone Duo 512 Star White"]) {
+  test(`AAA import corrects named phone category/model: ${name}`, async () => {
+    products.getProductCache().clear();
+    mock.method(brands, "resolveBrandFromName", () => "Apple");
+    const result = await imports.ingestAAAStorePrice(workbook([
+      ["SKU", "Категория", "Название", "Модель", "Цена", "Тип SIM"],
+      ["duo", "Аксессуары", name, name, 30000, "ESIM"],
+    ]));
+    assert.equal(result.items.length, 1);
+    assert.equal(result.items[0].product.category, "Смартфоны");
+    assert.equal(result.items[0].product.model, "iPhone Duo");
+    assert.equal(result.items[0].price, "30000");
+  });
+  test(`second import recognizes Duo as smartphone rather than accessory: ${name}`, async () => {
+    products.getProductCache().clear();
+    mock.method(brands, "extractBrandFromStart", () => ({ brand: "Apple", nameWithoutBrand: name.replace(/^Apple /, "") }));
+    mock.method(ai, "extractModelOnly", async () => ({ model: "Duo", cost: null }));
+    const result = await imports.ingestTodayThereTomorrowHerePrice(workbook([
+      ["Название", "Цена"], [name + " (ESIM)", 250],
+    ]));
+    assert.equal(result.items.length, 1);
+    assert.equal(result.items[0].product.category, "Смартфоны");
+    assert.equal(result.items[0].product.model, "iPhone Duo");
+    assert.equal(result.items[0].price, "255");
+  });
+}
+
+test("Duo accessories and unrelated Apple products remain accessories", async () => {
+  products.getProductCache().clear();
+  mock.method(brands, "resolveBrandFromName", () => "Apple");
+  for (const name of ["Apple iPhone Duo 256 Night Sky Case Kit", "Apple MagSafe Duo Charger"]) {
+    assert.equal(iphoneModels.getNamedIphoneDeviceModel(name), undefined);
+    const result = await imports.ingestAAAStorePrice(workbook([
+      ["SKU", "Категория", "Название", "Модель", "Цена"],
+      ["accessory", "Аксессуары", name, name, 1000],
+    ]));
+    assert.equal(result.items[0].product.category, "Аксессуары");
+    catalog.upsertCatalog(result.items[0].product.id, result.items[0].price, "AAA-store");
+  }
+  assert.equal(getCatalogProducts().length, 2);
+  assert.ok(getCatalogProducts().every(item => item.category === "Аксессуары"));
 });

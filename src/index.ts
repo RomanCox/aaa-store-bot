@@ -16,8 +16,12 @@ import { loadCatalog } from "./services/catalog/catalog.service";
 import { loadColorsFromFile } from "./services/colors.service";
 import { startAppleSimWatcher } from "./services/appleSimWatcher.service";
 import { loadWarehouseFromFile } from "./services/warehouse.service";
+import { migrateIphoneDuoCache } from "./migrations";
 
 async function bootstrap() {
+	// До polling и загрузки кеша: старое состояние в памяти не перезапишет миграцию.
+  loadColorsFromFile();
+  migrateIphoneDuoCache({ apply: true });
 	const bot = await createBot();
 
 	loadUsers();
@@ -27,7 +31,6 @@ async function bootstrap() {
 	loadPriceFormation();
   loadOrdersFromFile();
   loadBrandsFromFile();
-  loadColorsFromFile();
   loadWarehouseFromFile();
 
 	registerStart(bot);
@@ -46,9 +49,12 @@ async function bootstrap() {
   setInterval(() => {
     cleanOldFiles(TMP_PATH, 10, '.xlsx').catch(console.error);
   }, TIME_LIMIT_DELETING_OLD_FILES);
+
+  console.log("🤖 Bot started");
 }
 
-bootstrap().catch(console.error);
-
-console.log("🤖 Bot started");
+bootstrap().catch(error => {
+  console.error(error);
+  process.exitCode = 1;
+});
 

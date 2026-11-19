@@ -2,6 +2,7 @@ import { Product, UserRole } from "../types";
 import { compareSpecs, extractMemorySubstring } from "./catalog.utils";
 import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
 import { getPricingRole, getWarehouseMarker } from "./roles";
+import { getIphoneGroupKey } from "../services/products/iphone.models";
 
 function formatProductLine(product: Product, userRole?: UserRole): string {
   const name = product.name;
@@ -45,23 +46,7 @@ function getProductGroupKey(product: Product): string | null {
 		return firstLetter ?? null;
 	}
 
-	// === Apple смартфоны → по поколению iPhone ===
-	if (brand === "apple" && category === "смартфоны") {
-		const parts = model.split(/\s+/);
-
-		// ожидаем ["iPhone", "16e", ...]
-		if (parts.length >= 2) {
-			const secondWord = parts[1];
-
-			// 16e → 16
-			const match = secondWord.match(/\d+/);
-			if (match) {
-				return match[0];
-			}
-		}
-	}
-
-	return null;
+	return getIphoneGroupKey(product);
 }
 
 function shouldSplitMessage({
@@ -86,9 +71,7 @@ function shouldSplitMessage({
 	// 2️⃣ Проверка группировки внутри бренда
 	const currentGroupKey = getProductGroupKey(product);
 
-	return !!(prevGroupKey &&
-		currentGroupKey &&
-		prevGroupKey !== currentGroupKey);
+	return prevGroupKey !== currentGroupKey;
 }
 
 type ProductMessage = {
@@ -164,7 +147,7 @@ export function buildMessagesForProducts(
     currentProducts.push(product);
 
     const currentGroupKey = getProductGroupKey(product);
-    if (currentGroupKey) prevGroupKey = currentGroupKey;
+    prevGroupKey = currentGroupKey;
 
     prevModel = model;
     prevStorage = storage;

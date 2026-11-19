@@ -5,6 +5,7 @@
 ## Ориентиры
 
 - `src/index.ts` — bootstrap; `src/bot.ts` — подключение Telegram.
+- `src/migrations/` — идемпотентные исправления данных до подключения Telegram. Миграция Duo с резервной копией включена в стартовый поток; ручной просмотр и проверки — [iphone-duo.md](docs/migrations/iphone-duo.md).
 - `src/handlers/document.handler.ts`, `src/services/xlsx.service.ts` — импорт прайсов.
 - `src/services/products/`, `src/services/catalog/`, `src/utils/priceFormat.ts` — идентификация товаров, предложения, каталог и цены.
 - `src/handlers/callback.handler.ts`, `src/state/chat.state.ts`, `src/services/orders.service.ts` — корзина и отправка заказа.
@@ -22,6 +23,8 @@ Package manager: `pnpm@11.5.2` из `package.json`, lock-файл — `pnpm-lock
 | `pnpm install --frozen-lockfile` | Обычная установка по имеющемуся lock-файлу; отдельного install-script нет. Не выполнялась. Требует разрешённой установки зависимостей. |
 | `pnpm exec tsc --noEmit` | Проверка по `tsconfig.json`, отдельного script нет. Эквивалент `node node_modules/typescript/bin/tsc --noEmit` выполнен успешно. Сам `pnpm exec` не проверялся. |
 | `node -r ts-node/register --test tests/warehouse-prices.test.ts` | Тесты склада, менеджерских ролей и регрессии XLSX/корзины; без внешних сервисов и рабочих файлов. Результаты — в архитектуре. |
+| `node -r ts-node/register --test tests/iphone-duo-migration.test.ts tests/warehouse-prices.test.ts` | Выполнено успешно: 89 тестов; применение миграции проверено только на временных JSON. |
+| `node -r ts-node/register scripts/migrate-iphone-duo.ts` | Выполнен предварительный просмотр локального кеша без записи; 13 исправлений. `--apply` на рабочем кеше не выполнялся. |
 | `pnpm run build` | Script `build`: `tsc && cpx` с шаблоном `src/**/*.json` и целью `dist`; не выполнялся, корректность shell-экранирования шаблона не проверена. |
 | `pnpm run dev`, `pnpm start` | Scripts запуска через `ts-node src/index.ts` и `node dist/index.js`; не выполнялись. Они подключаются к рабочим сервисам. |
 
