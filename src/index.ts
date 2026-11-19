@@ -16,12 +16,9 @@ import { loadCatalog } from "./services/catalog/catalog.service";
 import { loadColorsFromFile } from "./services/colors.service";
 import { startAppleSimWatcher } from "./services/appleSimWatcher.service";
 import { loadWarehouseFromFile } from "./services/warehouse.service";
-import { migrateIphoneDuoCache } from "./migrations";
 
 async function bootstrap() {
-	// До polling и загрузки кеша: старое состояние в памяти не перезапишет миграцию.
   loadColorsFromFile();
-  migrateIphoneDuoCache({ apply: true });
 	const bot = await createBot();
 
 	loadUsers();
