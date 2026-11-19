@@ -2,12 +2,9 @@ import { AiCandidate } from "../../types";
 import { CATEGORY_MAP } from "../../constants";
 
 export function buildPromptForExtractProductAttributes(name: string, category: string) {
-  let chipInstruction = "";
-  if (category === "laptop" || category === "computer") {
-    chipInstruction = "Extract chip as M-series with Pro/Max if present (e.g., M4, M4 Pro, M4 Max, M5 Pro).";
-  } else {
-    chipInstruction = "Extract chip only if it's a processor (e.g., A15, A17). Ignore 'Pro'/'Max' as they refer to model, not chip.";
-  }
+  const chipInstruction = category === "laptop" || category === "computer"
+    ? "Extract chip as M-series with Pro/Max if present (e.g., M4, M4 Pro, M4 Max, M5 Pro)."
+    : "Extract chip only if it's a processor (e.g., A15, A17). Ignore 'Pro'/'Max' as they refer to model, not chip.";
   return `Return ONLY JSON. Extract from product name: model, storage (as number, without GB/TB or RAM/SSD format like "16/512"), color, connectivity (WiFi/LTE/Cellular), ${chipInstruction}. Use empty string if missing.
 
 Input: ${name}
