@@ -1,6 +1,6 @@
 import { CachedProduct, UpsertProductInput } from "../../types";
 import { generateId } from "./productId";
-import {  getProductFromCacheById, setProductToCache } from "./products.service";
+import { getProductCache } from "./products.service";
 
 export function normalize(str: string) {
   return str
@@ -65,7 +65,7 @@ export function addRawNameIfNeeded(product: CachedProduct, raw: string) {
   }
 }
 
-export function upsertProduct(input: UpsertProductInput): CachedProduct {
+export function upsertProduct(input: UpsertProductInput, cache = getProductCache()): CachedProduct {
   const {
     rawName,
     brand,
@@ -86,7 +86,7 @@ export function upsertProduct(input: UpsertProductInput): CachedProduct {
     activated: attributes?.activated,
   });
 
-  const existing = getProductFromCacheById(id);
+  const existing = cache.get(id);
 
   // 🔄 UPDATE
   if (existing) {
@@ -114,7 +114,7 @@ export function upsertProduct(input: UpsertProductInput): CachedProduct {
     rawNames: [rawName],
   };
 
-  setProductToCache(id, newProduct);
+  cache.set(id, newProduct);
 
   return newProduct;
 }

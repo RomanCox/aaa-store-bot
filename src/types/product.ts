@@ -31,6 +31,12 @@ export interface IngestResult {
 	skipped: IngestSkippedGroup[];
 }
 
+// Подготовленные изменения кеша публикуются сервисом склада только после сохранения снимка.
+export interface WarehouseIngestResult extends IngestResult {
+	aiCost: number;
+	cacheUpdates: CachedProduct[];
+}
+
 export interface CachedProduct {
 	id: string;
 

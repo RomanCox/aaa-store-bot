@@ -1,6 +1,16 @@
 import { AIResponse } from "../types";
 
 const AI_REQUEST_TIMEOUT_MS = 30_000;
+const AI_MAX_TOKENS = 1024;
+
+// Только диагностические поля: без prompt, заголовков авторизации и reasoning.
+function diagnosticText(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  let text = value;
+  const key = process.env.OPENROUTER_API_KEY;
+  if (key) text = text.split(key).join("[REDACTED]");
+  return text.replace(/Bearer\s+\S+|sk-[\w-]+/gi, "[REDACTED]").slice(0, 500);
+}
 
 export async function askAI(prompt: string): Promise<AIResponse> {
   const model = process.env.OPENROUTER_MODEL || '~anthropic/claude-haiku-latest';
@@ -19,8 +29,10 @@ export async function askAI(prompt: string): Promise<AIResponse> {
       },
       body: JSON.stringify({
         model,
-        temperature: 0,
-        max_tokens: 200,
+        max_tokens: AI_MAX_TOKENS,
+        // Извлекаем короткий JSON, без затрат общего бюджета на thinking.
+        // temperature не передаём: Haiku 5.5 не поддерживает значение 0.
+        reasoning: { enabled: false },
         response_format: {
           type: "json_object",
         },
@@ -52,7 +64,32 @@ export async function askAI(prompt: string): Promise<AIResponse> {
   const bodyCost = data?.usage?.cost ?? 0;
   const cost = costHeader || bodyCost;
 
-  const content = data?.choices?.[0]?.message?.content || "";
+  const choice = data?.choices?.[0];
+  const rawContent = choice?.message?.content;
+  const content = typeof rawContent === "string" ? rawContent : "";
+
+  if (!content.trim() || data?.error || choice?.error || choice?.finish_reason === "length") {
+    const error = data?.error || choice?.error;
+    console.warn("AI_RESPONSE_DIAGNOSTICS", {
+      httpStatus: res.status,
+      requestId: diagnosticText(data?.id),
+      requestedModel: model,
+      responseModel: diagnosticText(data?.model),
+      provider: diagnosticText(data?.provider),
+      maxTokens: AI_MAX_TOKENS,
+      finishReason: diagnosticText(choice?.finish_reason),
+      nativeFinishReason: diagnosticText(choice?.native_finish_reason),
+      contentType: rawContent === null ? "null" : typeof rawContent,
+      contentLength: content.length,
+      refusalPresent: Boolean(choice?.message?.refusal),
+      errorCode: diagnosticText(String(error?.code ?? "")),
+      errorMessage: diagnosticText(error?.message),
+      promptTokens: data?.usage?.prompt_tokens,
+      completionTokens: data?.usage?.completion_tokens,
+      reasoningTokens: data?.usage?.completion_tokens_details?.reasoning_tokens,
+      cost,
+    });
+  }
 
   return { content, cost };
 }

@@ -16,6 +16,7 @@ export interface ProductCreationResult {
   name?: string;
   storage?: string;
   color?: string;
+  category?: string;
 }
 
 export interface ExtractedAttrs {

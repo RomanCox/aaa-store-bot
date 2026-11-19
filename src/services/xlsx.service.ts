@@ -1,6 +1,6 @@
 import * as XLSX from "xlsx";
-import { CachedProduct, IngestItem, IngestResult, IngestSkippedGroup, WarehousePriceRow } from "../types";
-import { callAIForProductMatch, extractModelOnly } from "../ai/productAI";
+import { CachedProduct, IngestItem, IngestResult, IngestSkippedGroup, WarehousePriceRow, WarehouseIngestResult } from "../types";
+import { callAIForProduct, callAIForProductMatch, extractModelOnly } from "../ai/productAI";
 import {
 	cleanProductName,
 	extractActivated,
@@ -20,6 +20,7 @@ import {
 	buildAAAStoreRawName,
 	buildTodayThereTomorrowHereRawName,
 	upsertProduct,
+	normalize,
 } from "./products/product.builder";
 import {
 	findByRawName,
@@ -29,13 +30,17 @@ import {
 	getProductFromCacheById,
 	setProductToCache,
 } from "./products/products.service";
-import { SAVE_EVERY_NUMBER_ITEMS, TODAY_THERE_TOMORROW_HERE_PRICE_DELIVERY } from "../constants";
+import { SAVE_EVERY_NUMBER_ITEMS, TODAY_THERE_TOMORROW_HERE_PRICE_DELIVERY, CATEGORY_MAP } from "../constants";
+import { ADMIN_TEXTS } from "../texts";
 import { resolveColorFromName, normalizeColorInProductName, removeColorFromName } from "./colors.service";
 import { generateId } from "./products/productId";
 import { getNamedIphoneDeviceModel } from "./products/iphone.models";
 
 const WAREHOUSE_SIM_TOKEN = "(?:dual\\s*sim|sim\\s*\\+\\s*esim|esim\\s*\\+\\s*sim|[12]?sim|esim)";
 const WAREHOUSE_SIM_SUFFIX = new RegExp(`\\s+(\\(${WAREHOUSE_SIM_TOKEN}\\)|${WAREHOUSE_SIM_TOKEN})$`, "i");
+// Текстовые обозначения добавляем по подтверждённым форматам складских названий.
+const WAREHOUSE_TEXT_REGIONS: Record<string, string> = { RU: "🇷🇺" };
+const WAREHOUSE_REGION_SUFFIX = new RegExp(`\\s+(${Object.keys(WAREHOUSE_TEXT_REGIONS).join("|")})$`, "i");
 
 function normalizeWarehouseSimSuffix(name: string): string {
   if (!/^(?:apple\s+)?iphone\b/i.test(name)) return name;
@@ -56,9 +61,38 @@ function normalizeWarehouseSimSuffix(name: string): string {
   return buildAAAStoreRawName({ name: withoutActive.slice(0, match.index), sim }) + (activeSuffix?.[0] ?? "");
 }
 
-// Получает только строки с положительным остатком. Никаких новых карточек,
-// AI-запросов, записи в кеш или эвристик поиска для складского источника.
-export function ingestWarehousePrices(rows: WarehousePriceRow[]): IngestResult {
+function warehouseNameParts(name: string) {
+  const activated = extractActivated(name);
+  const withoutFlags = name.replace(/[\u{1F1E6}-\u{1F1FF}]{2}/gu, " ").replace(/\s+/g, " ").trim();
+  const withoutActive = withoutFlags.replace(/\s+\(active\)\s*$/i, "");
+  const regionSuffix = withoutActive.match(WAREHOUSE_REGION_SUFFIX);
+  const country = extractFlags(name) || (regionSuffix ? WAREHOUSE_TEXT_REGIONS[regionSuffix[1].toUpperCase()] : "");
+  const withoutRegion = regionSuffix ? withoutActive.slice(0, regionSuffix.index) : withoutActive;
+  const suffix = withoutRegion.match(WAREHOUSE_SIM_SUFFIX);
+  const baseName = (suffix ? withoutRegion.slice(0, suffix.index) : withoutRegion).trim();
+  const isIphone = /\biphone\b/i.test(name) && getCategory(normalizeWarehouseSimSuffix(withoutRegion)) === "Смартфоны";
+  const sim = suffix
+    ? normalizeSimByRules({ name, country, category: "Смартфоны", simTypeRaw: suffix[1] })
+    : extractSim(name) ?? (isIphone && country ? normalizeSimByRules({ name, country, category: "Смартфоны" }) : undefined);
+  const rawName = isIphone
+    ? buildTodayThereTomorrowHereRawName({ name: baseName, sim, activated })
+    : buildAAAStoreRawName({ name: baseName, sim, country: country || undefined }) + (activated ? " (Active)" : "");
+  return { country: isIphone ? undefined : country || undefined, activated, sim, rawName, isIphone, recognitionName: baseName };
+}
+
+function findWarehouseProduct(name: string, cache: ReadonlyMap<string, CachedProduct>) {
+  const parts = warehouseNameParts(name);
+  for (const raw of new Set([name, normalizeWarehouseSimSuffix(name), parts.rawName])) {
+    const product = findByRawName(raw, { activated: parts.activated, cache });
+    if (product && (parts.isIphone || normalize(product.attributes?.country ?? "") === normalize(parts.country ?? ""))) {
+      return { product, rawNameForMatch: raw };
+    }
+  }
+  return undefined;
+}
+
+// Восстановление из файла и поиск существующих товаров: без AI и записи.
+export function ingestWarehousePrices(rows: WarehousePriceRow[], cache: ReadonlyMap<string, CachedProduct> = getProductCache()): IngestResult {
   const items = new Map<string, IngestItem>();
   const unmatched: string[] = [];
   const invalid: string[] = [];
@@ -71,17 +105,12 @@ export function ingestWarehousePrices(rows: WarehousePriceRow[]): IngestResult {
       continue;
     }
 
-    const matchOptions = { activated: extractActivated(name) };
-    let rawNameForMatch = name;
-    let product = findByRawName(rawNameForMatch, matchOptions);
-    if (!product) {
-      rawNameForMatch = normalizeWarehouseSimSuffix(name);
-      if (rawNameForMatch !== name) product = findByRawName(rawNameForMatch, matchOptions);
-    }
-    if (!product) {
+    const match = findWarehouseProduct(name, cache);
+    if (!match) {
       unmatched.push(row.name);
       continue;
     }
+    const { product, rawNameForMatch } = match;
 
     const existing = items.get(product.id);
     if (!existing || price < Number(existing.price)) {
@@ -96,9 +125,101 @@ export function ingestWarehousePrices(rows: WarehousePriceRow[]): IngestResult {
   }
 
   const skipped: IngestSkippedGroup[] = [];
-  if (unmatched.length) skipped.push({ title: "Склад: товары не найдены в кеше", names: [...new Set(unmatched)] });
-  if (invalid.length) skipped.push({ title: "Склад: строки без названия или корректной цены", names: invalid });
+  if (unmatched.length) skipped.push({ title: ADMIN_TEXTS.WAREHOUSE_UNMATCHED, names: [...new Set(unmatched)] });
+  if (invalid.length) skipped.push({ title: ADMIN_TEXTS.WAREHOUSE_INVALID, names: invalid });
   return { items: [...items.values()], totalRows: rows.length, skipped };
+}
+
+// Подготовка создания выполняется только по кнопке обновления склада.
+// Копия кеша не даёт сетевому распознаванию менять рабочую память до сохранения.
+export async function ingestWarehouseProducts(rows: WarehousePriceRow[]): Promise<WarehouseIngestResult> {
+  const original = getProductCache();
+  const cache = new Map([...original].map(([id, product]) => [id, structuredClone(product)]));
+  const failures = new Map<string, string[]>();
+  let aiCost = 0;
+  const cost = (value: number | null) => { if (value !== null && Number.isFinite(value) && value > 0) aiCost += value; };
+  const fail = (title: string, name: string) => failures.set(title, [...(failures.get(title) ?? []), name]);
+  const initial = ingestWarehousePrices(rows, cache);
+  const unmatched = initial.skipped.find(group => group.title === ADMIN_TEXTS.WAREHOUSE_UNMATCHED)?.names ?? [];
+
+  for (const originalName of unmatched) {
+    const name = normalizeStorageInName(originalName.trim());
+    if (findWarehouseProduct(name, cache)) continue;
+    try {
+      const brand = resolveBrandFromName(name) ?? extractBrandFromStart(name).brand;
+      if (!brand) { fail(ADMIN_TEXTS.WAREHOUSE_UNKNOWN_BRAND, originalName); continue; }
+      const parts = warehouseNameParts(name);
+      let category: string = brand === "Apple" ? getCategory(parts.rawName) : "Другое";
+      let model = getNamedIphoneDeviceModel(parts.rawName) ?? "";
+      const storage = normalizeStorageForCatalog(parts.recognitionName);
+      let color = resolveColorFromName(parts.recognitionName);
+      if (parts.isIphone && (!parts.sim || !storage)) {
+        fail(ADMIN_TEXTS.WAREHOUSE_MISSING_ATTRIBUTES, originalName); continue;
+      }
+      if (parts.isIphone && !model) {
+        const models = [...new Set([...cache.values()].filter(p => p.brand === brand && p.category === category).map(p => p.model))];
+        const extracted = await extractModelOnly(parts.recognitionName, models);
+        if (extracted) cost(extracted.cost);
+        if (!extracted?.model) { fail(ADMIN_TEXTS.WAREHOUSE_UNRESOLVED, originalName); continue; }
+        model = extracted.model;
+      }
+
+      const nameWithoutBrand = parts.rawName.toLowerCase().startsWith(brand.toLowerCase() + " ")
+        ? parts.rawName.slice(brand.length).trim() : parts.rawName;
+      const displayName = normalizeColorInProductName(cleanProductName(nameWithoutBrand));
+      if ((!parts.isIphone && category !== "Аксессуары") || (parts.isIphone && !color)) {
+        const extracted = await callAIForProduct(parts.recognitionName, brand, category);
+        cost(extracted.cost);
+        const parsed = extracted.result;
+        if (parsed.status !== "ok" || typeof parsed.confidence !== "number" || !Number.isFinite(parsed.confidence) || parsed.confidence < 0.5 || parsed.confidence > 1) {
+          fail(ADMIN_TEXTS.WAREHOUSE_UNRESOLVED, originalName); continue;
+        }
+        if (category === "Другое") category = parsed.category ?? "Другое";
+        if (!parts.isIphone) model = parsed.model?.trim() ?? "";
+        const aiColor = parsed.color?.trim();
+        if (!color && aiColor && normalize(parts.recognitionName).replace(/\s/g, "").includes(normalize(aiColor).replace(/\s/g, ""))) {
+          color = resolveColorFromName(aiColor) ?? aiColor;
+        }
+      }
+      if (category === "Аксессуары") model = displayName;
+      if (!model || category === "Другое" || !(Object.values(CATEGORY_MAP) as string[]).includes(category)) {
+        fail(ADMIN_TEXTS.WAREHOUSE_UNRESOLVED, originalName); continue;
+      }
+      if ((parts.isIphone || (brand === "Apple" && ["Ноутбуки", "Планшеты"].includes(category))) && !color) {
+        fail(ADMIN_TEXTS.WAREHOUSE_MISSING_ATTRIBUTES, originalName); continue;
+      }
+      const same = (a?: string, b?: string) => normalize(a ?? "") === normalize(b ?? "");
+      const existing = [...cache.values()].find(p =>
+        p.brand === brand && p.category === category && same(p.model, model) &&
+        same(normalizeStorageForCatalog(p.attributes?.storage ?? ""), storage) &&
+        same(p.attributes?.color, color) && same(p.attributes?.sim, parts.sim) &&
+        same(p.attributes?.country, parts.country) && (p.attributes?.activated === true) === parts.activated
+      );
+      const product = existing ?? upsertProduct({
+        rawName: parts.rawName, brand, category, model, name: displayName,
+        attributes: { storage, color, sim: parts.sim, country: parts.country, activated: parts.activated },
+      }, cache);
+      // Храним канонические алиасы: регион уже представлен флагом,
+      // SIM/активация — стандартными суффиксами. Исходную строку не дублируем.
+      for (const raw of [parts.rawName, nameWithoutBrand]) addRawNameIfNeeded(product, raw);
+    } catch {
+      fail(ADMIN_TEXTS.WAREHOUSE_AI_ERROR, originalName);
+    }
+  }
+  const result = ingestWarehousePrices(rows, cache);
+  const skipped = result.skipped.filter(group => group.title !== ADMIN_TEXTS.WAREHOUSE_UNMATCHED);
+  for (const [title, names] of failures) {
+    const unresolved = [...new Set(names)].filter(name => !findWarehouseProduct(normalizeStorageInName(name.trim()), cache));
+    if (unresolved.length) skipped.push({ title, names: unresolved });
+  }
+  return {
+    ...result, skipped, aiCost,
+    items: result.items.map(item => ({ ...item, isNew: !original.has(item.product.id) })),
+    cacheUpdates: [...cache.values()].filter(product => {
+      const before = original.get(product.id);
+      return !before || product.rawNames.some(raw => !before.rawNames.some(previous => normalize(raw) === normalize(previous)));
+    }),
+  };
 }
 
 function hasRequiredColumns(row: Record<string, unknown>): boolean {

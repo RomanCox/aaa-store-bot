@@ -1,4 +1,5 @@
 import path from "path";
+export * from "./category";
 
 export const TIME_LIMIT_DELETING_OLD_FILES = 60 * 60 * 1000;
 

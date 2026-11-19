@@ -53,7 +53,9 @@ export async function callAI(prompt: string): Promise<AIResponse | null> {
         return null;
       }
 
-      memoryCache.set(prompt, result);
+      // Пустой ответ сохраняет стоимость, но не блокирует следующую попытку
+      // кешем. Автоматических дополнительных платных запросов здесь нет.
+      if (result.content.trim()) memoryCache.set(prompt, result);
       return result;
     } catch (e) {
       console.error("AI request failed:", e);

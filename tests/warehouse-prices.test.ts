@@ -112,6 +112,7 @@ beforeEach(() => {
   mock.method(screens, "renderScreen", async () => {});
   mock.method(ai, "callAIForProductMatch", async () => { throw new Error("AI forbidden in tests"); });
   mock.method(ai, "extractModelOnly", async () => { throw new Error("AI forbidden in tests"); });
+  mock.method(ai, "callAIForProduct", async () => { throw new Error("AI forbidden in tests"); });
   setChatState(10, { mode: "idle", sections: { [SECTION.CART]: { flowStep: "main", currentOrder: [] } } as any });
 });
 afterEach(() => mock.restoreAll());
@@ -736,4 +737,313 @@ test("Duo accessories and unrelated Apple products remain accessories", async ()
   }
   assert.equal(getCatalogProducts().length, 2);
   assert.ok(getCatalogProducts().every(item => item.category === "Аксессуары"));
+});
+
+function warehouseAppleRecognition() {
+  mock.method(brands, "resolveBrandFromName", (name: string) => /^(?:Apple |iPhone |MacBook |AirTag )/i.test(name) ? "Apple" : undefined);
+  mock.method(colors, "resolveColorFromName", (name: string) => {
+    if (/black/i.test(name)) return "Black";
+    if (/white/i.test(name)) return "White";
+    if (/starlight/i.test(name)) return "Starlight";
+    return undefined;
+  });
+}
+
+test("warehouse stages new iPhone, persists product, and retains USD without delivery on duplicate rows", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  const model = mock.method(ai, "extractModelOnly", async () => ({ model: "iPhone 17 Pro", cost: 0.01 }));
+  const saved = mock.method(products, "saveProductCache", () => {});
+  const rows = [{ name: "Apple iPhone 17 Pro 256 Black Esim", price: "500" }, { name: "iPhone 17 Pro 256 Black (ESIM)", price: "450" }];
+  const plan = await imports.ingestWarehouseProducts(rows);
+  assert.equal(products.getProductCache().size, 0);
+  assert.equal(plan.cacheUpdates.length, 1);
+  assert.equal(plan.items[0].isNew, true);
+  assert.equal(plan.items[0].price, "450");
+  model.mock.resetCalls();
+  await warehouseService.saveWarehouse(rows);
+  assert.equal(products.getProductCache().size, 1);
+  assert.equal(saved.mock.callCount(), 1);
+  assert.equal(model.mock.callCount(), 1);
+  const created = products.getProductCacheValues()[0];
+  assert.equal(created.model, "iPhone 17 Pro");
+  assert.equal(created.attributes?.sim, "ESIM");
+  assert.equal(created.attributes?.color, "Black");
+  assert.equal(catalog.getCatalogItem(created.id)?.offers[0].price, "450");
+  assert.equal(warehouseService.getWarehouseIngestResult().aiCost, 0.01);
+  await warehouseService.saveWarehouse(rows);
+  assert.equal(products.getProductCache().size, 1);
+  assert.equal(model.mock.callCount(), 1);
+  assert.equal(saved.mock.callCount(), 1);
+  assert.equal(warehouseService.getWarehouseIngestResult().items[0].isNew, false);
+});
+
+test("warehouse creates regional MacBooks separately and keeps region aliases", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  mock.method(ai, "callAIForProduct", async () => ({ result: { status: "ok", confidence: 0.95, model: "MacBook Air 13 M5", color: "Starlight" }, cost: 0.02 }));
+  const rows = [{ name: "Apple MacBook Air 13 M5 24/512 Starlight 🇪🇺", price: "900" },
+    { name: "MacBook Air 13 M5 24/512 Starlight 🇺🇸", price: "800" }];
+  await warehouseService.saveWarehouse(rows);
+  const created = products.getProductCacheValues();
+  assert.equal(created.length, 2);
+  assert.deepEqual(created.map(p => p.attributes?.country), ["🇪🇺", "🇺🇸"]);
+  assert.notEqual(created[0].id, created[1].id);
+  assert.equal(imports.ingestWarehousePrices(rows).items.length, 2);
+  assert.ok(created.every(p => p.rawNames.every(raw => /🇪🇺|🇺🇸/u.test(raw))));
+});
+
+test("new warehouse phones do not merge SIM, colors or activation", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  mock.method(ai, "extractModelOnly", async () => ({ model: "iPhone 17 Pro", cost: null }));
+  await warehouseService.saveWarehouse([
+    { name: "iPhone 17 Pro 256 Black Esim", price: "500" },
+    { name: "iPhone 17 Pro 256 Black Dual Sim", price: "510" },
+    { name: "iPhone 17 Pro 256 White Esim", price: "520" },
+    { name: "iPhone 17 Pro 256 Black Esim (Active)", price: "490" },
+  ]);
+  assert.equal(products.getProductCache().size, 4);
+  assert.equal(getCatalogProducts({ role: "admin" }).length, 4);
+  assert.equal(products.getProductCacheValues().filter(p => p.attributes?.activated).length, 1);
+});
+
+test("iPhone flags use existing SIM rules and do not create country-specific iPhone duplicates", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  const model = mock.method(ai, "extractModelOnly", async () => ({ model: "iPhone 17 Pro", cost: null }));
+  await warehouseService.saveWarehouse([
+    { name: "Apple iPhone 17 Pro 256 Black 🇺🇸", price: "500" },
+    { name: "iPhone 17 Pro 256 Black 🇯🇵", price: "490" },
+  ]);
+  assert.equal(products.getProductCache().size, 1);
+  const created = products.getProductCacheValues()[0];
+  assert.equal(created.attributes?.country, undefined);
+  assert.equal(created.attributes?.sim, "ESIM");
+  assert.equal(catalog.getCatalogItem(created.id)?.offers[0].price, "490");
+  assert.equal(model.mock.callCount(), 1);
+});
+
+test("AirTag package becomes new accessory without AI and retains package distinction", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  const aiCalls = mock.method(ai, "callAIForProduct", async () => { throw new Error("must not be called"); });
+  await warehouseService.saveWarehouse([{ name: "AirTag 2 (4pcs)", price: "80" }, { name: "AirTag 2 (1pcs)", price: "25" }]);
+  assert.equal(products.getProductCache().size, 2);
+  assert.ok(products.getProductCacheValues().every(p => p.category === "Аксессуары"));
+  assert.equal(aiCalls.mock.callCount(), 0);
+});
+
+test("warehouse uses generic existing extractor for non-Apple category and model", async () => {
+  products.getProductCache().clear();
+  mock.method(brands, "resolveBrandFromName", () => "Samsung");
+  mock.method(colors, "resolveColorFromName", () => "Black");
+  mock.method(ai, "callAIForProduct", async () => ({ result: { status: "ok", confidence: 0.95, category: "Смартфоны", model: "Galaxy S25", color: "Black" }, cost: 0.01 }));
+  await warehouseService.saveWarehouse([{ name: "Samsung Galaxy S25 256 Black 🇪🇺", price: "500" }]);
+  const created = products.getProductCacheValues()[0];
+  assert.equal(created.brand, "Samsung");
+  assert.equal(created.category, "Смартфоны");
+  assert.equal(created.attributes?.country, "🇪🇺");
+});
+
+test("structural match reuses supplier ID after model extraction, preserving supplier offer", async () => {
+  warehouseAppleRecognition();
+  mock.method(ai, "extractModelOnly", async () => ({ model: "iPhone 17", cost: null }));
+  catalog.upsertCatalog(product.id, "30000", "AAA-store");
+  await warehouseService.saveWarehouse([{ name: "Apple iPhone 17 256 Black Esim", price: "250" }]);
+  assert.equal(products.getProductCache().size, 1);
+  assert.equal(warehouseService.getWarehouseIngestResult().items[0].product.id, product.id);
+  assert.equal(warehouseService.getWarehouseIngestResult().items[0].isNew, false);
+  assert.deepEqual(catalog.getCatalogItem(product.id)?.offers.map(o => o.source), ["AAA-store", "warehouse"]);
+});
+
+test("partial creation failures and missing attributes do not block valid accessories", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  mock.method(ai, "extractModelOnly", async () => { throw new Error("simulated AI failure"); });
+  await warehouseService.saveWarehouse([
+    { name: "unknown", price: "10" },
+    { name: "iPhone 17 256 Black", price: "500" },
+    { name: "iPhone 17 256 Black Esim", price: "500" },
+    { name: "AirTag 2 (4pcs)", price: "80" },
+    { name: "AirTag 2 (1pcs)", price: "not a price" },
+  ]);
+  assert.equal(products.getProductCache().size, 1);
+  assert.equal(warehouseService.getWarehouseIngestResult().items.length, 1);
+  const rejected = warehouseService.getWarehouseIngestResult().skipped.flatMap(group => group.names);
+  assert.equal(rejected.length, 4);
+  assert.ok(rejected.includes("unknown"));
+  assert.ok(rejected.includes("iPhone 17 256 Black"));
+});
+
+test("Duo creation keeps explicit previously unknown colors from extraction", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  mock.method(colors, "resolveColorFromName", () => undefined);
+  mock.method(ai, "callAIForProduct", async (name: string) => ({ result: {
+    status: "ok", confidence: 0.95, model: "iPhone Duo", color: name.includes("Night") ? "Night Sky" : "Star White",
+  }, cost: 0.01 }));
+  await warehouseService.saveWarehouse([{ name: "iPhone Duo 256 NightSky Esim", price: "600" }, { name: "iPhone Duo 256 Star White Esim", price: "610" }]);
+  assert.equal(products.getProductCache().size, 2);
+  assert.deepEqual(products.getProductCacheValues().map(p => p.attributes?.color), ["Night Sky", "Star White"]);
+});
+
+test("warehouse write failure does not publish or persist newly staged products", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  const persist = mock.method(products, "saveProductCache", () => {});
+  mock.method(atomic, "writeJsonFileAtomic", () => { throw new Error("disk full"); });
+  await assert.rejects(warehouseService.saveWarehouse([{ name: "AirTag 2 (4pcs)", price: "80" }]), /disk full/);
+  assert.equal(products.getProductCache().size, 0);
+  assert.equal(persist.mock.callCount(), 0);
+  assert.deepEqual(warehouseService.getWarehouse(), []);
+});
+
+test("product cache write failure restores memory and leaves catalog unchanged", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  mock.method(products, "saveProductCache", () => { throw new Error("product cache write failed"); });
+  await assert.rejects(warehouseService.saveWarehouse([{ name: "AirTag 2 (4pcs)", price: "80" }]), /product cache write failed/);
+  assert.equal(products.getProductCache().size, 0);
+  assert.deepEqual(catalog.getCatalog(), []);
+  assert.deepEqual(warehouseService.getWarehouse(), []);
+});
+
+test("queued warehouse updates do not create the same product twice", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  const persist = mock.method(products, "saveProductCache", () => {});
+  await Promise.all([
+    warehouseService.saveWarehouse([{ name: "AirTag 2 (4pcs)", price: "80" }]),
+    warehouseService.saveWarehouse([{ name: "AirTag 2 (4pcs)", price: "70" }]),
+  ]);
+  assert.equal(products.getProductCache().size, 1);
+  assert.equal(persist.mock.callCount(), 1);
+  const created = products.getProductCacheValues()[0];
+  assert.equal(catalog.getCatalogItem(created.id)?.offers[0].price, "70");
+});
+
+test("warehouse startup never creates missing products or calls AI", () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  const aiCalls = mock.method(ai, "callAIForProduct", async () => { throw new Error("forbidden"); });
+  mock.method(fs, "existsSync", () => true);
+  mock.method(fs, "readFileSync", () => JSON.stringify([{ name: "AirTag 2 (4pcs)", price: "80" }]));
+  warehouseService.loadWarehouseFromFile();
+  assert.equal(products.getProductCache().size, 0);
+  assert.equal(aiCalls.mock.callCount(), 0);
+  assert.deepEqual(catalog.getCatalog(), []);
+  assert.deepEqual(warehouseService.getWarehouseIngestResult().skipped[0].names, ["AirTag 2 (4pcs)"]);
+});
+
+test("creation triggered by update button reports AI cost using existing admin report", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  mock.method(ai, "extractModelOnly", async () => ({ model: "iPhone 17", cost: 0.02 }));
+  mock.method(sheets, "loadPricesFormats", async () => {});
+  mock.method(sheets, "loadBrandsFromConfig", async () => {});
+  mock.method(sheets, "loadColorsFromConfig", async () => {});
+  mock.method(configReport, "sendConfigChangesReport", async () => {});
+  sheetRows = [["iPhone 17 256 Black Esim", "", 1, 250]];
+  registerCallbacks(bot);
+  await handlers.callback_query({ id: "q", data: CALLBACK_TYPE.RENEW_PRICE, from: { id: 10 }, message: { chat: { id: 10 } } });
+  assert.equal(products.getProductCache().size, 1);
+  assert.ok(messages.includes(`${ADMIN_TEXTS.AI_COST}0.0200`));
+});
+
+test("uncertain model/category or hallucinated color does not create warehouse cards", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  mock.method(colors, "resolveColorFromName", () => undefined);
+  mock.method(ai, "extractModelOnly", async () => ({ model: "iPhone 17", cost: null }));
+  mock.method(ai, "callAIForProduct", async () => ({ result: { status: "ok", confidence: 0.95, model: "iPhone 17", color: "Purple" }, cost: 0.01 }));
+  await warehouseService.saveWarehouse([{ name: "iPhone 17 256 Black Esim", price: "250" }]);
+  assert.equal(products.getProductCache().size, 0);
+  assert.ok(warehouseService.getWarehouseIngestResult().skipped.some(group => group.title === ADMIN_TEXTS.WAREHOUSE_MISSING_ATTRIBUTES));
+  mock.method(ai, "callAIForProduct", async () => ({ result: { status: "low_confidence", confidence: 0.3, model: "MacBook Air", color: "Starlight" }, cost: 0.02 }));
+  await warehouseService.saveWarehouse([{ name: "MacBook Air 13 M5 24/512 Starlight 🇪🇺", price: "900" }]);
+  assert.equal(products.getProductCache().size, 0);
+  assert.equal(warehouseService.getWarehouseIngestResult().aiCost, 0.02);
+});
+
+test("legacy regionless alias cannot attach a different region to supplier product", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  const name = "MacBook Air 13 M5 24/512 Starlight";
+  products.setProductToCache("supplier-eu", { ...product, id: "supplier-eu", category: "Ноутбуки", model: "MacBook Air 13 M5", name,
+    rawNames: [name, name + " 🇪🇺"], attributes: { storage: "512 GB", color: "Starlight", country: "🇪🇺" } });
+  mock.method(ai, "callAIForProduct", async () => ({ result: { status: "ok", confidence: 0.95, model: "MacBook Air 13 M5", color: "Starlight" }, cost: null }));
+  await warehouseService.saveWarehouse([{ name, price: "900" }, { name: name + " 🇺🇸", price: "850" }]);
+  assert.equal(products.getProductCache().size, 3);
+  assert.equal(catalog.getCatalogItem("supplier-eu"), undefined);
+  assert.deepEqual(new Set(products.getProductCacheValues().map(p => p.attributes?.country)), new Set(["🇪🇺", undefined, "🇺🇸"]));
+});
+
+test("later recognized alias resolves earlier row failure without a contradictory skip report", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  const model = mock.method(ai, "extractModelOnly", async () => ({ model: "iPhone 17", cost: null }));
+  model.mock.mockImplementationOnce(async () => { throw new Error("temporary failure"); });
+  await warehouseService.saveWarehouse([
+    { name: "iPhone 17 256 Black Esim", price: "240" },
+    { name: "Apple iPhone 17 256 Black Esim", price: "250" },
+  ]);
+  const result = warehouseService.getWarehouseIngestResult();
+  assert.equal(result.items.length, 1);
+  assert.equal(result.items[0].price, "240");
+  assert.deepEqual(result.skipped, []);
+});
+
+test("MacBook RU suffix stays local: AI receives only product name and card gets Russia flag", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  const extract = mock.method(ai, "callAIForProduct", async () => ({ result: {
+    status: "ok", confidence: 0.95, model: "MacBook Air 13 M5", color: "Starlight",
+  }, cost: null }));
+  await warehouseService.saveWarehouse([
+    { name: "MacBook Air 13 M5 24/512 Starlight RU", price: "900" },
+    { name: "MacBook Air 13 M5 24/512 Starlight 🇷🇺", price: "890" },
+  ]);
+  assert.equal(extract.mock.callCount(), 1);
+  assert.equal(extract.mock.calls[0].arguments[0], "MacBook Air 13 M5 24/512 Starlight");
+  assert.equal(products.getProductCache().size, 1);
+  const created = products.getProductCacheValues()[0];
+  assert.equal(created.attributes?.country, "🇷🇺");
+  assert.equal(created.name, "MacBook Air 13 M5 24/512 Starlight");
+  assert.equal(catalog.getCatalogItem(created.id)?.offers[0].price, "890");
+  assert.deepEqual(created.rawNames, ["MacBook Air 13 M5 24/512 Starlight 🇷🇺"]);
+  // Поиск и восстановление из файла нормализуют RU, отдельный алиас не нужен.
+  assert.equal(imports.ingestWarehousePrices([
+    { name: "MacBook Air 13 M5 24/512 Starlight RU", price: "880" },
+  ]).items[0].product.id, created.id);
+  await warehouseService.saveWarehouse([
+    { name: "MacBook Air 13 M5 24/512 Starlight RU", price: "880" },
+  ]);
+  assert.equal(extract.mock.callCount(), 1);
+  assert.deepEqual(products.getProductCacheValues()[0].rawNames, created.rawNames);
+});
+
+test("AI never receives flags, SIM or activation when recognizing a new warehouse iPhone", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  const extract = mock.method(ai, "extractModelOnly", async () => ({ model: "iPhone 17 Pro", cost: null }));
+  await warehouseService.saveWarehouse([{ name: "Apple iPhone 17 Pro 256 Black (ESIM) 🇯🇵 (Active)", price: "500" }]);
+  assert.equal(extract.mock.calls[0].arguments[0], "Apple iPhone 17 Pro 256 Black");
+  const created = products.getProductCacheValues()[0];
+  assert.equal(created.attributes?.sim, "ESIM");
+  assert.equal(created.attributes?.activated, true);
+  assert.equal(created.attributes?.country, undefined);
+});
+
+test("RU and EU MacBooks stay distinct while AI sees the same product text", async () => {
+  products.getProductCache().clear();
+  warehouseAppleRecognition();
+  const extract = mock.method(ai, "callAIForProduct", async () => ({ result: {
+    status: "ok", confidence: 0.95, model: "MacBook Air 13 M5", color: "Starlight",
+  }, cost: null }));
+  await warehouseService.saveWarehouse([{ name: "MacBook Air 13 M5 24/512 Starlight RU", price: "900" },
+    { name: "MacBook Air 13 M5 24/512 Starlight 🇪🇺", price: "950" }]);
+  assert.equal(products.getProductCache().size, 2);
+  assert.ok(extract.mock.calls.every(call => call.arguments[0] === "MacBook Air 13 M5 24/512 Starlight"));
+  assert.deepEqual(new Set(products.getProductCacheValues().map(p => p.attributes?.country)), new Set(["🇷🇺", "🇪🇺"]));
 });

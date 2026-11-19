@@ -36,7 +36,7 @@ import {
   loadWarehouseFromConfig
 } from "../services/sheets.service";
 import { renderSection } from "../render/renderSection";
-import { sendHiddenProductsReport, sendRawNamesReport, sendIngestSkippedReport } from "../render/reports";
+import { sendHiddenProductsReport, sendRawNamesReport, sendIngestSkippedReport, onCostReport } from "../render/reports";
 import { sendConfigChangesReport, takeConfigSnapshot } from "../render/configChangesReport";
 import { getProductsWithManyRawNames } from "../services/products/products.service";
 import { generateRetailCsv, sendPriceList } from "./catalog.hanlder";
@@ -296,7 +296,9 @@ export function registerCallbacks(bot: TelegramBot) {
 
           await sendConfigChangesReport(bot, chatId, configBefore, configAfter);
           await sendWarehouseChangesReport(bot, chatId, warehouseBefore, takeWarehouseSnapshot());
-          await sendIngestSkippedReport(bot, chatId, getWarehouseIngestResult().skipped);
+          const warehouseResult = getWarehouseIngestResult();
+          await sendIngestSkippedReport(bot, chatId, warehouseResult.skipped);
+          if (warehouseResult.aiCost > 0) await onCostReport(bot, warehouseResult.aiCost);
           await safeAnswerCallback(bot, query.id);
         } catch (error) {
           await bot.sendMessage(chatId, ADMIN_TEXTS.RENEW_PRICE_ERROR, {

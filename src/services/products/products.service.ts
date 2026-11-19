@@ -56,8 +56,8 @@ export function saveProductCache() {
 // activated — если передан, ищем только среди активированных (true) или
 // неактивированных (false) товаров: иначе строка прайса может попасть
 // в карточку с другим статусом активации, у которой случайно совпал rawName.
-export function findByRawName(raw: string, options?: { activated?: boolean }) {
-  for (const product of productCache.values()) {
+export function findByRawName(raw: string, options?: { activated?: boolean; cache?: ReadonlyMap<string, CachedProduct> }) {
+  for (const product of (options?.cache ?? productCache).values()) {
     if (
       options?.activated !== undefined &&
       (product.attributes?.activated === true) !== options.activated

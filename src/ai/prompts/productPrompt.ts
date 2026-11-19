@@ -1,4 +1,5 @@
 import { AiCandidate } from "../../types";
+import { CATEGORY_MAP } from "../../constants";
 
 export function buildPromptForExtractProductAttributes(name: string, category: string) {
   let chipInstruction = "";
@@ -71,11 +72,13 @@ export function buildProductPrompt(name: string, brand: string, category: string
   return `Return ONLY JSON. No text, no markdown.
 
 Extract product model and clean name from incoming text.
-- Ignore: color, storage, SIM, country, activation (we add them later).
+- Exclude SIM, country and activation from model and name; those are processed locally.
 - Model: base product line (e.g., "iPhone 15", "MacBook Air"). Do NOT include storage, color, SIM, country.
 - Name: keep storage and color as written, but remove flags, SIM, activation.
+- Storage and color: extract only explicitly present attributes; use empty string if absent.
+${category === "Другое" ? `- Category: choose the exact Russian category from ${JSON.stringify(Object.values(CATEGORY_MAP))}. Return "Другое" if uncertain.` : ""}
 
-Output: {"status":"ok","confidence":0.9,"model":"iPhone 15","name":"iPhone 15 256GB Blue"}
+Output: {"status":"ok","confidence":0.9,"model":"iPhone 15","name":"iPhone 15 256GB Blue","storage":"256GB","color":"Blue","category":"Смартфоны"}
 
 Input: brand=${brand}, category=${category}, raw_name=${name}`;
 }
