@@ -90,6 +90,14 @@ export async function handleBack(chatId: number) {
 
   if (!adminState) return;
 
+  if (state.section === SECTION.ADMIN_PANEL && adminState.flowStep === "helper") {
+    setChatState(chatId, {
+      mode: "idle",
+      sections: { [SECTION.ADMIN_PANEL]: { ...adminState, flowStep: "main" } },
+    });
+    return;
+  }
+
   if (adminState.flowStep === "upload_aaa_store_price" || adminState.flowStep === "upload_today_there_tomorrow_here_price") {
     setChatState(chatId, {
       mode: "idle",

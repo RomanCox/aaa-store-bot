@@ -9,3 +9,4 @@ export * from "./pagination.texts";
 export * from "./price.texts";
 export * from "./start.texts";
 export * from "./users.texts";
+export * from "./helper.texts";
