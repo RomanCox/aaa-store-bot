@@ -1030,14 +1030,14 @@ test("later recognized alias resolves earlier row failure without a contradictor
   assert.deepEqual(result.skipped, []);
 });
 
-test("MacBook RU suffix stays local: AI receives only product name and card gets Russia flag", async () => {
+test("MacBook flag stays local: AI receives only product name and card gets Russia flag", async () => {
   products.getProductCache().clear();
   warehouseAppleRecognition();
   const extract = mock.method(ai, "callAIForProduct", async () => ({ result: {
     status: "ok", confidence: 0.95, model: "MacBook Air 13 M5", color: "Starlight",
   }, cost: null }));
   await warehouseService.saveWarehouse([
-    { name: "MacBook Air 13 M5 24/512 Starlight RU", price: "900" },
+    { name: "MacBook Air 13 M5 24/512 Starlight 🇷🇺", price: "900" },
     { name: "MacBook Air 13 M5 24/512 Starlight 🇷🇺", price: "890" },
   ]);
   assert.equal(extract.mock.callCount(), 1);
@@ -1048,12 +1048,12 @@ test("MacBook RU suffix stays local: AI receives only product name and card gets
   assert.equal(created.name, "MacBook Air 13 M5 24/512 Starlight");
   assert.equal(catalog.getCatalogItem(created.id)?.offers[0].price, "890");
   assert.deepEqual(created.rawNames, ["MacBook Air 13 M5 24/512 Starlight 🇷🇺"]);
-  // Поиск и восстановление из файла нормализуют RU, отдельный алиас не нужен.
+  // Поиск и восстановление из файла используют каноническое название с флагом.
   assert.equal(imports.ingestWarehousePrices([
-    { name: "MacBook Air 13 M5 24/512 Starlight RU", price: "880" },
+    { name: "MacBook Air 13 M5 24/512 Starlight 🇷🇺", price: "880" },
   ]).items[0].product.id, created.id);
   await warehouseService.saveWarehouse([
-    { name: "MacBook Air 13 M5 24/512 Starlight RU", price: "880" },
+    { name: "MacBook Air 13 M5 24/512 Starlight 🇷🇺", price: "880" },
   ]);
   assert.equal(extract.mock.callCount(), 1);
   assert.deepEqual(products.getProductCacheValues()[0].rawNames, created.rawNames);
@@ -1071,15 +1071,28 @@ test("AI never receives flags, SIM or activation when recognizing a new warehous
   assert.equal(created.attributes?.country, undefined);
 });
 
-test("RU and EU MacBooks stay distinct while AI sees the same product text", async () => {
+test("Russia and EU flag MacBooks stay distinct while AI sees the same product text", async () => {
   products.getProductCache().clear();
   warehouseAppleRecognition();
   const extract = mock.method(ai, "callAIForProduct", async () => ({ result: {
     status: "ok", confidence: 0.95, model: "MacBook Air 13 M5", color: "Starlight",
   }, cost: null }));
-  await warehouseService.saveWarehouse([{ name: "MacBook Air 13 M5 24/512 Starlight RU", price: "900" },
+  await warehouseService.saveWarehouse([{ name: "MacBook Air 13 M5 24/512 Starlight 🇷🇺", price: "900" },
     { name: "MacBook Air 13 M5 24/512 Starlight 🇪🇺", price: "950" }]);
   assert.equal(products.getProductCache().size, 2);
   assert.ok(extract.mock.calls.every(call => call.arguments[0] === "MacBook Air 13 M5 24/512 Starlight"));
   assert.deepEqual(new Set(products.getProductCacheValues().map(p => p.attributes?.country)), new Set(["🇷🇺", "🇪🇺"]));
+});
+
+test("warehouse lookup does not convert RU or other letter codes into regional flags", () => {
+  products.getProductCache().clear();
+  const name = "MacBook Air 13 M5 24/512 Starlight";
+  for (const country of ["🇷🇺", "🇪🇺", "🇺🇸"]) {
+    products.setProductToCache(country, { ...product, id: country, name, brand: "Apple", category: "Ноутбуки",
+      rawNames: [`${name} ${country}`], attributes: { country } });
+  }
+  const result = imports.ingestWarehousePrices(["RU", "EU", "US"].map(code => ({ name: `${name} ${code}`, price: "900" })));
+  assert.equal(result.items.length, 0);
+  assert.equal(result.skipped[0].names.length, 3);
+  assert.equal(imports.ingestWarehousePrices([{ name: `${name} 🇷🇺`, price: "900" }]).items[0].product.id, "🇷🇺");
 });
