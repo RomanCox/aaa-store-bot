@@ -7,12 +7,18 @@ import { adminKeyboard } from "../keyboards";
 import { renderScreen } from "./renderScreen";
 import { getChatState } from "../state/chat.state";
 import { ordersHandler } from "../handlers/orders.handler";
+import { showAdminHelper } from "../services/helper.service";
 
 export async function renderSection(bot: TelegramBot, chatId: number) {
   const state = getChatState(chatId);
 
   if (state.section === SECTION.ADMIN_PANEL) {
     const adminState = state.sections?.[SECTION.ADMIN_PANEL];
+
+    if (adminState?.flowStep === "helper") {
+      await showAdminHelper(bot, chatId);
+      return;
+    }
 
     if (!adminState || adminState.flowStep === "main") {
       await renderScreen(bot, chatId, {

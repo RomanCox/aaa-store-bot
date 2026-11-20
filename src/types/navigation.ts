@@ -8,6 +8,7 @@ export enum SECTION {
 
 export type AdminPanelFlowStep =
 	"main"
+  | "helper"
 	| "upload_aaa_store_price"
 	| "upload_today_there_tomorrow_here_price"
 	| "manage_users"

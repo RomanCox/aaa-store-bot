@@ -11,6 +11,7 @@ import {
   isAssignableRole
 } from "../utils";
 import { handleBack } from "./back.handler";
+import { showAdminHelper, sendHelperTopic } from "../services/helper.service";
 import { addUser, deleteUser, editUser, startUserManagement, startPriceUpload } from "../services/admin.service";
 import { renderProductsList } from "../render/renderProductsList";
 import { showUsersList } from "./users/users.handler";
@@ -21,6 +22,7 @@ import {
   ITEM_TEXTS,
   ORDER_TEXTS,
   PAGINATION_TEXTS,
+  HELPER_TEXTS,
   USERS_ERRORS,
   USERS_TEXTS
 } from "../texts";
@@ -50,6 +52,9 @@ const ADMIN_CHAT_ID = Number(process.env.ADMIN_CHAT_ID);
 // Действия, доступные только администраторам — UI их скрывает от остальных,
 // но callback_data можно прислать напрямую, минуя клавиатуру, поэтому нужна серверная проверка.
 const ADMIN_ONLY_ACTIONS = new Set<string>([
+  CALLBACK_TYPE.ADMIN_HELPER,
+  CALLBACK_TYPE.HELPER_TOPIC,
+  CALLBACK_TYPE.HELPER_BACK,
 	CALLBACK_TYPE.AAA_STORE_PRICE,
 	CALLBACK_TYPE.TODAY_THERE_TOMORROW_HERE_PRICE,
 	CALLBACK_TYPE.MANAGE_USERS,
@@ -88,6 +93,18 @@ export function registerCallbacks(bot: TelegramBot) {
 		}
 
 		switch (action) {
+      case CALLBACK_TYPE.ADMIN_HELPER:
+      case CALLBACK_TYPE.HELPER_TOPIC:
+      case CALLBACK_TYPE.HELPER_BACK: {
+        try {
+          if (action === CALLBACK_TYPE.HELPER_TOPIC) await sendHelperTopic(bot, chatId, params[0]);
+          else await showAdminHelper(bot, chatId, action === CALLBACK_TYPE.HELPER_BACK);
+        } catch {
+          // Ошибка отправки справки не должна завершать процесс бота.
+          await bot.sendMessage(chatId, HELPER_TEXTS.SEND_ERROR).catch(() => {});
+        }
+        return;
+      }
       case CALLBACK_TYPE.BACK: {
         return guardWorkingHours(bot, chatId, async () => {
           await handleBack(chatId);

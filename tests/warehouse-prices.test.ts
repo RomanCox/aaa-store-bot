@@ -521,6 +521,23 @@ for (const manager of ["manager_retail", "manager_wholesale"] as const) {
 }
 
 for (const role of ["retail", "wholesale", "manager_retail", "manager_wholesale", "admin", "superadmin", undefined] as const) {
+  test(`warehouse legend visibility for ${role} in Apple smartphones`, async () => {
+    const { CATALOG_TEXTS } = require("../src/texts") as typeof import("../src/texts");
+    const { renderProductsList } = require("../src/render/renderProductsList") as typeof import("../src/render/renderProductsList");
+    mock.method(users, "getUserRole", () => role);
+    catalog.upsertCatalog(product.id, "250", "Today there tomorrow here");
+    setChatState(10, { section: SECTION.CATALOG, sections: {
+      [SECTION.CATALOG]: { flowStep: "products", selectedBrand: "Apple", selectedCategory: "Смартфоны" },
+    } });
+    const screen = mock.method(screens, "renderScreen", async () => {});
+    await renderProductsList(bot, 10);
+    const options = screen.mock.calls[screen.mock.calls.length - 1].arguments[2];
+    assert.ok(options);
+    const legend = options.text;
+    assert.ok(legend.startsWith(CATALOG_TEXTS.SIM_LEGEND));
+    assert.equal(legend.includes(CATALOG_TEXTS.WAREHOUSE_LEGEND), role !== "retail" && role !== undefined);
+  });
+
   test(`warehouse indication for ${role} uses availability independently of cheapest source`, () => {
     catalog.upsertCatalog(product.id, "250", "Today there tomorrow here");
     catalog.upsertCatalog(product.id, "200", "warehouse");
@@ -626,13 +643,13 @@ for (const role of ["manager_retail", "manager_wholesale"] as const) {
         selectedBrand: product.brand, selectedCategory: product.category, selectedModel: product.model, selectedStorage: product.attributes?.storage,
       } } as any });
       await actualRenderFlow(bot, 10);
-      assert.ok(lastArgs(screen)[2].text.includes(ITEM_TEXTS.IN_WAREHOUSE));
+      assert.ok(lastArgs(screen)[2].text.split("\n").some((line: string) => line.endsWith(` ${ITEM_TEXTS.IN_WAREHOUSE}`)));
     }
     catalog.clearCatalogSource("warehouse");
     setChatState(10, { sections: { [SECTION.CART]: { flowStep: "main", currentOrder: [entry] } } as any });
     await actualRenderFlow(bot, 10);
     const text = lastArgs(screen)[2].text;
-    assert.equal(text.includes(ITEM_TEXTS.IN_WAREHOUSE), false);
+    assert.equal(text.includes(`</i> ${ITEM_TEXTS.IN_WAREHOUSE}`), false);
     assert.ok(text.includes("123"));
     assert.equal(getChatState(10).sections.cart?.currentOrder?.[0].price, "123");
   });
@@ -1041,14 +1058,14 @@ test("later recognized alias resolves earlier row failure without a contradictor
   assert.deepEqual(result.skipped, []);
 });
 
-test("MacBook RU suffix stays local: AI receives only product name and card gets Russia flag", async () => {
+test("MacBook flag stays local: AI receives only product name and card gets Russia flag", async () => {
   products.getProductCache().clear();
   warehouseAppleRecognition();
   const extract = mock.method(ai, "callAIForProduct", async () => ({ result: {
     status: "ok", confidence: 0.95, model: "MacBook Air 13 M5", color: "Starlight",
   }, cost: null }));
   await warehouseService.saveWarehouse([
-    { name: "MacBook Air 13 M5 24/512 Starlight RU", price: "900" },
+    { name: "MacBook Air 13 M5 24/512 Starlight 🇷🇺", price: "900" },
     { name: "MacBook Air 13 M5 24/512 Starlight 🇷🇺", price: "890" },
   ]);
   assert.equal(extract.mock.callCount(), 1);
@@ -1059,12 +1076,12 @@ test("MacBook RU suffix stays local: AI receives only product name and card gets
   assert.equal(created.name, "MacBook Air 13 M5 24/512 Starlight");
   assert.equal(catalog.getCatalogItem(created.id)?.offers[0].price, "890");
   assert.deepEqual(created.rawNames, ["MacBook Air 13 M5 24/512 Starlight 🇷🇺"]);
-  // Поиск и восстановление из файла нормализуют RU, отдельный алиас не нужен.
+  // Поиск и восстановление из файла используют каноническое название с флагом.
   assert.equal(imports.ingestWarehousePrices([
-    { name: "MacBook Air 13 M5 24/512 Starlight RU", price: "880" },
+    { name: "MacBook Air 13 M5 24/512 Starlight 🇷🇺", price: "880" },
   ]).items[0].product.id, created.id);
   await warehouseService.saveWarehouse([
-    { name: "MacBook Air 13 M5 24/512 Starlight RU", price: "880" },
+    { name: "MacBook Air 13 M5 24/512 Starlight 🇷🇺", price: "880" },
   ]);
   assert.equal(extract.mock.callCount(), 1);
   assert.deepEqual(products.getProductCacheValues()[0].rawNames, created.rawNames);
@@ -1082,15 +1099,28 @@ test("AI never receives flags, SIM or activation when recognizing a new warehous
   assert.equal(created.attributes?.country, undefined);
 });
 
-test("RU and EU MacBooks stay distinct while AI sees the same product text", async () => {
+test("Russia and EU flag MacBooks stay distinct while AI sees the same product text", async () => {
   products.getProductCache().clear();
   warehouseAppleRecognition();
   const extract = mock.method(ai, "callAIForProduct", async () => ({ result: {
     status: "ok", confidence: 0.95, model: "MacBook Air 13 M5", color: "Starlight",
   }, cost: null }));
-  await warehouseService.saveWarehouse([{ name: "MacBook Air 13 M5 24/512 Starlight RU", price: "900" },
+  await warehouseService.saveWarehouse([{ name: "MacBook Air 13 M5 24/512 Starlight 🇷🇺", price: "900" },
     { name: "MacBook Air 13 M5 24/512 Starlight 🇪🇺", price: "950" }]);
   assert.equal(products.getProductCache().size, 2);
   assert.ok(extract.mock.calls.every(call => call.arguments[0] === "MacBook Air 13 M5 24/512 Starlight"));
   assert.deepEqual(new Set(products.getProductCacheValues().map(p => p.attributes?.country)), new Set(["🇷🇺", "🇪🇺"]));
+});
+
+test("warehouse lookup does not convert RU or other letter codes into regional flags", () => {
+  products.getProductCache().clear();
+  const name = "MacBook Air 13 M5 24/512 Starlight";
+  for (const country of ["🇷🇺", "🇪🇺", "🇺🇸"]) {
+    products.setProductToCache(country, { ...product, id: country, name, brand: "Apple", category: "Ноутбуки",
+      rawNames: [`${name} ${country}`], attributes: { country } });
+  }
+  const result = imports.ingestWarehousePrices(["RU", "EU", "US"].map(code => ({ name: `${name} ${code}`, price: "900" })));
+  assert.equal(result.items.length, 0);
+  assert.equal(result.skipped[0].names.length, 3);
+  assert.equal(imports.ingestWarehousePrices([{ name: `${name} 🇷🇺`, price: "900" }]).items[0].product.id, "🇷🇺");
 });

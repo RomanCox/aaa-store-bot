@@ -38,9 +38,6 @@ import { getNamedIphoneDeviceModel } from "./products/iphone.models";
 
 const WAREHOUSE_SIM_TOKEN = "(?:dual\\s*sim|sim\\s*\\+\\s*esim|esim\\s*\\+\\s*sim|[12]?sim|esim)";
 const WAREHOUSE_SIM_SUFFIX = new RegExp(`\\s+(\\(${WAREHOUSE_SIM_TOKEN}\\)|${WAREHOUSE_SIM_TOKEN})$`, "i");
-// Текстовые обозначения добавляем по подтверждённым форматам складских названий.
-const WAREHOUSE_TEXT_REGIONS: Record<string, string> = { RU: "🇷🇺" };
-const WAREHOUSE_REGION_SUFFIX = new RegExp(`\\s+(${Object.keys(WAREHOUSE_TEXT_REGIONS).join("|")})$`, "i");
 
 function normalizeWarehouseSimSuffix(name: string): string {
   if (!/^(?:apple\s+)?iphone\b/i.test(name)) return name;
@@ -65,12 +62,10 @@ function warehouseNameParts(name: string) {
   const activated = extractActivated(name);
   const withoutFlags = name.replace(/[\u{1F1E6}-\u{1F1FF}]{2}/gu, " ").replace(/\s+/g, " ").trim();
   const withoutActive = withoutFlags.replace(/\s+\(active\)\s*$/i, "");
-  const regionSuffix = withoutActive.match(WAREHOUSE_REGION_SUFFIX);
-  const country = extractFlags(name) || (regionSuffix ? WAREHOUSE_TEXT_REGIONS[regionSuffix[1].toUpperCase()] : "");
-  const withoutRegion = regionSuffix ? withoutActive.slice(0, regionSuffix.index) : withoutActive;
-  const suffix = withoutRegion.match(WAREHOUSE_SIM_SUFFIX);
-  const baseName = (suffix ? withoutRegion.slice(0, suffix.index) : withoutRegion).trim();
-  const isIphone = /\biphone\b/i.test(name) && getCategory(normalizeWarehouseSimSuffix(withoutRegion)) === "Смартфоны";
+  const country = extractFlags(name);
+  const suffix = withoutActive.match(WAREHOUSE_SIM_SUFFIX);
+  const baseName = (suffix ? withoutActive.slice(0, suffix.index) : withoutActive).trim();
+  const isIphone = /\biphone\b/i.test(name) && getCategory(normalizeWarehouseSimSuffix(withoutActive)) === "Смартфоны";
   const sim = suffix
     ? normalizeSimByRules({ name, country, category: "Смартфоны", simTypeRaw: suffix[1] })
     : extractSim(name) ?? (isIphone && country ? normalizeSimByRules({ name, country, category: "Смартфоны" }) : undefined);
