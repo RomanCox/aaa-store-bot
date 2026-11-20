@@ -67,9 +67,9 @@ const { normalizeSimByRules } = require("../src/utils") as typeof import("../src
 
 test("правила SIM учитывают модель iPhone и регион при отсутствии явного типа SIM", () => {
   const cases = [
-    ["Apple iPhone 18 Pro Max 512 Glacier", "🇨🇳", "SIM + ESIM"],
-    ["iPhone 18 Pro 256 Glacier", "🇨🇳", "SIM + ESIM"],
-    ["iPhone 17e 256 Black", "🇨🇳", "SIM + ESIM"],
+    ["Apple iPhone 18 Pro Max 512 Glacier", "🇨🇳", "Dual SIM"],
+    ["iPhone 18 Pro 256 Glacier", "🇨🇳", "Dual SIM"],
+    ["iPhone 17e 256 Black", "🇨🇳", "Dual SIM"],
     ["iPhone Duo 256 Night Sky", "🇨🇳", "ESIM"],
     ["iPhone Air 256 Sky Blue", "🇨🇳", "ESIM"],
     ["iPhone Duo 256 Star White", "", "ESIM"],
@@ -79,7 +79,8 @@ test("правила SIM учитывают модель iPhone и регион 
     ["iPhone 18 Pro 256 Glacier", "🇺🇸", "ESIM"],
     ["iPhone 16 Pro 256 Black", "🇭🇰", "Dual SIM"],
     ["iPhone 13 128 Blue", "🇺🇸", "SIM + ESIM"],
-    ["iPhone 18 Pro 256 Glacier (Dual SIM)", "🇨🇳", "Dual SIM"],
+    ["iPhone Duo 256 Night Sky (Dual SIM)", "🇨🇳", "Dual SIM"],
+    ["iPhone 18 Pro 256 Glacier (SIM + ESIM)", "🇨🇳", "SIM + ESIM"],
     ["Redmi Air 256 Black", "🇨🇳", undefined],
   ] as const;
 

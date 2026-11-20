@@ -151,13 +151,6 @@ export function normalizeSimByRules(input: {
 		return "ESIM";
 	}
 
-	// Для китайских версий с eSIM указываем поддержку nano-SIM и eSIM.
-	// У 18 Pro и Pro Max также поддерживаются две nano-SIM.
-	// https://support.apple.com/en-by/108898
-	if (country === "🇨🇳" && /\biphone\s*(?:17e|18\s*pro(?:\s*max)?)\b/.test(name)) {
-		return "SIM + ESIM";
-	}
-
 	const generation = getIphoneGeneration(name);
 	const dualSimCountries = generation === "new" ? NEW_SIM_ONLY_COUNTRIES : OLD_SIM_ONLY_COUNTRIES;
 	const esimOnlyCountries = generation === "new" ? NEW_ESIM_ONLY_COUNTRIES : OLD_ESIM_ONLY_COUNTRIES;
