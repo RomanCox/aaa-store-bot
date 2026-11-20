@@ -63,6 +63,33 @@ const addUsers = require("../src/handlers/users/addUser.handler") as typeof impo
 const editUsers = require("../src/handlers/users/editUser.handler") as typeof import("../src/handlers/users/editUser.handler");
 const { MENU_TEXTS, ITEM_TEXTS, ADMIN_TEXTS } = require("../src/texts") as typeof import("../src/texts");
 const iphoneModels = require("../src/services/products/iphone.models") as typeof import("../src/services/products/iphone.models");
+const { normalizeSimByRules } = require("../src/utils") as typeof import("../src/utils");
+
+test("правила SIM учитывают модель iPhone и регион при отсутствии явного типа SIM", () => {
+  const cases = [
+    ["Apple iPhone 18 Pro Max 512 Glacier", "🇨🇳", "SIM + ESIM"],
+    ["iPhone 18 Pro 256 Glacier", "🇨🇳", "SIM + ESIM"],
+    ["iPhone 17e 256 Black", "🇨🇳", "SIM + ESIM"],
+    ["iPhone Duo 256 Night Sky", "🇨🇳", "ESIM"],
+    ["iPhone Air 256 Sky Blue", "🇨🇳", "ESIM"],
+    ["iPhone Duo 256 Star White", "", "ESIM"],
+    ["iPhone 17 Pro 256 Silver", "🇨🇳", "Dual SIM"],
+    ["iPhone 18 Pro 256 Glacier", "🇭🇰", "SIM + ESIM"],
+    ["iPhone 17e 256 Black", "🇲🇴", "SIM + ESIM"],
+    ["iPhone 18 Pro 256 Glacier", "🇺🇸", "ESIM"],
+    ["iPhone 16 Pro 256 Black", "🇭🇰", "Dual SIM"],
+    ["iPhone 13 128 Blue", "🇺🇸", "SIM + ESIM"],
+    ["iPhone 18 Pro 256 Glacier (Dual SIM)", "🇨🇳", "Dual SIM"],
+    ["Redmi Air 256 Black", "🇨🇳", undefined],
+  ] as const;
+
+  for (const [name, country, expected] of cases) {
+    assert.equal(normalizeSimByRules({ name, country, category: "Смартфоны" }), expected, `${name} ${country}`);
+  }
+  assert.equal(normalizeSimByRules({
+    name: "iPhone 18 Pro 256 Glacier (SIM + ESIM)", country: "🇨🇳", category: "Смартфоны", simTypeRaw: "2SIM",
+  }), "Dual SIM");
+});
 const colors = require("../src/services/colors.service") as typeof import("../src/services/colors.service");
 
 const rates: Rates = { rub_to_usd: 100, rub_to_byn: 4, usd_to_byn: 3 };

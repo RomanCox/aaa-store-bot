@@ -124,7 +124,6 @@ export function normalizeSimByRules(input: {
 	country: string;
 	simTypeRaw?: string;
 }): SimType {
-	const name = input.name.toLowerCase();
 	const country = input.country;
 
 	// 👉 НЕ смартфоны
@@ -143,45 +142,30 @@ export function normalizeSimByRules(input: {
 		return extracted;
 	}
 
-	// 🔥 3. fallback правила
-
-	if (name.includes("air")) {
-		return "ESIM";
-	}
-
-	const isIn = (set: Set<string>) => country && set.has(country);
-
-	if (!name.includes("iphone")) {
+	const name = input.name.toLowerCase();
+	if (!/\biphone\b/.test(name)) {
 		return undefined;
 	}
 
-	// Правила по поколениям — по https://support.apple.com/ru-ru/118569.
-	// Старые поколения перечислены явно, а всё остальное (17, 18, 19…, Fold и любые
-	// будущие модели без номера) по умолчанию получает правила новых моделей —
-	// чтобы новинки не надо было руками добавлять сюда и они не уходили в Dual SIM для 🇭🇰/🇲🇴.
+	if (/\biphone\s*(?:air|duo)\b/.test(name)) {
+		return "ESIM";
+	}
+
+	// Для китайских версий с eSIM указываем поддержку nano-SIM и eSIM.
+	// У 18 Pro и Pro Max также поддерживаются две nano-SIM.
+	// https://support.apple.com/en-by/108898
+	if (country === "🇨🇳" && /\biphone\s*(?:17e|18\s*pro(?:\s*max)?)\b/.test(name)) {
+		return "SIM + ESIM";
+	}
+
 	const generation = getIphoneGeneration(name);
+	const dualSimCountries = generation === "new" ? NEW_SIM_ONLY_COUNTRIES : OLD_SIM_ONLY_COUNTRIES;
+	const esimOnlyCountries = generation === "new" ? NEW_ESIM_ONLY_COUNTRIES : OLD_ESIM_ONLY_COUNTRIES;
 
-	if (generation === "legacy") {
-		if (isIn(OLD_SIM_ONLY_COUNTRIES)) {
-			return "Dual SIM";
-		}
-		return "SIM + ESIM";
-	}
-
-	if (generation === "old") {
-		if (isIn(OLD_SIM_ONLY_COUNTRIES)) {
-			return "Dual SIM";
-		}
-		if (isIn(OLD_ESIM_ONLY_COUNTRIES)) {
-			return "ESIM";
-		}
-		return "SIM + ESIM";
-	}
-
-	if (isIn(NEW_SIM_ONLY_COUNTRIES)) {
+	if (dualSimCountries.has(country)) {
 		return "Dual SIM";
 	}
-	if (isIn(NEW_ESIM_ONLY_COUNTRIES)) {
+	if (generation !== "legacy" && esimOnlyCountries.has(country)) {
 		return "ESIM";
 	}
 	return "SIM + ESIM";
@@ -325,7 +309,7 @@ export function extractSim(name: string): SimType {
 
 	const hasSim = parts.includes('sim') || parts.includes('1sim');
   const hasEsim = parts.includes('esim');
-  const hasDual = parts.includes('2sim') || parts.includes('dual');
+  const hasDual = parts.includes('2sim') || parts.includes('dual') || parts.includes('dualsim');
 
 	if (hasEsim && hasSim) return "SIM + ESIM";
   if (hasEsim) return "ESIM";
