@@ -207,3 +207,12 @@ test("messages fit Telegram limit with balanced HTML and correct links", () => {
   assert.ok(HELPER_TOPICS[1].messages[0].includes(HELPER_LINKS.CONFIG));
   assert.ok(HELPER_TOPICS[2].messages[0].includes(HELPER_LINKS.WAREHOUSE));
 });
+
+test("delete and edit instructions obtain ID from the person's profile", () => {
+  const instructions = HELPER_TOPICS.find(topic => topic.id === "users")!.messages.slice(1);
+  for (const text of instructions) {
+    assert.match(text, /профиль нужного человека в Telegram/);
+    assert.doesNotMatch(text, /спис[ок]/i);
+    assert.match(text, /только цифры/);
+  }
+});

@@ -1,3 +1,5 @@
+import { ITEM_TEXTS } from "./item.texts";
+
 export const CATALOG_TEXTS = {
 	EMPTY_CATALOG:
 		"Здесь пока нет товаров. Пожалуйста, попробуйте еще раз чуть позже или свяжитесь с менеджером.",
@@ -13,4 +15,5 @@ export const CATALOG_TEXTS = {
 	PRICE_LIST: "📦 Прайс-лист",
 
 	SIM_LEGEND: `📋 <b>Условные обозначения:</b>\n\n📲 — SIM + eSIM\n📶 — eSIM\n☎️ — Dual SIM\n✅ Active — Активированное устройство`,
+  WAREHOUSE_LEGEND: `${ITEM_TEXTS.IN_WAREHOUSE} — На складе`,
 };
