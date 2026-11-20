@@ -208,7 +208,7 @@ test("messages fit Telegram limit with balanced HTML and correct links", () => {
   assert.ok(HELPER_TOPICS[2].messages[0].includes(HELPER_LINKS.WAREHOUSE));
 });
 
-test("delete and edit instructions obtain ID from the person's profile", () => {
+test("delete and edit instructions obtain ID from the persons profile", () => {
   const instructions = HELPER_TOPICS.find(topic => topic.id === "users")!.messages.slice(1);
   for (const text of instructions) {
     const firstStep = text.split("\n").find(line => line.startsWith("<b>1.</b>"));
