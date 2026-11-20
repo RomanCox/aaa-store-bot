@@ -1,5 +1,5 @@
 import { InlineKeyboardButton } from "node-telegram-bot-api";
-import { ADMIN_TEXTS } from "../texts";
+import { ADMIN_TEXTS, HELPER_TEXTS } from "../texts";
 import { CALLBACK_TYPE } from "../types";
 import { getRates } from "../services/price.service";
 
@@ -36,5 +36,6 @@ export function adminKeyboard(): InlineKeyboardButton[][] {
           callback_data: CALLBACK_TYPE.CHECK_RAWNAMES
         },
       ],
+      [{ text: HELPER_TEXTS.BUTTON, callback_data: CALLBACK_TYPE.ADMIN_HELPER }],
     ];
 }

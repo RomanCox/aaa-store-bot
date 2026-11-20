@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
-import { buildDownloadCallback, buildMessagesForProducts } from "../utils";
+import { buildDownloadCallback, buildMessagesForProducts, canSeeWarehouse } from "../utils";
 import { CatalogSectionState, ProductFilters, SECTION } from "../types";
 import { CATALOG_TEXTS, ITEM_TEXTS } from "../texts";
 import { getChatState, getSectionState, setChatState } from "../state/chat.state";
@@ -46,7 +46,7 @@ export async function renderProductsList(
   const parts = buildMessagesForProducts(products, userRole);
   if (selectedBrand === "Apple" && selectedCategory === "Смартфоны" && parts.length > 0) {
     parts.push({
-      text: CATALOG_TEXTS.SIM_LEGEND,
+      text: CATALOG_TEXTS.SIM_LEGEND + (canSeeWarehouse(userRole) ? `\n${CATALOG_TEXTS.WAREHOUSE_LEGEND}` : ""),
       products: [],
     });
   }

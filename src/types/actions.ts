@@ -1,4 +1,7 @@
 export enum CALLBACK_TYPE {
+  ADMIN_HELPER = "admin_helper",
+  HELPER_TOPIC = "helper_topic",
+  HELPER_BACK = "helper_back",
 	MAIN = "main",
 	AAA_STORE_PRICE = "upload_aaa_store_price",
   TODAY_THERE_TOMORROW_HERE_PRICE = "upload_today_there_tomorrow_here_price",

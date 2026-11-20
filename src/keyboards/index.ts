@@ -8,3 +8,4 @@ export * from "./main.keyboard";
 export * from "./merge.keyboard";
 export * from "./models.keyboard";
 export * from "./storageValues.keyboard";
+export * from "./helper.keyboard";
