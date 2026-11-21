@@ -118,7 +118,11 @@ beforeEach(() => {
   };
   products.getProductCache().clear();
   products.setProductToCache(product.id, structuredClone(product));
-  for (const source of ["AAA-store", "Today there tomorrow here", "warehouse"] as const) catalog.clearCatalogSource(source);
+  const emptyCatalog = mock.method(fs, "existsSync", () => true);
+  const emptyCatalogData = mock.method(fs, "readFileSync", () => "[]");
+  catalog.loadCatalog();
+  emptyCatalogData.mock.restore();
+  emptyCatalog.mock.restore();
   mock.method(globalThis, "fetch", async () => { throw new Error("Network forbidden in tests"); });
   mock.method(fs, "writeFileSync", () => { throw new Error("Filesystem writes forbidden in tests"); });
   saveWarehouseFile = mock.method(atomic, "writeJsonFileAtomic", () => {});
@@ -287,9 +291,9 @@ test("saved warehouse offers load locally with the existing JSON schema", () => 
   catalog.upsertCatalog(product.id, "30000", "AAA-store");
   saveCatalog.mock.restore();
   let saved = "";
-  mock.method(fs, "writeFileSync", (path: any, data: any) => {
+  mock.method(atomic, "writeJsonFileAtomic", (path: string, data: unknown) => {
     assert.equal(path, "./data/catalog.json");
-    saved = String(data);
+    saved = JSON.stringify(data);
   });
   catalog.saveCatalog();
   catalog.clearCatalogSource("warehouse");
@@ -308,6 +312,46 @@ test("saved warehouse offers load locally with the existing JSON schema", () => 
   ]);
   assert.equal(getCatalogProductById(product.id, "wholesale")?.price, "310");
   assert.equal(sheetCalls.length, 0);
+});
+
+test("last market price survives loss of all offers and is reused when warehouse stock returns", () => {
+  const row = { product, rawNameForMatch: product.rawNames[0], isNew: false };
+  catalog.replaceCatalogSource("AAA-store", [{ ...row, price: "30000" }]);
+  catalog.replaceCatalogSource("Today there tomorrow here", [{ ...row, price: "280" }]);
+  catalog.replaceCatalogSource("AAA-store", []);
+  const lastMarketPrice = catalog.getCatalogItem(product.id)?.lastMarketPrice;
+  assert.equal(lastMarketPrice?.priceUsd, 280);
+  assert.ok(Number.isFinite(Date.parse(lastMarketPrice?.observedAt ?? "")));
+
+  catalog.replaceCatalogSource("Today there tomorrow here", []);
+  assert.equal(getCatalogProductById(product.id, "admin"), undefined);
+  saveCatalog.mock.restore();
+  let saved = "";
+  mock.method(atomic, "writeJsonFileAtomic", (_path: string, data: unknown) => { saved = JSON.stringify(data); });
+  catalog.saveCatalog();
+  assert.deepEqual(JSON.parse(saved), [{ productId: product.id, offers: [], lastMarketPrice }]);
+  mock.method(fs, "existsSync", () => true);
+  mock.method(fs, "readFileSync", () => JSON.stringify([
+    { productId: product.id, offers: [], lastMarketPrice: { ...lastMarketPrice, priceUsd: 280.4 } },
+  ]));
+  catalog.loadCatalog();
+
+  catalog.replaceCatalogSource("warehouse", [{ ...row, price: "200" }]);
+  assert.equal(getCatalogProductById(product.id, "admin")?.price, "280");
+  assert.equal(getCatalogProductById(product.id, "manager_wholesale")?.price, "290");
+  assert.equal(getCatalogProductById(product.id, "manager_retail")?.price, "900");
+  assert.deepEqual(catalog.getCatalogItem(product.id)?.lastMarketPrice, lastMarketPrice);
+  catalog.replaceCatalogSource("AAA-store", [{ ...row, price: "31050" }]);
+  assert.equal(getCatalogProductById(product.id, "wholesale")?.price, "321");
+  assert.equal(catalog.getCatalogItem(product.id)?.lastMarketPrice?.priceUsd, 311);
+});
+
+test("legacy supplier offer is preserved with unknown date when it disappears", () => {
+  catalog.upsertCatalog(product.id, "30040", "AAA-store");
+  catalog.upsertCatalog(product.id, "200", "warehouse");
+  catalog.replaceCatalogSource("AAA-store", []);
+  assert.deepEqual(catalog.getCatalogItem(product.id)?.lastMarketPrice, { priceUsd: 300, observedAt: null });
+  assert.equal(getCatalogProductById(product.id, "retail")?.price, "960");
 });
 
 for (const [rub, usd, warehouse, source, price] of [
@@ -696,13 +740,30 @@ test("second XLSX regression: cached rawName, USD rounding and +5 delivery", asy
   catalog.upsertCatalog(product.id, "51000", "AAA-store");
   mock.method(brands, "extractBrandFromStart", () => ({ brand: "Apple", nameWithoutBrand: product.rawNames[0] }));
   const result = await imports.ingestTodayThereTomorrowHerePrice(workbook([
-    ["Название", "Цена"], [product.rawNames[0], 250.4],
+    ["Название", "Цена"], [`${product.name} US`, 250.4],
   ]));
   assert.equal(result.items[0].product.id, product.id);
   assert.equal(result.items[0].price, "255");
   await handleIngestResult(bot, 10, result.items, "Today there tomorrow here", result.totalRows);
   assert.equal(getCatalogProducts({ role: "wholesale" })[0].price, "265");
   assert.equal(catalog.getCatalogItem(product.id)?.offers.length, 3);
+});
+
+test("AAA XLSX matches a legacy laptop alias and emits a flag from the name or country column", async () => {
+  const name = "MacBook Air 13 M5 24/512 Starlight";
+  const laptop = { ...product, name, category: "Ноутбуки", model: "MacBook Air 13 M5",
+    rawNames: [`${name} RU`], attributes: { country: "RU" } };
+  products.setProductToCache(laptop.id, laptop);
+  mock.method(brands, "resolveBrandFromName", () => "Apple");
+  for (const [input, country] of [[`${name} (RU)`, ""], [name, "ru"]]) {
+    const result = await imports.ingestAAAStorePrice(workbook([
+      ["SKU", "Категория", "Название", "Модель", "Цена", "Страна"],
+      ["sku", laptop.category, input, laptop.model, 30000, country],
+    ]));
+    assert.equal(result.items[0].product.id, laptop.id);
+    assert.equal(result.items[0].country, "🇷🇺");
+    assert.equal(result.items[0].rawNameForMatch, `${name} 🇷🇺`);
+  }
 });
 
 test("iPhone Air/Duo sort together and form separate messages despite legacy model strings", () => {
@@ -1115,22 +1176,24 @@ test("Russia and EU flag MacBooks stay distinct while AI sees the same product t
   const extract = mock.method(ai, "callAIForProduct", async () => ({ result: {
     status: "ok", confidence: 0.95, model: "MacBook Air 13 M5", color: "Starlight",
   }, cost: null }));
-  await warehouseService.saveWarehouse([{ name: "MacBook Air 13 M5 24/512 Starlight 🇷🇺", price: "900" },
+  await warehouseService.saveWarehouse([{ name: "MacBook Air 13 M5 24/512 Starlight RU", price: "900" },
     { name: "MacBook Air 13 M5 24/512 Starlight 🇪🇺", price: "950" }]);
   assert.equal(products.getProductCache().size, 2);
   assert.ok(extract.mock.calls.every(call => call.arguments[0] === "MacBook Air 13 M5 24/512 Starlight"));
   assert.deepEqual(new Set(products.getProductCacheValues().map(p => p.attributes?.country)), new Set(["🇷🇺", "🇪🇺"]));
 });
 
-test("warehouse lookup does not convert RU or other letter codes into regional flags", () => {
+test("warehouse lookup converts region codes and keeps storage units intact", () => {
   products.getProductCache().clear();
   const name = "MacBook Air 13 M5 24/512 Starlight";
   for (const country of ["🇷🇺", "🇪🇺", "🇺🇸"]) {
+    const region = country === "🇷🇺" ? "RU" : country;
     products.setProductToCache(country, { ...product, id: country, name, brand: "Apple", category: "Ноутбуки",
-      rawNames: [`${name} ${country}`], attributes: { country } });
+      rawNames: [`${name} ${region}`], attributes: { country: region } });
   }
-  const result = imports.ingestWarehousePrices(["RU", "EU", "US"].map(code => ({ name: `${name} ${code}`, price: "900" })));
-  assert.equal(result.items.length, 0);
-  assert.equal(result.skipped[0].names.length, 3);
+  const result = imports.ingestWarehousePrices(["RU", "(EU)", "US"].map(code => ({ name: `${name} ${code}`, price: "900" })));
+  assert.deepEqual(result.items.map(item => item.country), ["🇷🇺", "🇪🇺", "🇺🇸"]);
+  assert.deepEqual(result.skipped, []);
   assert.equal(imports.ingestWarehousePrices([{ name: `${name} 🇷🇺`, price: "900" }]).items[0].product.id, "🇷🇺");
+  assert.equal(imports.ingestWarehousePrices([{ name: `${name} GB`, price: "900" }]).items.length, 0);
 });

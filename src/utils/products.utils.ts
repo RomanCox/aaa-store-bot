@@ -7,6 +7,7 @@ import {
 } from "../types";
 import { compareSpecs, extractMemorySubstring, extractModelKey } from "./catalog.utils";
 import { brandsFromConfig } from "../services/brands.service";
+import { PRODUCT_REGION_FLAGS } from "../constants";
 
 const CATEGORY_ORDER = [
 	"Смартфоны",
@@ -281,6 +282,20 @@ export function getStorageValues(
 				.filter((storage): storage is string => typeof storage === "string"),
 		)
 	);
+}
+
+export function normalizeProductRegion(country: string): string {
+	const code = country.trim();
+	const upperCode = code.toUpperCase();
+	return PRODUCT_REGION_FLAGS.get(upperCode === "GB" ? "UK" : upperCode) ?? code;
+}
+
+export function normalizeProductRegionCodes(name: string): string {
+	return name.replace(/(^|\s)(?:\(([A-Z]{2})\)|([A-Z]{2}))(?=$|[\s,;])/g,
+		(match, prefix: string, parenthesized?: string, bare?: string) => {
+			const flag = PRODUCT_REGION_FLAGS.get(parenthesized ?? bare ?? "");
+			return flag ? prefix + flag : match;
+		});
 }
 
 export function extractFlags(name: string): string {

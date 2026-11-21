@@ -13,6 +13,8 @@ import {
 	// extractDisplayFinish,
 	normalizeModelForIPadMini,
 	normalizeStorageInName,
+	normalizeProductRegion,
+	normalizeProductRegionCodes,
 } from "../utils";
 import { extractBrandFromStart, resolveBrandFromName } from "./brands.service";
 import {
@@ -59,6 +61,7 @@ function normalizeWarehouseSimSuffix(name: string): string {
 }
 
 function warehouseNameParts(name: string) {
+  name = normalizeProductRegionCodes(name);
   const activated = extractActivated(name);
   const withoutFlags = name.replace(/[\u{1F1E6}-\u{1F1FF}]{2}/gu, " ").replace(/\s+/g, " ").trim();
   const withoutActive = withoutFlags.replace(/\s+\(active\)\s*$/i, "");
@@ -79,8 +82,10 @@ function findWarehouseProduct(name: string, cache: ReadonlyMap<string, CachedPro
   const parts = warehouseNameParts(name);
   for (const raw of new Set([name, normalizeWarehouseSimSuffix(name), parts.rawName])) {
     const product = findByRawName(raw, { activated: parts.activated, cache });
-    if (product && (parts.isIphone || normalize(product.attributes?.country ?? "") === normalize(parts.country ?? ""))) {
-      return { product, rawNameForMatch: raw };
+    if (!product) continue;
+    const country = normalizeProductRegion(product.attributes?.country ?? "") || extractFlags(normalizeProductRegionCodes(raw));
+    if (parts.isIphone || country === (parts.country ?? "")) {
+      return { product, rawNameForMatch: raw === name && normalizeProductRegionCodes(name) !== name ? parts.rawName : raw, country: parts.country };
     }
   }
   return undefined;
@@ -105,7 +110,7 @@ export function ingestWarehousePrices(rows: WarehousePriceRow[], cache: Readonly
       unmatched.push(row.name);
       continue;
     }
-    const { product, rawNameForMatch } = match;
+    const { product, rawNameForMatch, country } = match;
 
     const existing = items.get(product.id);
     if (!existing || price < Number(existing.price)) {
@@ -114,7 +119,7 @@ export function ingestWarehousePrices(rows: WarehousePriceRow[], cache: Readonly
         price: String(price),
         rawNameForMatch,
         isNew: false,
-        country: product.attributes?.country,
+        country,
       });
     }
   }
@@ -188,7 +193,7 @@ export async function ingestWarehouseProducts(rows: WarehousePriceRow[]): Promis
         p.brand === brand && p.category === category && same(p.model, model) &&
         same(normalizeStorageForCatalog(p.attributes?.storage ?? ""), storage) &&
         same(p.attributes?.color, color) && same(p.attributes?.sim, parts.sim) &&
-        same(p.attributes?.country, parts.country) && (p.attributes?.activated === true) === parts.activated
+        same(normalizeProductRegion(p.attributes?.country ?? ""), parts.country) && (p.attributes?.activated === true) === parts.activated
       );
       const product = existing ?? upsertProduct({
         rawName: parts.rawName, brand, category, model, name: displayName,
@@ -596,10 +601,12 @@ export async function ingestAAAStorePrice(
 				const model = String(row["Модель"] ?? "").trim();
 				const storageRaw = String(row["Хранилище"] ?? "").trim();
 				const price = String(row["Цена"] ?? "").trim();
-				const country = String(row["Страна"] ?? "");
+				const countryRaw = String(row["Страна"] ?? "").trim();
 				const simTypeRaw = String(row["Тип SIM"] ?? "");
 
-				const name = normalizeStorageInName(nameRaw);
+				const nameWithRegion = normalizeProductRegionCodes(nameRaw);
+				const country = normalizeProductRegion(countryRaw) || extractFlags(nameWithRegion);
+				const name = normalizeStorageInName(nameWithRegion.replace(/[\u{1F1E6}-\u{1F1FF}]{2}/gu, " ").replace(/\s+/g, " ").trim());
 				const namedModel = getNamedIphoneDeviceModel(name);
 				const category = namedModel ? "Смартфоны" : sourceCategory;
 
@@ -813,8 +820,9 @@ export async function ingestTodayThereTomorrowHerePrice(
 	const categoryMismatch: string[] = [];
 
 	for (let r = 1; r <= range.e.r; r++) {
-		const name =
-			sheet[XLSX.utils.encode_cell({ r, c: 0 })]?.v?.toString().trim() ?? "";
+		const name = normalizeProductRegionCodes(
+			sheet[XLSX.utils.encode_cell({ r, c: 0 })]?.v?.toString().trim() ?? "",
+		);
 		const priceRaw =
 			sheet[XLSX.utils.encode_cell({ r, c: 1 })]?.v?.toString().trim() ?? "";
 

@@ -1,4 +1,21 @@
 import type { HelperTopic } from "../types";
+import { PRODUCT_REGION_FLAGS } from "../constants";
+
+const REGIONS_PER_ROW = 3;
+const REGION_SEPARATOR = "  ·  ";
+const regionEntries = Array.from(PRODUCT_REGION_FLAGS, ([code, flag]) => `<code>${code}</code> ${flag}`);
+const regionRows: string[] = [];
+for (let index = 0; index < regionEntries.length; index += REGIONS_PER_ROW) {
+  const entries = regionEntries.slice(index, index + REGIONS_PER_ROW);
+  // В Telegram флаг на третьей позиции первой строки ломался при широком разделителе.
+  regionRows.push(entries.reduce((row, entry, column) => {
+    const separator = index === 0 && column === 2 ? " · " : REGION_SEPARATOR;
+    return `${row}${separator}${entry}`;
+  }));
+}
+export const HELPER_WAREHOUSE_REGIONS_HTML = `<b>🌐 Коды регионов и флаги</b>
+Код пишите заглавными буквами отдельным словом в конце названия, например <code>RU</code> или <code>(RU)</code>.
+${regionRows.join("\n")}`;
 
 export const HELPER_LINKS = {
   CONFIG: "https://docs.google.com/spreadsheets/d/1FMiacxRrb3wQTMBL2q3lgaVoNSOrMbepSXK2ujThvHk",
@@ -112,9 +129,11 @@ export const HELPER_TOPICS: { id: HelperTopic; label: string; messages: readonly
 <b>1.</b> Возьмите полное название из одного из прайсов поставщиков. Не придумывайте сокращения. Сохраните модель, поколение, память, RAM/SSD, цвет, размер и комплектацию — все параметры, отличающие товар от похожих.
 <b>2. Для iPhone укажите SIM:</b> <code>Esim</code>, <code>Dual Sim</code> или <code>Sim+Esim</code>. Для активированного товара добавьте <code>(Active)</code>.
 ✅ <code>iPhone 17 Pro 256 Orange Esim</code>
-<b>3. Для остальных товаров укажите регион, если он есть</b> — эмодзи-флагом в конце названия.
+<b>3. Для остальных товаров укажите регион, если он есть</b> — флагом или кодом из списка в конце названия.
 ✅ <code>MacBook Air 13 M5 24/512 Starlight 🇷🇺</code>
 Для iPhone используйте явный тип SIM вместо региона.
+
+${HELPER_WAREHOUSE_REGIONS_HTML}
 
 🔎 <b>Проверьте однозначность:</b> можно ли по названию и параметрам без догадок выбрать ровно один вариант товара? Если подходят два или больше, добавьте недостающие отличия.
 ❌ <code>iPhone 17 Pro 256</code> — неизвестны цвет и SIM.

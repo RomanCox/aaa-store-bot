@@ -105,6 +105,7 @@ interface OfferType {
 export interface CatalogItem {
 	productId: string;
 	offers: OfferType[];
+	lastMarketPrice?: { priceUsd: number; observedAt: string | null };
 }
 
 export interface ProductCore {
