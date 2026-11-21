@@ -2,7 +2,7 @@ import fs from "fs";
 import { CachedProduct, MatchInput } from "../../types";
 import { PRODUCTS_CACHE_PATH } from "../../constants";
 import { normalize } from "./product.builder";
-import { writeJsonFileAtomic } from "../../utils";
+import { extractFlags, normalizeProductRegionCodes, writeJsonFileAtomic } from "../../utils";
 
 let productCache = new Map<string, CachedProduct>();
 
@@ -57,6 +57,8 @@ export function saveProductCache() {
 // неактивированных (false) товаров: иначе строка прайса может попасть
 // в карточку с другим статусом активации, у которой случайно совпал rawName.
 export function findByRawName(raw: string, options?: { activated?: boolean; cache?: ReadonlyMap<string, CachedProduct> }) {
+  const key = normalize(raw);
+  const hasFlag = Boolean(extractFlags(raw));
   for (const product of (options?.cache ?? productCache).values()) {
     if (
       options?.activated !== undefined &&
@@ -65,7 +67,7 @@ export function findByRawName(raw: string, options?: { activated?: boolean; cach
       continue;
     }
     if (
-      product.rawNames.some(n => normalize(n) === normalize(raw))
+      product.rawNames.some(n => normalize(n) === key || (hasFlag && normalize(normalizeProductRegionCodes(n)) === key))
     ) {
       return product;
     }
