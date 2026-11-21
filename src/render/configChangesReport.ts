@@ -1,6 +1,7 @@
 import TelegramBot from "node-telegram-bot-api";
 import { PriceFormat, PriceRule } from "../types";
 import { TELEGRAM_MESSAGE_LIMIT } from "../constants";
+import { CONFIG_MARKUP_TEXTS } from "../texts";
 import { getPriceFormation } from "../services/price.service";
 import { getBrandsConfig } from "../services/brands.service";
 import { getColorsConfig } from "../services/colors.service";
@@ -77,17 +78,13 @@ function tierLabel(tier: Tier): string {
   return tier.max === undefined ? "без лимита" : `до ${tier.max}`;
 }
 
-function percent(value?: number): string {
-  return value === undefined ? "—" : `${value}%`;
-}
-
 function tierValues(tier: Tier): string {
-  return `опт ${percent(tier.wholesale)} · розн ${percent(tier.retail)}`;
+  return CONFIG_MARKUP_TEXTS.tierValues(tier.wholesale, tier.retail);
 }
 
-function changedValue(name: string, before?: number, after?: number): string | null {
+function changedValue(type: "wholesale" | "retail", before?: number, after?: number): string | null {
   if (before === after) return null;
-  return `${name} <s>${percent(before)}</s> → <b>${percent(after)}</b>`;
+  return CONFIG_MARKUP_TEXTS.changedValue(type, before, after);
 }
 
 function diffPrices(before: PriceFormat[], after: PriceFormat[]): string[] {
@@ -121,8 +118,8 @@ function diffPrices(before: PriceFormat[], after: PriceFormat[]): string[] {
         lines.push(`   ➖ <s>${tierLabel(a)}:  ${tierValues(a)}</s>`);
       } else if (a && b) {
         const changes = [
-          changedValue("опт", a.wholesale, b.wholesale),
-          changedValue("розн", a.retail, b.retail),
+          changedValue("wholesale", a.wholesale, b.wholesale),
+          changedValue("retail", a.retail, b.retail),
         ].filter(Boolean);
 
         if (changes.length) {

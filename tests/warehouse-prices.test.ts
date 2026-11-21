@@ -324,13 +324,20 @@ for (const [rub, usd, warehouse, source, price] of [
   assert.equal(selected.price, price);
 });
 
-test("warehouse-only offers are retained in storage and excluded from priced views", () => {
+test("warehouse-only products appear in the catalog with role-based prices", () => {
   assert.equal(formatting.normalizeOfferPrice({ price: "250.4", source: "warehouse" }, rates), 250.4);
   assert.equal(formatting.toUsdPrice(250.4, rates, "warehouse"), 250.4);
   catalog.upsertCatalog(product.id, "250.4", "warehouse");
   assert.equal(catalog.getCatalogItem(product.id)?.offers[0].price, "250.4");
-  for (const role of ["wholesale", "retail", "admin"] as const) {
-    assert.equal(getCatalogProductById(product.id, role), undefined);
+  for (const [role, price] of [
+    ["wholesale", "260"], ["manager_wholesale", "260"],
+    ["retail", "810"], ["manager_retail", "810"],
+    ["admin", "250.4"], ["superadmin", "250.4"],
+  ] as const) {
+    const selected = getCatalogProductById(product.id, role);
+    assert.equal(selected?.source, "warehouse");
+    assert.equal(selected?.price, price);
+    assert.ok(getCatalogUIProducts({}, role).some(item => item.id === product.id));
   }
 });
 
@@ -339,6 +346,9 @@ test("invalid offers and unusable RUB conversion cannot win minimum selection", 
   catalog.upsertCatalog(product.id, "250", "warehouse");
   catalog.upsertCatalog(product.id, "10000", "AAA-store");
   mock.method(priceService, "getRates", () => ({ ...rates, rub_to_usd: 0 }));
+  assert.equal(getCatalogProductById(product.id, "wholesale")?.source, "warehouse");
+  assert.equal(getCatalogProductById(product.id, "wholesale")?.price, "260");
+  catalog.upsertCatalog(product.id, "0", "warehouse");
   assert.deepEqual(getCatalogProducts({ role: "wholesale" }), []);
 });
 

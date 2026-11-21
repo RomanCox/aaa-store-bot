@@ -16,3 +16,15 @@ export const PRICE_ERRORS = {
 	PRICE_FORMAT_ERROR: "❌ Значение должно быть числом, введите заново:",
 	ERROR_PRICE_FORMATION_EDIT: "❌ Не удалось изменить цену",
 }
+const MARKUP_ROLE_LABELS = { wholesale: "опт", retail: "розн" };
+
+function markupAmount(value?: number): string {
+	return value === undefined ? "—" : `${value}$`;
+}
+
+export const CONFIG_MARKUP_TEXTS = {
+	tierValues: (wholesale?: number, retail?: number) =>
+		`${MARKUP_ROLE_LABELS.wholesale} ${markupAmount(wholesale)} · ${MARKUP_ROLE_LABELS.retail} ${markupAmount(retail)}`,
+	changedValue: (type: keyof typeof MARKUP_ROLE_LABELS, before?: number, after?: number) =>
+		`${MARKUP_ROLE_LABELS[type]} <s>${markupAmount(before)}</s> → <b>${markupAmount(after)}</b>`,
+};
